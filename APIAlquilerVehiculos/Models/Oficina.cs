@@ -1,52 +1,39 @@
 ﻿namespace APIAlquilerVehiculos.Models;
 
-/// <summary>
-/// Representa la oficina de alquiler de vehículos.
-/// </summary>
 public class Oficina
 {
-    /// <summary>
-    /// Identificador único de la oficina.
-    /// </summary>
-    public int Id { get; set; } = 0;
+    public long Id { get; init; }
     
-    /// <summary>
-    /// Nombre de la oficina.
-    /// </summary>
-    public string Nombre { get; set; } = string.Empty;
+    public string Name { get; init; } = string.Empty;
     
-    /// <summary>
-    /// Dirección de la oficina.
-    /// </summary>
-    public string Direccion { get; set; } = string.Empty;
+    public Direccion Direccion { get; set; } = null!;
     
-    /// <summary>
-    /// Ciudad donde se encuentra la oficina.
-    /// </summary>
+    public string Telefono { get; init; } = string.Empty;
+    
+    public Localizacion Localizacion { get; set; } = null!;
+    
+    public string Horario { get; init; } = string.Empty;
+    
+    public long IdResponsable { get; init; } // Id del trabajador responsable
+    
+    public Trabajador Responsable { get; set; } = null!; // acceder a Trabajador
+    
+    public DateTime CreatedAt { get; set; }
+    
+    public DateTime? UpdatedAt { get; set; }
+}
+
+// OwnsOne
+public class Direccion
+{
+    public string Calle { get; init; } = string.Empty;
+    public string CodigoPostal { get; init; } = string.Empty;
     public string Ciudad { get; set; } = string.Empty;
-    
-    /// <summary>
-    /// Código postal de la oficina.
-    /// </summary>
-    public int CodigoPostal { get; set; }
-    
-    /// <summary>
-    /// Número de teléfono de la oficina.
-    /// </summary>
-    public string Telefono { get; set; } = string.Empty;
-    
-    /// <summary>
-    /// Localización de la oficina.
-    /// </summary>
-    public string Localizacion { get; set; } = string.Empty;
-    
-    /// <summary>
-    /// Horario de funcionamiento de la oficina.
-    /// </summary>
-    public string Horario { get; set; } = string.Empty;
-    
-    /// <summary>
-    /// Identificador del responsable de la oficina.
-    /// </summary>
-    public long Responsable_Id { get; set; }
+}
+
+public class Localizacion
+{
+    public decimal Latitud { get; set; }
+
+    public decimal Longitud { get; set; }
 }
