@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="APIAlquilerVehiculos.Test/APIAlquilerVehiculos.Test.csproj" />
+  <Project Path="APIAlquilerVehiculos/APIAlquilerVehiculos.csproj" />
+</Solution>
