@@ -1,0 +1,14 @@
+
+# Archivos generados por .NET
+bin/
+obj/
+
+# Configuración personal de Rider
+.idea/
+
+# Configuración de Visual Studio
+.vs/
+
+# Archivos temporales
+*.user
+*.suo
