@@ -12,3 +12,28 @@ obj/
 # Archivos temporales
 *.user
 *.suo
+
+Archivos del sistema operativo
+.DS_Store
+Thumbs.db
+
+.vs/
+.vscode/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+/bin/
+/obj/
+[Dd]ebug/
+[Rr]elease/
+*.dll
+*.exe
+*.pdb
+
+*.nupkg
+**/packages/
+
+.env
+appsettings.Secrets.json
