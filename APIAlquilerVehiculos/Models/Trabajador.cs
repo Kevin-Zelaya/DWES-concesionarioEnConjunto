@@ -20,6 +20,7 @@ public class Trabajador
     
     public required Tipo Tipo { get; set; } 
     
+    //Antes de eliminar seleccionar otro responsable
     public required bool Activo { get; set; } 
     
     public DateTime CreatedAt { get; init; }
