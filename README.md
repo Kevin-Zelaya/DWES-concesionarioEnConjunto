@@ -1,4 +1,4 @@
-# 👋 Compañeros y compañeras
+# 👋 Compañerigirigillos
 
 Para que podamos trabajar de forma organizada y que el proyecto quede lo mejor posible, os dejo algunas pautas que estaría bien que todos siguiéramos durante el desarrollo.
 
