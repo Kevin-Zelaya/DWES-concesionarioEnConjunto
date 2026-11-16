@@ -12,12 +12,12 @@ public class Usuario : IdentityUser<long>
     /// <summary>
     /// Perfil de trabajador asociado a este usuario, si existe.
     /// </summary>
-    public Trabajador? Trabajador { get; init; }
+    public Trabajador? Trabajador { get; set; }
     
     /// <summary>
     /// Perfil de cliente asociado a este usuario, si existe.
     /// </summary>
-    public Cliente? Cliente { get; init; }
+    public Cliente? Cliente { get; set; }
     
     /// <summary>
     /// Fecha de alta de usuario
@@ -49,12 +49,12 @@ public static class Roles
     public const string Cliente = "Cliente";
     
     /// <summary>
-    /// Usuario que pertenece al personal de la empresa.
+    /// Trabajador del tipo operario.
     /// </summary>
-    public const string Trabajador = "Trabajador";
+    public const string Operario = "Operario";
     
     /// <summary>
-    /// Trabajador con permisos de responsable de oficina.
+    /// Trabajador del tipo mecánico.
     /// </summary>
-    public const string Responsable = "Responsable";
+    public const string Mecanico = "Mecanico";
 }

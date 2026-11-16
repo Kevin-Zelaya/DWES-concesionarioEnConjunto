@@ -46,13 +46,13 @@ public class Trabajador
     /// Tipo de trabajador según sus funciones: operaciones o mecánico.
     /// Operaciones o Mecanico
     /// </summary>
-    public required Tipo Tipo { get; set; } 
+    public required TipoTrabajador TipoTrabajador { get; set; } 
     
     //Antes de eliminar seleccionar otro responsable
     /// <summary>
     /// Indica si el trabajador se encuentra activo en la empresa.
     /// </summary>
-    public required bool Activo { get; set; } 
+    public required bool IsActivo { get; set; } 
     
     /// <summary>
     /// Fecha de alta del trabajador
@@ -62,17 +62,17 @@ public class Trabajador
     /// <summary>
     /// Fecha de modificación de datos del trabajador
     /// </summary>
-    public DateTime? UpdatedAt { get; init; }
+    public DateTime? UpdatedAt { get; set; }
     
     /// <summary>
     /// Fecha de baja logica del trabajador (si se produjó)
     /// </summary>
-    public DateTime? DeletedAt { get; init; }
+    public DateTime? DeletedAt { get; set; }
 }
 /// <summary>
 /// Tipos de trabajadores según sus funciones dentro de la empresa.
 /// </summary>
-public enum Tipo
+public enum TipoTrabajador
 {
     /// <summary>
     /// Trabajador encargado de las tareas operativas.

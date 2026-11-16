@@ -53,6 +53,11 @@ public class Cliente
     public string? Pasaporte { get; set; } 
     
     /// <summary>
+    /// nº de permiso de conducir, obligatorio si solo se facilita el pasaporte
+    /// </summary>
+    public string? NumeroPermisoConducir { get; set; }
+    
+    /// <summary>
     /// Fecha de alta del cliente.
     /// </summary>
     public DateTime CreatedAt { get; init; }
@@ -60,15 +65,15 @@ public class Cliente
     /// <summary>
     /// Fecha de modificación de datos del cliente
     /// </summary>
-    public DateTime? UpdatedAt { get; init; }
+    public DateTime? UpdatedAt { get; set; }
     
     /// <summary>
     /// Indica si el cliente se encuentra activo en la empresa.
     /// </summary>
-    public required bool Activo { get; set; } 
+    public required bool IsActivo { get; set; } 
     
     /// <summary>
     /// Fecha de baja logica del cliente (si se produjó)
     /// </summary>
-    public DateTime? DeletedAt { get; init; }
+    public DateTime? DeletedAt { get; set; }
 }

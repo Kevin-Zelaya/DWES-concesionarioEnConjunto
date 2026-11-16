@@ -43,7 +43,7 @@ public class Oficina
     /// <summary>
     /// Identificador del trabajador responsable.
     /// </summary>
-    public long IdResponsable { get; init; } // Id del trabajador responsable
+    public long IdResponsable { get; set; } // Id del trabajador responsable
     
     /// <summary>
     /// Trabajador responsable.
