@@ -1,6 +1,8 @@
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.ValueGeneration;
 
+namespace APIAlquilerVehiculos.Validators.ValueGenerators;
+
 public class YoutubeIdValueGenerator : ValueGenerator<string>
 {
     private const string Chars =

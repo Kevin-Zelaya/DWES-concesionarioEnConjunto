@@ -1,4 +1,4 @@
-﻿namespace APIAlquilerVehiculos.Models.Enums;
+﻿namespace APIAlquilerVehiculos.Models;
 
 /// <summary>
 /// Representa un concesionario de vehículos.

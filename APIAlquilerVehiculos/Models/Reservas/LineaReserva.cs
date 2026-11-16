@@ -9,7 +9,7 @@
 /// </summary>
 public class LineaReserva
 {
-    long id {get; set;}
+    long Id {get; set;}
     /// <summary> fk de reserva, así para poder agregar mismo
     /// concepto pero con diferente precio por día </summary>
     long ReservaId{get; set;}

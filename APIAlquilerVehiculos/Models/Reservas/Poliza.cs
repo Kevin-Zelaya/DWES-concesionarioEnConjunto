@@ -1,6 +1,6 @@
 public class Poliza
 {
-    long id {get; set;}
+    long Id {get; set;}
     string nombre {get; set;}
     string Descripcion {get; set;}
     double IncrementoDiario {get; set;}

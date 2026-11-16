@@ -1,3 +1,5 @@
+namespace APIAlquilerVehiculos.Models.Reservas;
+
 /// <summary>
 /// Cabecera reserva, relación en base 
 /// lineas reserva, en la que una reserva
@@ -6,7 +8,7 @@
 /// </summary>
 public class Reservas
 {
-    long id {get; set;}
+    long Id {get; set;}
     string CodigoRefencia {get; set;} = string.Empty;
     long ClienteId {get; set;}
     // Relación con categoria por su id

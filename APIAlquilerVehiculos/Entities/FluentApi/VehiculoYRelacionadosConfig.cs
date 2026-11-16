@@ -1,6 +1,9 @@
 using APIAlquilerVehiculos.Models;
 using APIAlquilerVehiculos.Models.Enums;
+using APIAlquilerVehiculos.Validators.ValueGenerators;
 using Microsoft.EntityFrameworkCore;
+
+namespace APIAlquilerVehiculos.Entities.FluenApi;
 
 public static class VehiculoYRelacionadosConfig
 {

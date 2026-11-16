@@ -3,7 +3,7 @@
 /// </summary>
 public class Extra
 {
-    long id {get; set;}
+    long Id {get; set;}
     string Nombre {get; set;}
     string Descripcion {get; set;}
     double PrecioDiario {get; set;}
