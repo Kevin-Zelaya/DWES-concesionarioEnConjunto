@@ -9,14 +9,14 @@
 /// </summary>
 public class LineaReserva
 {
-    long Id {get; set;}
-    /// <summary> fk de reserva, así para poder agregar mismo
-    /// concepto pero con diferente precio por día </summary>
-    long ReservaId{get; set;}
-    /// <summary> Referencia al nombre pero no con fk </summary>
-    string Tipo {get; set;} = string.Empty;
-    string Concepto {get; set;} = string.Empty;
-    int Cantidad {get; set;}
-    double PrecioUnitario {get; set;}
-    double Subtotal {get; set;}
+   public long Id {get; set;}
+   /// <summary> fk de reserva, así para poder agregar mismo
+   /// concepto pero con diferente precio por día </summary>
+   public long ReservaId{get; set;}
+   /// <summary> Referencia al nombre pero no con fk </summary>
+   public string Tipo {get; set;} = string.Empty;
+   public string Concepto {get; set;} = string.Empty;
+   public int Cantidad {get; set;}
+   public double PrecioUnitario {get; set;}
+   public double Subtotal {get; set;}
 }
