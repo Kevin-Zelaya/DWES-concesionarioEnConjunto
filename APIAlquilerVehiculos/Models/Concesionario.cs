@@ -8,7 +8,7 @@ public class Concesionario
     /// <summary>
     /// Identificador único del concesionario.
     /// </summary>
-    public int Id { get; set; }
+    public long Id { get; set; }
 
     /// <summary>
     /// Nombre del concesionario.
@@ -34,4 +34,19 @@ public class Concesionario
     /// Indica si el concesionario está activo o no.
     /// </summary>
     public bool Activo { get; set; }
+    
+    /// <summary>
+    /// Fecha de creación del concesionario.
+    /// </summary>
+    public DateTime? CreatedAt { get; set; }
+    
+    /// <summary>
+    /// Fecha de última actualización del concesionario.
+    /// </summary>
+    public DateTime? UpdatedAt { get; set; }
+    
+    /// <summary>
+    /// Fecha de eliminación del concesionario (si ha sido eliminado).
+    /// </summary>
+    public DateTime? DeletedAt { get; set; }
 }
