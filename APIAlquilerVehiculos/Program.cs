@@ -4,7 +4,19 @@ var builder = WebApplication.CreateBuilder(args);
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
+// Configuración del servicio de almacenamiento de archivos
+builder.Services.AddStorage();
+
+// Configuración de SignalR para notificaciones en tiempo real
+builder.Services.AddSignalRconfiguration();
+
 var app = builder.Build();
+
+// Inicialización y preparación del directorio de subidas (uploads)
+app.InitializeStorage(app.Environment.IsDevelopment());
+
+// Habilita el suministro de archivos estáticos para acceder a las imágenes guardadas
+app.UseStaticFiles();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -13,6 +25,9 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+// Mapeo del endpoint del Hub de SignalR para las notificaciones
+app.MapHub<CocheHubs>("/hubs/coche");
 
 var summaries = new[]
 {
