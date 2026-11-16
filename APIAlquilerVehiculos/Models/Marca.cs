@@ -8,7 +8,7 @@ public class Marca
     /// <summary>
     /// Identificador único de la marca.
     /// </summary>
-    public int Id { get; set; }
+    public long Id { get; set; }
 
     /// <summary>
     /// Nombre de la marca.
@@ -24,4 +24,19 @@ public class Marca
     /// Indica si la marca está activa o no.
     /// </summary>
     public bool Activo { get; set; }
+    
+    /// <summary>
+    /// Fecha de creación de la marca.
+    /// </summary>
+    public DateTime? CreatedAt { get; set; }
+    
+    /// <summary>
+    /// Fecha de última actualización de la marca.
+    /// </summary>
+    public DateTime? UpdatedAt { get; set; }
+    
+    /// <summary>
+    /// Fecha de eliminación de la marca (si ha sido eliminada).
+    /// </summary>
+    public DateTime? DeletedAt { get; set; }
 }

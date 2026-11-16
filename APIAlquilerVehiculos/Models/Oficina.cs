@@ -41,14 +41,34 @@ public class Oficina
     public string Horario { get; init; } = string.Empty;
     
     /// <summary>
-    /// Identificador del trabajador responsable.
+    /// Obtiene o establece el identificador del trabajador responsable de la oficina.
     /// </summary>
-    public long IdResponsable { get; set; } // Id del trabajador responsable
+    public long IdResponsable { get; init; } // Id del trabajador responsable
     
     /// <summary>
-    /// Trabajador responsable.
+    /// Obtiene o establece el trabajador responsable de la oficina.
     /// </summary>
-    public Trabajador Responsable { get; set; } = null!; // acceder a Trabajador
+    public Trabajador Responsable { get; set; } = null!;
+    
+    /// <summary>
+    /// Indica si la oficina está activa o no.
+    /// </summary>
+    public DateTime CreatedAt { get; set; }
+    
+    /// <summary>
+    /// Obtiene o establece la fecha de última actualización de la oficina.
+    /// </summary>
+    public DateTime? UpdatedAt { get; set; }
+    
+    /// <summary>
+    /// Indica si el modelo está activo o no.
+    /// </summary>
+    public bool Activo { get; set; }
+    
+    /// <summary>
+    /// Fecha de eliminación del modelo (si ha sido eliminado).
+    /// </summary>
+    public DateTime? DeletedAt { get; set; }
 }
 
 // OwnsOne
@@ -74,18 +94,17 @@ public class Direccion
 }
 
 /// <summary>
-/// Localización de la oficina
-/// Representada con Latitud y longitud
+/// Representa la localización geográfica de una oficina.
 /// </summary>
 public class Localizacion
 {
     /// <summary>
-    /// Latitud de la oficina
+    /// Obtiene o establece la latitud de la localización.
     /// </summary>
     public decimal Latitud { get; set; }
 
     /// <summary>
-    /// Longitud de la oficina
+    /// Obtiene o establece la longitud de la localización.
     /// </summary>
     public decimal Longitud { get; set; }
 }

@@ -43,6 +43,15 @@ public static class VehiculoYRelacionadosConfig
 
             entity.Property(v => v.Imagenes).IsRequired();
 
+            // Propiedades de control
+            entity.Property(v => v.CreatedAt).HasDefaultValue(null);
+            
+            entity.Property(v => v.UpdatedAt).HasDefaultValue(null);
+
+            entity.Property(v => v.DeletedAt).HasDefaultValue(null);
+            
+            entity.Property(v => v.Activo).HasDefaultValue(true);
+
             // Estado del vehículo
             entity.Property(v => v.Estado).IsRequired().HasConversion<string>().HasDefaultValue(EstadoEnum.Disponible);
 
@@ -77,6 +86,15 @@ public static class VehiculoYRelacionadosConfig
 
             // Índice para búsquedas por nombre
             entity.HasIndex(m => m.Nombre);
+            
+            // Propiedades de control
+            entity.Property(m => m.CreatedAt).HasDefaultValue(null);
+            
+            entity.Property(m => m.UpdatedAt).HasDefaultValue(null);
+
+            entity.Property(m => m.DeletedAt).HasDefaultValue(null);
+            
+            entity.Property(m => m.Activo).HasDefaultValue(true);
         });
 
         // ==========================================
@@ -92,9 +110,15 @@ public static class VehiculoYRelacionadosConfig
 
             entity.Property(m => m.Wb).IsRequired();
 
-            entity.Property(m => m.Activo).IsRequired()
-                .HasDefaultValue(true);
+            // Propiedades de Control
+            entity.Property(m => m.Activo).IsRequired().HasDefaultValue(true);
 
+            entity.Property(m => m.CreatedAt).HasDefaultValue(null);
+            
+            entity.Property(m => m.UpdatedAt).HasDefaultValue(null);
+
+            entity.Property(m => m.DeletedAt).HasDefaultValue(null);
+            
             // Índice para búsquedas por nombre
             entity.HasIndex(m => m.Nombre);
 
