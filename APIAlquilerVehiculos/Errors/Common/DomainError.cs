@@ -1,5 +1,7 @@
 using System.Net;
 
+namespace APIAlquilerVehiculos.Errors.Common;
+
 public record  DomainError(string Message, HttpStatusCode StatusCode);
 
 public record NotFoundError(string Message, HttpStatusCode StatusCode) : DomainError(Message, StatusCode)
