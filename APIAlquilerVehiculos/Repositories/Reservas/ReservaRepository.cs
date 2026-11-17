@@ -1,7 +1,9 @@
+using System.Data;
 using APIAlquilerVehiculos.Entities;
 using APIAlquilerVehiculos.Models.Reservas;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Serilog;
 
 public class ReservaRepository(
     AppDbContext _context
@@ -123,20 +125,56 @@ public class ReservaRepository(
         return existing;
     }
     public async Task<Reserva?> UpdateStatusAsync(
-        Reserva reserva,
+        string CodigoReferencia,
+        ReservaUpdateStatusRequestDto request,
         CancellationToken ct = default)
     {
-        var existing = await _context.Reservas
-            .FirstOrDefaultAsync(r => r.Id == reserva.Id, ct);
+        var response = await _context.Reservas
+            .FirstOrDefaultAsync(r => r.CodigoRefencia == CodigoReferencia, ct);
+        
+        if (response is null) return null;
+        // asignamos el nuevo estado
+        response.Estado = request.Estado;
+        try
+        {
+            _context.Entry(response)
+                .Property(f => f.RowVersion)
+                .OriginalValue = request.RowVersion;
+            await _context.SaveChangesAsync(ct);
+        }
+        catch (DBConcurrencyException)
+        {
+            Log.Error("[REPOSITORY-UPDATE] Error de concurrencia, al actualizar la reserva con codigó de referencia: {cr}", CodigoReferencia);
+            throw;
+        }
 
-        if (existing is null)
-            return null;
+        return response;
+    }
+    public async Task<Reserva?> UpdateVehicleAsync(
+        string CodigoReferencia,
+        ReservaUpdateStatusRequestDto request,
+        CancellationToken ct = default)
+    {
+        var response = await _context.Reservas
+            .FirstOrDefaultAsync(r => r.CodigoRefencia == CodigoReferencia, ct);
+        
+        if (response is null) return null;
+        // asignamos el nuevo estado
+        response.Estado = request.Estado;
+        try
+        {
+            _context.Entry(response)
+                .Property(f => f.RowVersion)
+                .OriginalValue = request.RowVersion;
+            await _context.SaveChangesAsync(ct);
+        }
+        catch (DBConcurrencyException)
+        {
+            Log.Error("[REPOSITORY-UPDATE] Error de concurrencia, al actualizar la reserva con codigó de referencia: {cr}", CodigoReferencia);
+            throw;
+        }
 
-        existing.Estado = reserva.Estado;
-
-        await _context.SaveChangesAsync(ct);
-
-        return existing;
+        return response;
     }
 
     /// <inheritdoc cref="IReservaRepository.ExistsAsync(long, CancellationToken)"/>

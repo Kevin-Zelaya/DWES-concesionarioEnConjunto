@@ -18,9 +18,7 @@ public class ReservaYRelacionadosConfigure
                 .ValueGeneratedOnAdd();
 
             // Código de referencia único
-            entity.Property(r => r.CodigoRefencia)
-                .IsRequired()
-                .HasMaxLength(50);
+            
 
             entity.HasIndex(r => r.CodigoRefencia)
                 .IsUnique();
