@@ -24,7 +24,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options)
 	//USUARIOS
 	public DbSet<Cliente> Cliente {get; set;}
 	public DbSet<Trabajador> Trabajador {get; set;}
-	public DbSet<Oficina> Oficina { get; set; }
+	public DbSet<Oficina> Oficinas { get; set; }
 	
 	protected override void OnModelCreating(ModelBuilder modelBuilder)
 	{
