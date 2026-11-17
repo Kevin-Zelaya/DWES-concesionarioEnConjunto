@@ -49,7 +49,7 @@ public static class UserRoleSeeder {
             email: "responsable@alquiler.com",
             password: "Resp1234@",
             telefono: "600000002",
-            roles: ["Operaciones", Roles.Responsable]
+            roles: ["Operario", Roles.Responsable]
         );
 
         // si se ha creado, los asigno como responsable, si no lo encuentra creo uno
@@ -68,7 +68,7 @@ public static class UserRoleSeeder {
                     Apellidos = "García López",
                     Dni = "11111111H",
                     FechaIngreso = DateTime.UtcNow.AddYears(-3),
-                    TipoTrabajador = TipoTrabajador.Operaciones,
+                    TipoTrabajador = TipoTrabajador.Operario,
                     IsActivo = true, 
                     CreatedAt = DateTime.UtcNow
                 };
@@ -83,7 +83,7 @@ public static class UserRoleSeeder {
             email: "operario@alquiler.com",
             password: "Oper1234@",
             telefono: "600000003",
-            roles: ["Operaciones"]
+            roles: ["Operario"]
         );
 
         // si se ha creado bien lo mete a la bd
@@ -96,7 +96,7 @@ public static class UserRoleSeeder {
                 Apellidos = "Martínez Ruiz",
                 Dni = "22222222J",
                 FechaIngreso = DateTime.UtcNow.AddYears(-1),
-                TipoTrabajador = TipoTrabajador.Operaciones,
+                TipoTrabajador = TipoTrabajador.Operario,
                 IsActivo = true,
                 CreatedAt = DateTime.UtcNow
             });
@@ -174,6 +174,7 @@ public static class UserRoleSeeder {
                     Longitud = -3.763500m
                 },
                 IdResponsable = trabajadorResponsable.Id,
+                Activo = true,
                 CreatedAt = DateTime.UtcNow
             });
             await db.SaveChangesAsync();
