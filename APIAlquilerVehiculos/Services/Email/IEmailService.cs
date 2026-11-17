@@ -1,3 +1,4 @@
+using APIAlquilerVehiculos.Errors.Common;
 using CSharpFunctionalExtensions;
 
 namespace APIAlquilerVehiculos.Services.Email;

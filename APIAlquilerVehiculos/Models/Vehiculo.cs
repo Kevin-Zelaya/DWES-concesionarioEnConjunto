@@ -42,7 +42,7 @@ public class Vehiculo
     /// <summary>
     /// Establece el identificador del concesionario al que pertenece el vehículo.
     /// </summary>
-    public int Concesionario_id { get; set; }
+    public long Concesionario_id { get; set; }
     
     /// <summary>
     /// Color del vehículo.
@@ -72,7 +72,7 @@ public class Vehiculo
     /// <summary>
     /// Lista de imágenes asociadas al vehículo.
     /// </summary>
-    public int Imagenes { get; set; }
+    public long Imagenes { get; set; }
     
     /// <summary>
     /// Estado actual del vehículo.

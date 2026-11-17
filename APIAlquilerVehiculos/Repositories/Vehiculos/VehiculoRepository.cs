@@ -72,14 +72,14 @@ public class VehiculoRepository : IVehiculosRepository
 
         _context.Vehiculos.Add(obj);
         await _context.SaveChangesAsync();
-        obj.Id = GetByMatriculaAsync(obj.Matricula).Result.Id;
+        
         return obj;
     }
 
     /// <inheritdoc cref="UpdateAsync"/>
     public async Task<Vehiculo?> UpdateAsync(Vehiculo objt)
     {
-        var response = await GetByIdAsync(objt.Id); 
+        var response = await _context.Vehiculos.FirstOrDefaultAsync(v=> v.Id == objt.Id && v.Activo == true); 
         if (response == null) return null;
 
         var createdAt = response.CreatedAt;
@@ -94,7 +94,7 @@ public class VehiculoRepository : IVehiculosRepository
     /// <inheritdoc cref="DeleteAsync"/>
     public async Task<bool> DeleteAsync(string id)
     {
-        var objt = await GetByIdAsync(id); 
+        var objt = await _context.Vehiculos.FirstOrDefaultAsync(v=> v.Id == id && v.Activo == true); 
         if (objt == null) return false;
 
         objt.UpdatedAt = DateTime.UtcNow;
