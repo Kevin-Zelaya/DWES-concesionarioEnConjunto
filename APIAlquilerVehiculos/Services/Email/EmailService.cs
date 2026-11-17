@@ -1,4 +1,6 @@
 using APIAlquilerVehiculos.Configuration;
+using APIAlquilerVehiculos.Errors.Common;
+using APIAlquilerVehiculos.Errors.Email;
 using CSharpFunctionalExtensions;
 using MailKit;
 using MailKit.Net.Smtp;
