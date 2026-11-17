@@ -16,15 +16,19 @@ public class Reserva
     // Trabajador que lo crea
     public long TrabajadorId {get; set;}
     public CategoriaEnum Categoria {get; set;}
-    public long VehiculoId {get; set;}
+    public string VehiculoId {get; set;}
+    public Vehiculo? Vehiculo {get; set;}
     public DateTime FechaCreacion {get; set;}
     public DateTime FechaRecogida {get; set;}
     public DateTime FechaDevolucion {get; set;}
     public Estado Estado {get; set;}
-    public List<LineaReserva>? Lineas {get; set;}
-    public double PrecioTotal {get; set;}
-    public long PagoId {get; set;}
+    public List<LineaReserva>? Lineas {get; set;} = [];
+    public decimal PrecioTotal { get; set; }
+    public long? PagoId {get; set;}
+    public Pago? Pago {get; set;}
     public string? Notas {get; set;}
+    // control de concurrencia
+    public uint RowVersion {get; set;}
 }
 
 /// <summary>

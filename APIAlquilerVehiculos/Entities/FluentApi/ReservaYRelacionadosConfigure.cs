@@ -26,7 +26,7 @@ public class ReservaYRelacionadosConfigure
                 .IsUnique();
 
             // Relación con vehículo
-            entity.HasOne<Vehiculo>()
+            entity.HasOne(r => r.Vehiculo)
                 .WithMany()
                 .HasForeignKey(r => r.VehiculoId)
                 .OnDelete(DeleteBehavior.Restrict);
@@ -44,9 +44,10 @@ public class ReservaYRelacionadosConfigure
                 .OnDelete(DeleteBehavior.Restrict);
 
             // Relación con pago
-            entity.HasOne<Pago>()
+            entity.HasOne(r => r.Pago)
                 .WithOne()
                 .HasForeignKey<Reserva>(r => r.PagoId)
+                .IsRequired(false)
                 .OnDelete(DeleteBehavior.Restrict);
 
             // Categoría de vehículo solicitada
@@ -86,6 +87,9 @@ public class ReservaYRelacionadosConfigure
                 .WithOne()
                 .HasForeignKey(l => l.ReservaId)
                 .OnDelete(DeleteBehavior.Cascade);
+            // control de concurrencia
+            entity.Property(r => r.RowVersion)
+                .IsRowVersion();
         });
 
 
@@ -149,6 +153,33 @@ public class ReservaYRelacionadosConfigure
                 .HasMaxLength(250);
 
             entity.Property(e => e.PrecioDiario)
+                .IsRequired()
+                .HasPrecision(10, 2);
+
+            entity.Property(e => e.Activa)
+                .IsRequired()
+                .HasDefaultValue(true);
+
+            entity.HasQueryFilter(e => e.Activa);
+
+            entity.HasIndex(e => e.Nombre);
+        });
+        modelbuilder.Entity<Poliza>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+
+            entity.Property(e => e.Id)
+                .ValueGeneratedOnAdd();
+
+            entity.Property(e => e.Nombre)
+                .IsRequired()
+                .HasMaxLength(100);
+
+            entity.Property(e => e.Descripcion)
+                .IsRequired()
+                .HasMaxLength(250);
+
+            entity.Property(e => e.IncrementoDiario)
                 .IsRequired()
                 .HasPrecision(10, 2);
 
