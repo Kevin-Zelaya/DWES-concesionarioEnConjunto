@@ -44,6 +44,8 @@ public static class UsuarioYRelacionadosConfig
             entity.HasIndex(c => c.Dni).IsUnique();
             entity.HasIndex(c => c.Nie).IsUnique();
             entity.HasIndex(c => c.Pasaporte).IsUnique();
+            
+            entity.Property(u => u.IsActivo).IsRequired();
         });
 
         // ==========================================
@@ -60,6 +62,8 @@ public static class UsuarioYRelacionadosConfig
 
             entity.HasIndex(t => t.IdUsuario)
                 .IsUnique();
+            
+            entity.Property(u => u.IsActivo).IsRequired();
         });
     }
 }
