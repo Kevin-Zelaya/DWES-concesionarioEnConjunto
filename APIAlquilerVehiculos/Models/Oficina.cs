@@ -1,37 +1,42 @@
 ﻿namespace APIAlquilerVehiculos.Models;
 
 /// <summary>
-/// Representa una oficina de alquiler de vehículos.
+/// Representa la única oficina de la empresa
 /// </summary>
 public class Oficina
 {
     /// <summary>
-    /// Obtiene o establece el identificador único de la oficina.
+    /// Identificador de la oficina
     /// </summary>
     public long Id { get; init; }
     
     /// <summary>
-    /// Obtiene o establece el nombre de la oficina.
+    /// Nombre de la oficina
     /// </summary>
     public string Name { get; init; } = string.Empty;
     
     /// <summary>
-    /// Obtiene o establece la dirección de la oficina.
+    /// Dirección de la oficina
+    /// Propiedad embebida dentro de Oficina
+    /// cuenta con Calle, codigo postal y la ciudad
     /// </summary>
     public Direccion Direccion { get; set; } = null!;
     
     /// <summary>
-    /// Obtiene o establece el número de teléfono de la oficina.
+    /// Telefono de la oficina.
     /// </summary>
     public string Telefono { get; init; } = string.Empty;
     
     /// <summary>
-    /// Obtiene o establece la localización de la oficina.
+    /// Localización de la oficina.
+    /// Propiedad embebida dentro de Oficina.
+    /// Cuenta con latitud y longitud.
     /// </summary>
     public Localizacion Localizacion { get; set; } = null!;
     
     /// <summary>
-    /// Obtiene o establece el horario de la oficina.
+    /// Horario de atención.
+    /// Si se excede del horario, oficina cerrada.
     /// </summary>
     public string Horario { get; init; } = string.Empty;
     
@@ -68,20 +73,22 @@ public class Oficina
 
 // OwnsOne
 /// <summary>
-/// Representa la dirección de una oficina.
+/// Dirección de la oficina. 
 /// </summary>
 public class Direccion
 {
     /// <summary>
-    /// Obtiene o establece la calle de la dirección.
+    /// Calle de la oficina
     /// </summary>
     public string Calle { get; init; } = string.Empty;
+    
     /// <summary>
-    /// Obtiene o establece el código postal de la dirección.
+    /// Código postal de la oficna
     /// </summary>
     public string CodigoPostal { get; init; } = string.Empty;
+    
     /// <summary>
-    /// Obtiene o establece la ciudad de la dirección.
+    /// Ciudad donse se situa la oficina
     /// </summary>
     public string Ciudad { get; set; } = string.Empty;
 }
