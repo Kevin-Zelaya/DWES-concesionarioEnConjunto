@@ -1,10 +1,35 @@
 using APIAlquilerVehiculos.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 public static class UsuarioYRelacionadosConfig
 {
     public static void EntityConfigure(ModelBuilder modelBuilder)
     {
+        // ==========================================
+        // USUARIOS Y ROLES
+        // ==========================================
+        //Usuarios
+        modelBuilder.Entity<Usuario>(entity =>
+        {   
+            entity.ToTable("usuarios");
+            entity.HasKey(c => c.Id);
+
+            entity.Property(u => u.Email).IsRequired().HasMaxLength(256);
+            entity.HasIndex(u => u.Email).IsUnique();
+
+            entity.Property(u => u.CreatedAt).IsRequired();
+        });
+        
+        //Roles
+        modelBuilder.Entity<IdentityRole<long>>(entity =>
+        {
+            entity.ToTable("roles");
+        });
+        
+        // ==========================================
+        // CLIENTES
+        // ==========================================
         modelBuilder.Entity<Cliente>(entity =>
         {
             entity.HasKey(c => c.Id);
@@ -14,10 +39,16 @@ public static class UsuarioYRelacionadosConfig
                 .HasForeignKey<Cliente>(c => c.IdUsuario)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            entity.HasIndex(c => c.IdUsuario)
-                .IsUnique();
+            entity.HasIndex(c => c.IdUsuario).IsUnique();
+            
+            entity.HasIndex(c => c.Dni).IsUnique();
+            entity.HasIndex(c => c.Nie).IsUnique();
+            entity.HasIndex(c => c.Pasaporte).IsUnique();
         });
 
+        // ==========================================
+        // TRABAJADORES
+        // ==========================================
         modelBuilder.Entity<Trabajador>(entity =>
         {
             entity.HasKey(t => t.Id);

@@ -1,18 +1,10 @@
-﻿using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
-using APIAlquilerVehiculos.Dtos.Auth;
-using APIAlquilerVehiculos.Models;
+﻿using APIAlquilerVehiculos.Dtos.Auth;
+using APIAlquilerVehiculos.Services;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
 using Swashbuckle.AspNetCore.Annotations;
-using Swashbuckle.AspNetCore.Filters;
 
 namespace APIAlquilerVehiculos.Controller;
-
-
 
 /// <summary>
 /// Controller de autenticacion usando ASP.NET Core Identity.
@@ -21,7 +13,7 @@ namespace APIAlquilerVehiculos.Controller;
 [ApiController]
 [Route("api/auth")]
 [SwaggerTag("Gestion de usuarios y Tokens")]
-public class AuthController (UserManager<Usuario> userManager, SignInManager<Usuario> signInManager, IConfiguration configuration, ILogger<AuthController> logger) : ControllerBase
+public class AuthController (IAuthService authService, ILogger<AuthController> logger) : ControllerBase
 {
     // UserManager<User> ==> gestiona CRUD de usuarios (crear, buscar, actualizar, eliminar, gestionar roles)
     // SignInManager<User> ==> gestiona las operaciones de login (verificar contraseña, bloqueo, login externo)
@@ -33,87 +25,20 @@ public class AuthController (UserManager<Usuario> userManager, SignInManager<Usu
     [HttpPost("signup")]
     [SwaggerOperation(
         Summary = "Registra un usuario cliente nuevo",
-        Description = "Devuelve el ID, correo electronico y nombre de usuario del nuevo usuario",
+        Description = "Devuelve los datos del usuario y cliente registrados",
         OperationId = "Signup",
         Tags = new[] { "Usuarios" }
     )]
     //[SwaggerRequestExample(typeof(SignupDto), typeof(SignupRequestExample))]
-    [SwaggerResponse(201, "Datos del usuario", typeof(IActionResult))]
+    [SwaggerResponse(201, "Datos del usuario", typeof(UsuarioResponseDto))]
     [SwaggerResponse(400, "Parametros invalidos", typeof(ProblemDetails))]
-    public async Task<IActionResult> Signup([FromBody, SwaggerRequestBody("Email, Nombre y Apellidos, contrasena, telefono, Fecha de nacimiento, Documentación y número de permiso de conducir del usuario")] 
-        SignupDto request)
+    public async Task<IActionResult> Signup([FromBody, SwaggerRequestBody("Datos de registro del cliente", Required = true)] SignupDto request)
     {
-        var user = new Usuario
-        { //Datos por defecto de entity
-            Email = request.Email,
-            PhoneNumber = request.Telefono,
-            
-            Nombre = request.Nombre,
-            Apellidos = request.Apellidos,
-            FechaNacimiento = request.FechaNacimiento,
-            
+        var result = await authService.SignupAsync(request);
 
-        };
-        
-        //Guardamos y creamos el nuevo usuario con las reglas de contraseña
-        var result = await userManager.CreateAsync(user, request.Contraseña);
-        logger.LogInformation("Creando usuario");
-
-        
-        if (!result.Succeeded)
-        {
-            logger.LogWarning("Error de registro de usuario");
-            return BadRequest(new ProblemDetails
-            {
-                Title = "Error de registro",
-                Detail = string.Join(", ", result.Errors.Select(e => e.Description)),
-                Status = StatusCodes.Status400BadRequest
-            });
-        }
-        // A todo nuevo usuario se le asigna el rol Cliente
-        var roleResult = await userManager.AddToRoleAsync(user, Roles.Cliente);
-        logger.LogInformation("Asignando rol cliente");
-        // Retornamos 201 con sus datos
-        if (!roleResult.Succeeded)
-        {
-            await transaction.RollbackAsync();
-            return StatusCode(StatusCodes.Status500InternalServerError, new ProblemDetails
-            {
-                Title = "Error asignando rol",
-                Status = StatusCodes.Status500InternalServerError
-            });
-        }
-        
-        //Creamos la entidad Cliente vinculada al Usuario
-        var cliente = new Cliente
-        {
-            UsuarioId = user.Id, // Clave foránea hacia Usuario (ajusta el nombre si lo tienes al revés)
-            Nombre = request.Nombre,
-            Apellidos = request.Apellidos,
-            Email = request.Email,
-            Telefono = request.Telefono,
-            FechaNacimiento = DateTime.SpecifyKind(request.FechaNacimiento, DateTimeKind.Utc), // RI-04
-            Dni = request.Dni?.ToUpperInvariant(),
-            Nie = request.Nie?.ToUpperInvariant(),
-            Pasaporte = request.Pasaporte?.ToUpperInvariant(),
-            NumeroPermisoConducir = request.NumeroPermisoConducir,
-            IsActivo = true
-        };
-        
-        dbContext.Clientes.Add(cliente);
-        await dbContext.SaveChangesAsync();
-
-        // Confirmamos la transacción: ambos registros quedan guardados
-        await transaction.CommitAsync();
-
-        logger.LogInformation("Cliente {ClienteId} y Usuario {UserId} registrados correctamente", cliente.Id, user.Id);
-        
-        return CreatedAtAction(nameof(GetCurrentUser), new { }, new
-        {
-            user.Id,
-            user.UserName,
-            user.Email
-        });
+        return result.IsSuccess
+            ? CreatedAtAction(nameof(GetCurrentUser), new { }, result.Value)
+            : StatusCode(result.Error.Status ?? StatusCodes.Status400BadRequest, result.Error);
     }
 
     /// <summary>
@@ -127,113 +52,16 @@ public class AuthController (UserManager<Usuario> userManager, SignInManager<Usu
         Tags = new[] { "Usuarios" }
     )]
     //[SwaggerRequestExample(typeof(LoginDto), typeof(LoginRequestExample))]
-    [SwaggerResponse(200, "Datos del usuario", typeof(IActionResult))]
+    [SwaggerResponse(200, "Token y su fecha de expiración y datos del usuario", typeof(AuthResponseDto))]
     [SwaggerResponse(401, "Credenciales invalidas", typeof(ProblemDetails))]
-    public async Task<ActionResult<AuthResponseDto>> Login([FromBody, SwaggerRequestBody("usuario y contraseña", Required = true)] LoginDto request)
+    public async Task<ActionResult<AuthResponseDto>> Login([FromBody, SwaggerRequestBody("Email y contraseña de usuario", Required = true)] LoginDto request)
     
     {
-        //Buscamos al usuario por su nombre de usuario
-        var user = await  userManager.FindByEmailAsync(request.Email);
-        
-        if (user is null)
-        {
-            logger.LogWarning("Credenciales invalidas del usuario");
-            return Unauthorized(new ProblemDetails
-            {
-                Title = "Credenciales invalidas",
-                Status = StatusCodes.Status401Unauthorized
-            });
-        }
-        logger.LogInformation("Usuario {UserId} encontrado", user.Id);
-        // Verificamos que la contraseña sea correcta (bloqueando la cuenta si excede los intentos permitidos = 5)
-        var result = await signInManager.CheckPasswordSignInAsync(user, request.Contraseña, lockoutOnFailure: true);
+        var result = await authService.LoginAsync(request);
 
-        if (!result.Succeeded)
-        {
-            logger.LogWarning("Contraseña incorrecta del usuario {UserId}", user.Id);
-            return Unauthorized(new ProblemDetails
-            {
-                Title = "Credenciales invalidas",
-                Status = StatusCodes.Status401Unauthorized
-            });
-        }
-
-        await userManager.UpdateAsync(user);  
-        logger.LogInformation("Usuario {UserId} a iniciado sesion", user.Id);
-        
-        // Generar JWT  
-        // Obtenemos los roles asociados al usuario para incluirlos dentro de las credenciales del token
-        var roles = await userManager.GetRolesAsync(user);
-        var rolPrincipal = roles.FirstOrDefault() ?? Roles.Cliente;
-        
-        var tokenHandler = new System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler();
-        
-        var claims = new List<Claim>
-        {
-            new(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
-            new(JwtRegisteredClaimNames.Email, user.Email ?? string.Empty),
-            new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-            new(JwtRegisteredClaimNames.Iat, DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString(), ClaimValueTypes.Integer64),
-            new(ClaimTypes.Role, rolPrincipal),
-        };
-        if (roles.Contains(Roles.Mecanico)) 
-        {
-            claims.Add(new Claim("tipo_trabajo", "Mecanico")); 
-        }
-        if (roles.Contains(Roles.Operario)) 
-        {
-            claims.Add(new Claim("tipo_trabajo", "Operario")); 
-        }
-        
-        
-        // Obtenemos y validamos la clave secreta (configurada en appsettings.Development.json)
-        var key = Encoding.UTF8.GetBytes(configuration["Jwt:Secret"]
-            ?? throw new InvalidOperationException("JWT Secret no configurado"));
-
-        var expiresAt = DateTime.UtcNow.AddMinutes(15); // El token expira en 15 minutos
-        
-        //Configuramos los Claims ==> información del usuario que viaja dentro del token. Ademas de su tiempo de expiración
-        var token = tokenHandler.CreateToken(new SecurityTokenDescriptor
-        {
-            Subject = new ClaimsIdentity(claims),
-            Issuer = configuration["Jwt:Issuer"],
-            Audience = configuration["Jwt:Audience"],
-            Expires = expiresAt, 
-            SigningCredentials = new SigningCredentials(
-                new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256)
-        });
-        
-        if (roles.Contains(Roles.Cliente))
-        {
-            var cliente = await context.Clientes.FirstOrDefaultAsync(c => c.UsuarioId == user.Id); // Ajusta según tu propiedad
-            var clienteId = cliente?.Id;
-        }
-        else if (roles.Contains(Roles.Operario) || roles.Contains(Roles.Mecanico) || roles.Contains(Roles.Responsable))
-        {
-            var trabajador = await context.Trabajadores.FirstOrDefaultAsync(t => t.UsuarioId == user.Id); // Ajusta según tu propiedad
-            var trabajadorId = trabajador?.Id;
-        }
-        
-        // Construimos el DTO del usuario (ajusta los parámetros según los campos que tenga tu UsuarioResponseDto)
-        var usuarioDto = new UsuarioResponseDto(
-            Id: user.Id,
-            Email: user.Email ?? string.Empty,
-            Telefono: user.PhoneNumber ?? string.Empty,
-            Rol: rolPrincipal,
-            ClienteId: user.Cliente.Id,
-            TrabajadorId: user.Trabajador.Id,
-            CreatedAt: user.CreatedAt
-            // Si tu UsuarioResponseDto tiene más campos como Nombre, Activo, ClienteId o TrabajadorId, pásalos aquí
-        );
-
-        // Retornamos  AuthResponseDto 
-        var respuesta = new AuthResponseDto(
-            Token: tokenHandler.WriteToken(token),
-            ExpiresAt: expiresAt,
-            Usuario: usuarioDto
-        );
-
-        return Ok(respuesta);
+        return result.IsSuccess
+            ? Ok(result.Value)
+            : Unauthorized(result.Error);
     }
 
     /// <summary>
@@ -251,24 +79,10 @@ public class AuthController (UserManager<Usuario> userManager, SignInManager<Usu
     [SwaggerResponse(404, "Usuario no encontrado")]
     public async Task<ActionResult<UsuarioResponseDto>> GetCurrentUser()
     {
-        // Extraemos el usuario actual a partir del contexto de seguridad de la petición
-        var user = await userManager.GetUserAsync(User);
-        if (user is null) {logger.LogWarning("Usuario NO encontrado"); return NotFound();}
+        var result = await authService.GetCurrentUserAsync(User);
 
-        // Consultamos sus roles actuales
-        var roles = await userManager.GetRolesAsync(user);
-        
-        if(user.UserName is null ||  user.Email is null){logger.LogWarning("Usuario NO encontrado"); return NotFound();}
-        
-        // Retornamos un objeto plano con la información de perfil
-        return Ok(new UsuarioResponseDto(
-            user.Id,
-            user.Email ?? string.Empty,
-            user.PhoneNumber ?? string.Empty,
-            roles,
-            user.Cliente.Id,
-            user.Trabajador.Id,
-            user.CreatedAt
-        ));
+        return result.IsSuccess
+            ? Ok(result.Value)
+            : NotFound(result.Error);
     } 
 }
