@@ -1,8 +1,8 @@
 public class Poliza
 {
-    long Id {get; set;}
-    string nombre {get; set;}
-    string Descripcion {get; set;}
-    double IncrementoDiario {get; set;}
-    bool Activa {get; set;}
+    public long Id {get; set;}
+    public string Nombre {get; set;}
+    public string Descripcion {get; set;}
+    public double IncrementoDiario {get; set;}
+    public bool Activa {get; set;}
 }
