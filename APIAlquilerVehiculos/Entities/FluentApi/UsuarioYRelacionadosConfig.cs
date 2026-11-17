@@ -6,10 +6,7 @@ public static class UsuarioYRelacionadosConfig
 {
     public static void EntityConfigure(ModelBuilder modelBuilder)
     {
-        // ==========================================
-        // USUARIOS Y ROLES
-        // ==========================================
-        //Usuarios
+        // users
         modelBuilder.Entity<Usuario>(entity =>
         {   
             entity.ToTable("usuarios");
@@ -21,15 +18,12 @@ public static class UsuarioYRelacionadosConfig
             entity.Property(u => u.CreatedAt).IsRequired();
         });
         
-        //Roles
-        modelBuilder.Entity<IdentityRole<long>>(entity =>
-        {
+        // roles
+        modelBuilder.Entity<IdentityRole<long>>(entity => {
             entity.ToTable("roles");
         });
         
-        // ==========================================
-        // CLIENTES
-        // ==========================================
+        // clientes
         modelBuilder.Entity<Cliente>(entity =>
         {
             entity.HasKey(c => c.Id);
@@ -48,9 +42,7 @@ public static class UsuarioYRelacionadosConfig
             entity.Property(u => u.IsActivo).IsRequired();
         });
 
-        // ==========================================
-        // TRABAJADORES
-        // ==========================================
+        // trabajadores
         modelBuilder.Entity<Trabajador>(entity =>
         {
             entity.HasKey(t => t.Id);
@@ -64,6 +56,34 @@ public static class UsuarioYRelacionadosConfig
                 .IsUnique();
             
             entity.Property(u => u.IsActivo).IsRequired();
+        });
+        
+        // oficina
+        modelBuilder.Entity<Oficina>(entity =>
+        {
+            entity.HasKey(o => o.Id);
+
+            entity.Property(o => o.Name).HasMaxLength(150).IsRequired();
+            entity.Property(o => o.Telefono).HasMaxLength(20).IsRequired();
+            entity.Property(o => o.Horario).HasMaxLength(100).IsRequired();
+
+            entity.OwnsOne(o => o.Direccion, dir =>
+            {
+                dir.Property(d => d.Calle).HasColumnName("calle").HasMaxLength(200).IsRequired();
+                dir.Property(d => d.CodigoPostal).HasColumnName("codigo_postal").HasMaxLength(10).IsRequired();
+                dir.Property(d => d.Ciudad).HasColumnName("ciudad").HasMaxLength(100).IsRequired();
+            });
+
+            entity.OwnsOne(o => o.Localizacion, loc =>
+            {
+                loc.Property(l => l.Latitud).HasColumnName("latitud").HasPrecision(9, 6);
+                loc.Property(l => l.Longitud).HasColumnName("longitud").HasPrecision(9, 6);
+            });
+
+            entity.HasOne(o => o.Responsable)
+                .WithMany()
+                .HasForeignKey(o => o.IdResponsable)
+                .OnDelete(DeleteBehavior.Restrict);
         });
     }
 }

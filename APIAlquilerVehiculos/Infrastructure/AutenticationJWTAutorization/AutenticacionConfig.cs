@@ -25,7 +25,7 @@ public static class AutenticacionConfig
                 options.Password.RequireLowercase = true;       // Exige al menos una minúscula (a-z).
                 options.Password.RequireUppercase = true;       // Exige al menos una mayúscula (A-Z).
                 options.Password.RequireNonAlphanumeric = true; // Exige al menos un carácter especial (!, ?, @, #...).
-                options.Password.RequiredLength = 12;            // Establece el mínimo de caracteres (8)
+                options.Password.RequiredLength = 8;            // Establece el mínimo de caracteres (8)
 
                 // --- USUARIO ---
                 options.User.RequireUniqueEmail = true;         // Email único
