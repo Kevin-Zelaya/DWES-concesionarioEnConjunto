@@ -49,6 +49,9 @@ public class AuthController (UserManager<Usuario> userManager, SignInManager<Usu
             PhoneNumber = request.Telefono,
             
             Nombre = request.Nombre,
+            Apellidos = request.Apellidos,
+            FechaNacimiento = request.FechaNacimiento,
+            
 
         };
         
@@ -68,9 +71,43 @@ public class AuthController (UserManager<Usuario> userManager, SignInManager<Usu
             });
         }
         // A todo nuevo usuario se le asigna el rol Cliente
-        await userManager.AddToRoleAsync(user, Roles.Cliente);
+        var roleResult = await userManager.AddToRoleAsync(user, Roles.Cliente);
         logger.LogInformation("Asignando rol cliente");
         // Retornamos 201 con sus datos
+        if (!roleResult.Succeeded)
+        {
+            await transaction.RollbackAsync();
+            return StatusCode(StatusCodes.Status500InternalServerError, new ProblemDetails
+            {
+                Title = "Error asignando rol",
+                Status = StatusCodes.Status500InternalServerError
+            });
+        }
+        
+        //Creamos la entidad Cliente vinculada al Usuario
+        var cliente = new Cliente
+        {
+            UsuarioId = user.Id, // Clave foránea hacia Usuario (ajusta el nombre si lo tienes al revés)
+            Nombre = request.Nombre,
+            Apellidos = request.Apellidos,
+            Email = request.Email,
+            Telefono = request.Telefono,
+            FechaNacimiento = DateTime.SpecifyKind(request.FechaNacimiento, DateTimeKind.Utc), // RI-04
+            Dni = request.Dni?.ToUpperInvariant(),
+            Nie = request.Nie?.ToUpperInvariant(),
+            Pasaporte = request.Pasaporte?.ToUpperInvariant(),
+            NumeroPermisoConducir = request.NumeroPermisoConducir,
+            IsActivo = true
+        };
+        
+        dbContext.Clientes.Add(cliente);
+        await dbContext.SaveChangesAsync();
+
+        // Confirmamos la transacción: ambos registros quedan guardados
+        await transaction.CommitAsync();
+
+        logger.LogInformation("Cliente {ClienteId} y Usuario {UserId} registrados correctamente", cliente.Id, user.Id);
+        
         return CreatedAtAction(nameof(GetCurrentUser), new { }, new
         {
             user.Id,
@@ -183,8 +220,8 @@ public class AuthController (UserManager<Usuario> userManager, SignInManager<Usu
             Email: user.Email ?? string.Empty,
             Telefono: user.PhoneNumber ?? string.Empty,
             Rol: rolPrincipal,
-            ClienteId: user.C,
-            TrabajadorId: user.Trabajador.Id ?? null,
+            ClienteId: user.Cliente.Id,
+            TrabajadorId: user.Trabajador.Id,
             CreatedAt: user.CreatedAt
             // Si tu UsuarioResponseDto tiene más campos como Nombre, Activo, ClienteId o TrabajadorId, pásalos aquí
         );
@@ -229,8 +266,8 @@ public class AuthController (UserManager<Usuario> userManager, SignInManager<Usu
             user.Email ?? string.Empty,
             user.PhoneNumber ?? string.Empty,
             roles,
-            user.ClienteId,
-            user.TrabajadorId,
+            user.Cliente.Id,
+            user.Trabajador.Id,
             user.CreatedAt
         ));
     } 
