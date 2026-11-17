@@ -38,7 +38,7 @@ public class AuthController (IAuthService authService, ILogger<AuthController> l
 
         return result.IsSuccess
             ? CreatedAtAction(nameof(GetCurrentUser), new { }, result.Value)
-            : StatusCode(result.Error.Status ?? StatusCodes.Status400BadRequest, result.Error);
+            : StatusCode((int)result.Error.StatusCode, result.Error);
     }
 
     /// <summary>

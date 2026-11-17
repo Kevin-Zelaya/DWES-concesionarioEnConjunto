@@ -1,3 +1,4 @@
+using APIAlquilerVehiculos.Validators.Auth;
 using Microsoft.Extensions.Options;
 using Serilog;
 
@@ -39,6 +40,8 @@ builder.Services
 
 
 builder.Services.AddAuthentication();
+
+
 // ======= MIDDLEWARES ==========
 var app = builder.Build();
 
