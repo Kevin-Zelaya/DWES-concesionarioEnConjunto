@@ -1,56 +1,94 @@
+using Microsoft.Extensions.Options;
+using Serilog;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
+// ======= Logger de Serilog =============
+Console.OutputEncoding = System.Text.Encoding.UTF8;
 
-// Configuración del servicio de almacenamiento de archivos
-builder.Services.AddStorage();
+Log.Logger = new LoggerConfiguration()
+    .MinimumLevel.Information()
+    .MinimumLevel.Override("Microsoft", Serilog.Events.LogEventLevel.Warning)
+    .MinimumLevel.Override("System", Serilog.Events.LogEventLevel.Warning)
+    .WriteTo.Console(
+        outputTemplate: "[{Timestamp:HH:mm:ss} {Level:u3}] {Message:lj}{NewLine}{Exception}")
+    .WriteTo.File(
+        path: "logs/productos-.log",
+        rollingInterval: RollingInterval.Day,
+        retainedFileCountLimit: 7,
+        outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff} [{Level:u3}] {Message:lj}{NewLine}{Exception}")
+    .CreateLogger();
 
-// Configuración de SignalR para notificaciones en tiempo real
-builder.Services.AddSignalRconfiguration();
+Log.Information("Iniciando aplicación...");
 
+// ======= Configuración de Swagger ==========
+builder.Services.AddEndpointsApiExplorer();
+builder.AddCustomSwagger();
+
+// ======= Registrando controladores ==========
+builder.Services.AddControllers(options =>
+{
+    options.RespectBrowserAcceptHeader = true;
+    options.ReturnHttpNotAcceptable = true;
+});
+
+// ======= Infraestructura ==========
+builder.Services
+    .AddDatabases(builder.Configuration);
+
+
+
+builder.Services.AddAuthentication();
+// ======= MIDDLEWARES ==========
 var app = builder.Build();
 
-// Inicialización y preparación del directorio de subidas (uploads)
-app.InitializeStorage(app.Environment.IsDevelopment());
+var apiConfig = app.Services
+    .GetRequiredService<IOptions<ApiConfig>>()
+    .Value;
 
-// Habilita el suministro de archivos estáticos para acceder a las imágenes guardadas
-app.UseStaticFiles();
+// Inicializar bases de datos
+await app.InitializeDatabasesAsync();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+if (apiConfig.shouldRecreateDb)
 {
-    app.MapOpenApi();
-}
+    // Inicialización del servicio storage
+    app.InitializeStorage(true);
 
+    // Inicialización de Mongo y PostgreSQL
+    await app.RecreateDatabasesAsync();
+}
 app.UseHttpsRedirection();
 
-// Mapeo del endpoint del Hub de SignalR para las notificaciones
-app.MapHub<CocheHubs>("/hubs/coche");
+// Permite lectura de archivos estáticos
+app.UseStaticFiles();
 
-var summaries = new[]
+// ======= AUTHENTICATION - AUTHORIZATION ==========
+app.UseAuthentication();  // Primero: quien eres?
+app.UseAuthorization();   // Segundo: que puedes hacer?
+
+// Documentacón solo en Desarrollo
+if (app.Environment.IsDevelopment())
 {
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
-
-app.MapGet("/weatherforecast", () =>
-    {
-        var forecast = Enumerable.Range(1, 5).Select(index =>
-                new WeatherForecast
-                (
-                    DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-                    Random.Shared.Next(-20, 55),
-                    summaries[Random.Shared.Next(summaries.Length)]
-                ))
-            .ToArray();
-        return forecast;
-    })
-    .WithName("GetWeatherForecast");
-
-app.Run();
-
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
+    //app.MapOpenApi();
+    app.UseSwagger();
 }
+// ======= Buscar todos los controladores ==========
+app.MapControllers();
+
+
+// TODO: Falta vaciar la BD en el caso de Mongo
+Console.ForegroundColor = ConsoleColor.Blue;
+Console.WriteLine("==============================================");
+Console.WriteLine("                Concesionario                  ");
+Console.WriteLine("==============================================");
+Console.ResetColor();
+
+Console.WriteLine($"  Entorno:          {app.Environment.EnvironmentName}");
+Console.WriteLine($"  Swagger:          http://localhost:5205/swagger");
+Console.WriteLine($"  Reconstruir Db:   {(apiConfig.shouldRecreateDb ? "Sí" : "No")}");
+
+Console.ForegroundColor = ConsoleColor.Blue;
+Console.WriteLine("==============================================");
+Console.ResetColor();
+Console.WriteLine();
+app.Run();

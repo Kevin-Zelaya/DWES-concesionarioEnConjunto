@@ -22,12 +22,12 @@ public class Vehiculo
     /// <summary>
     /// Identificador de la marca del vehículo.
     /// </summary>
-    public int Marca_id { get; set; }
+    public long Marca_id { get; set; }
 
     /// <summary>
     /// Establece el identificador del modelo del vehículo.
     /// </summary>
-    public int Modelo_id { get; set; }
+    public long Modelo_id { get; set; }
 
     /// <summary>
     /// Establece el código Acriss del vehículo.
@@ -83,4 +83,24 @@ public class Vehiculo
     /// Fecha de la última revisión del vehículo.
     /// </summary>
     public DateTime UltimaRevision { get; set; }
+    
+    /// <summary>
+    /// Indica si el vehiculo está activo o no.
+    /// </summary>
+    public bool Activo { get; set; }
+    
+    /// <summary>
+    /// Fecha de creación del vehiculo.
+    /// </summary>
+    public DateTime? CreatedAt { get; set; }
+    
+    /// <summary>
+    /// Fecha de última actualización del vehiculo.
+    /// </summary>
+    public DateTime? UpdatedAt { get; set; }
+    
+    /// <summary>
+    /// Fecha de eliminación del vehiculo (si ha sido eliminado).
+    /// </summary>
+    public DateTime? DeletedAt { get; set; }
 }

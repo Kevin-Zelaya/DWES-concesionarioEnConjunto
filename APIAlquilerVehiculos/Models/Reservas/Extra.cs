@@ -3,9 +3,9 @@
 /// </summary>
 public class Extra
 {
-    long Id {get; set;}
-    string Nombre {get; set;}
-    string Descripcion {get; set;}
-    double PrecioDiario {get; set;}
-    bool Activa {get; set;}
+    public long Id {get; set;}
+    public string Nombre {get; set;}
+    public string Descripcion {get; set;}
+    public double PrecioDiario {get; set;}
+    public bool Activa {get; set;}
 }
