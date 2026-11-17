@@ -57,4 +57,9 @@ public static class Roles
     /// Trabajador del tipo mecánico.
     /// </summary>
     public const string Mecanico = "Mecanico";
+    
+    /// <summary>
+    /// Trabajador responsable de Oficina
+    /// </summary>
+    public const string Responsable = "Responsable";
 }

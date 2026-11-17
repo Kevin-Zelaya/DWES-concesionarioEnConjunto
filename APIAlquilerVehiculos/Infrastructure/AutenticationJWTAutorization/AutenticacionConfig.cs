@@ -2,11 +2,17 @@
 using APIAlquilerVehiculos.Entities;
 using APIAlquilerVehiculos.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 
 namespace APIAlquilerVehiculos;
 
+/// <summary>
+///  Configuración de autenticación y autorización.
+///  Uso de ASP.NET Core Identity (UserManager/SignInManager) + JWT Bearer
+///  Devuelve un JWT Bearer que los endpoints validan.
+/// </summary>
 public static class AutenticacionConfig
 {
     public static IServiceCollection AddAuthentication(this IServiceCollection services, IConfiguration configuration)
@@ -34,6 +40,7 @@ public static class AutenticacionConfig
             .AddDefaultTokenProviders();
 
         // Forzar JWT Bearer como esquema global evitando conflictos con cookies
+        //Lo fijamos a Bearer para que ningún registro futuro pueda cambiar el comportamiento.
         services.AddAuthentication(options =>
             {
                 options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;                 //
@@ -72,9 +79,48 @@ public static class AutenticacionConfig
                     //Indicamos qué claim del JWT representa los roles
                     RoleClaimType = "role"
                 };
-                
                 #endregion
             });
+        
+        AddAuthorizationPolicies(services);
         return services;
+    }
+    
+    /// <summary>
+    ///  Políticas de autorización.
+    /// </summary>
+    private static void AddAuthorizationPolicies(IServiceCollection services)
+    {
+        //Log.Information("🛡️ Configurando políticas de autorización...");
+        // Todas las políticas declaran el esquema Bearer EXPLÍCITAMENTE.
+        // Al declarar el esquema aquí inmuniza las políticas ante cualquier cambio futuro.
+        // Se seguira autenticando con JWT en vez de redirigir a /Account/Login.
+        // Es la buena práctica en cualquier API JWT: la política es autosuficiente.
+        services.AddAuthorizationBuilder()
+            .SetDefaultPolicy(new AuthorizationPolicyBuilder(JwtBearerDefaults.AuthenticationScheme)
+                .RequireAuthenticatedUser()
+                .Build())
+            // Solo Administrador (catálogos globales, gestión de usuarios, etc.)
+            .AddPolicy("RequireAdminRole", new AuthorizationPolicyBuilder(JwtBearerDefaults.AuthenticationScheme)
+                .RequireRole(Roles.Administrador)
+                .Build())
+            // Acciones solo del Cliente (dejar valoraciones o Gestionar su cuenta)
+            .AddPolicy("RequireClienteRole", new AuthorizationPolicyBuilder(JwtBearerDefaults.AuthenticationScheme)
+                .RequireRole(Roles.Cliente)
+                .Build())
+            // Para la mayoria de enspoints que se requiera al Tabajador sea del tipo que sea.
+            .AddPolicy("RequireTrabajadorRole", new AuthorizationPolicyBuilder(JwtBearerDefaults.AuthenticationScheme)
+                .RequireRole(Roles.Mecanico, Roles.Operario)
+                .Build())
+            //Para abrir y cerrar partes de taller
+            .AddPolicy("RequireMecanicoRole", new AuthorizationPolicyBuilder(JwtBearerDefaults.AuthenticationScheme)
+                .RequireRole(Roles.Mecanico, Roles.Responsable)
+                .Build())
+            // Acciones del responsable
+            .AddPolicy("RequireResponsableRole", new AuthorizationPolicyBuilder(JwtBearerDefaults.AuthenticationScheme)
+                .RequireRole(Roles.Responsable, Roles.Administrador)
+                .Build());
+        //Para acciones generales que requieran autorizacion simplemente [Authorize]
+        //Para acciones publicas sin autorization.
     }
 }
