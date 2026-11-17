@@ -10,6 +10,7 @@ public class AppDbContext(DbContextOptions options) : DbContext(options)
     
 	public DbSet<Vehiculo> Vehiculos {get; set;}
 	public DbSet<Modelo> Modelos {get; set;}
+	public DbSet<Marca> Marcas {get; set;}
 
 	// Reservas
 	public DbSet<Reserva> Reservas {get; set;}

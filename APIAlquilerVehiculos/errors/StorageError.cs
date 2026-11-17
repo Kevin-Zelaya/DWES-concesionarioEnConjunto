@@ -1,3 +1,5 @@
+using APIAlquilerVehiculos.Errors.Common;
+
 /// <summary>
 /// Proporciona un catálogo centralizado de errores de dominio específicos para las operaciones de almacenamiento y subida de archivos.
 /// </summary>

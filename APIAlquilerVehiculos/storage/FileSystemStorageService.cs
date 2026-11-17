@@ -1,4 +1,5 @@
 using System.Net;
+using APIAlquilerVehiculos.Errors.Common;
 using CSharpFunctionalExtensions;
 
 /// <summary>
