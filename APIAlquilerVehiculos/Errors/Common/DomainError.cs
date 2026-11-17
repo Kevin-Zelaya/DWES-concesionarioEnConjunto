@@ -43,7 +43,7 @@ public sealed record ForbiddenError(string Message) : DomainError(Message, HttpS
 public sealed record BusinessRuleError(string Message) : DomainError(Message, HttpStatusCode.BadRequest);
 
 /// <summary>
-/// Error 400 Bad Request: Fallos de validación de entrada, es decir fluentValidation o annotations.
+/// Error 400 Bad Request: Fallos de validación de entrada, es decir fluentValidation o Annotations.
 /// </summary>
 public sealed record ValidationError(string Message, IDictionary<string, string[]> Errors): DomainError(Message, HttpStatusCode.BadRequest)
 {
