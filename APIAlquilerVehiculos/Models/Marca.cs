@@ -19,6 +19,12 @@ public class Marca
     /// URL del sitio web de la marca.
     /// </summary>
     public string Wb { get; set; } = string.Empty;
+
+   /// <summary>
+    /// Indica el pais .
+    /// </summary>
+    public string Pais { get; set; } = string.Empty;
+
     
     /// <summary>
     /// Indica si la marca está activa o no.
