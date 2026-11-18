@@ -1,4 +1,9 @@
+using APIAlquilerVehiculos;
+using APIAlquilerVehiculos.Seed;
+using APIAlquilerVehiculos.Services;
+using APIAlquilerVehiculos.Services.Auth;
 using APIAlquilerVehiculos.Validators.Auth;
+using FluentValidation;
 using Microsoft.Extensions.Options;
 using Serilog;
 
@@ -36,11 +41,15 @@ builder.Services.AddControllers(options =>
 // ======= Infraestructura ==========
 builder.Services
     .AddDatabases(builder.Configuration);
+builder.Services.AddAuthenticationConfing(builder.Configuration);
+
+builder.Services.AddScoped<IAuthService, AuthService>();
 
 
 
-builder.Services.AddAuthentication();
 
+// ======= FluentValidation =======
+builder.Services.AddValidatorsFromAssemblyContaining<SignupDtoValidator>();
 
 // ======= MIDDLEWARES ==========
 var app = builder.Build();
@@ -48,6 +57,18 @@ var app = builder.Build();
 var apiConfig = app.Services
     .GetRequiredService<IOptions<ApiConfig>>()
     .Value;
+
+// Seed de Usuarios
+using (var scope = app.Services.CreateScope())
+{
+    var logger = scope.ServiceProvider
+        .GetRequiredService<ILogger<Program>>();
+
+    await UserRoleSeeder.SeedIdentityAsync(
+        scope.ServiceProvider,
+        logger
+    );
+}
 
 // Inicializar bases de datos
 await app.InitializeDatabasesAsync();
@@ -60,7 +81,7 @@ if (apiConfig.shouldRecreateDb)
     // Inicialización de Mongo y PostgreSQL
     await app.RecreateDatabasesAsync();
 }
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 
 // Permite lectura de archivos estáticos
 app.UseStaticFiles();

@@ -15,7 +15,7 @@ namespace APIAlquilerVehiculos;
 /// </summary>
 public static class AutenticacionConfig
 {
-    public static IServiceCollection AddAuthentication(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection AddAuthenticationConfing(this IServiceCollection services, IConfiguration configuration)
     {
         // AddIdentityCore: Identity sin UI; roles y signInManager se añaden a mano
        services.AddIdentityCore<Usuario>(options =>

@@ -35,9 +35,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options)
 		VehiculoYRelacionadosConfig.EntityConfigure(modelBuilder);
 		ReservaYRelacionadosConfigure.EntityConfigure(modelBuilder);
 		UsuarioYRelacionadosConfig.EntityConfigure(modelBuilder);
-		
-		//Clase base de Identity ==> configura automáticamente tablas, índices, claves y relaciones.
-		base.OnModelCreating(modelBuilder);
+
 		//TABLAS DE IDENTITY POR DEFECTO
 		modelBuilder.Entity<IdentityUserClaim<long>>().ToTable("user_claims");
 		modelBuilder.Entity<IdentityUserRole<long>>().ToTable("user_roles");
