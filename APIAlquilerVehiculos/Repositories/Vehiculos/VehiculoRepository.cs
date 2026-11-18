@@ -69,6 +69,7 @@ public class VehiculoRepository : IVehiculosRepository
         obj.CreatedAt = DateTime.UtcNow;
         obj.UpdatedAt = DateTime.UtcNow;
         obj.Activo = true;
+        obj.Id = null!;
 
         _context.Vehiculos.Add(obj);
         await _context.SaveChangesAsync();
@@ -77,15 +78,14 @@ public class VehiculoRepository : IVehiculosRepository
     }
 
     /// <inheritdoc cref="UpdateAsync"/>
-    public async Task<Vehiculo?> UpdateAsync(Vehiculo objt)
+    public async Task<Vehiculo?> UpdateAsync(Vehiculo obj)
     {
-        var response = await _context.Vehiculos.FirstOrDefaultAsync(v=> v.Id == objt.Id && v.Activo == true); 
+        var response = await _context.Vehiculos.FirstOrDefaultAsync(v=> v.Id == obj.Id && v.Activo == true); 
         if (response == null) return null;
 
-        var createdAt = response.CreatedAt;
-        _context.Entry(response).CurrentValues.SetValues(objt);
-        response.CreatedAt = createdAt;
-        response.UpdatedAt = DateTime.UtcNow;
+        obj.UpdatedAt = DateTime.Now;
+        _context.Entry(response).CurrentValues.SetValues(obj);
+        await _context.SaveChangesAsync();
         await _context.SaveChangesAsync();
 
         return response;

@@ -4,8 +4,14 @@ using Swashbuckle.AspNetCore.Filters;
 
 namespace APIAlquilerVehiculos.Infrastructure.Swagger;
 
+/// <summary>
+/// Configuración de Swagger/OpenAPI.
+/// </summary>
 public static class SwaggerConfig
 {
+    /// <summary>
+    ///  Configuracón Swagger/OpenAPI con documentación completa y seguridad JWT.
+    /// </summary>
     public static IServiceCollection AddSwagger(this IServiceCollection services)
     {
         services.AddSwaggerGen(options =>
