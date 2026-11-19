@@ -41,7 +41,8 @@ builder.Services.AddControllers(options =>
 // ======= Infraestructura ==========
 builder.Services
     .AddDatabases(builder.Configuration)
-    .AddServices();
+    .AddServices()
+    .AddRedisConnection(builder.Configuration);
 
 builder.Services.AddAuthenticationConfing(builder.Configuration);
 
