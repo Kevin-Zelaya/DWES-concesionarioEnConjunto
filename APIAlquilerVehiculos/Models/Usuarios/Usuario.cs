@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 
-namespace APIAlquilerVehiculos.Models;
+namespace APIAlquilerVehiculos.Models.Usuarios;
 
 /// <summary>
 /// Representa un usuario de la API.

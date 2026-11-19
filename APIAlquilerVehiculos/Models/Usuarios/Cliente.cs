@@ -1,4 +1,4 @@
-﻿namespace APIAlquilerVehiculos.Models;
+﻿namespace APIAlquilerVehiculos.Models.Usuarios;
 
 /// <summary>
 /// Representa un Cliente que quiere alquilar un vehiculo
