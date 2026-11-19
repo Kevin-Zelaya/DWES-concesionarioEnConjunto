@@ -13,5 +13,5 @@ public interface ITrabajadorRepository : ICrudRepository<Trabajador, long> {
 
     // consultas para el 409 del service
     Task<bool> EsResponsableAsync(long idTrabajador);
-    Task<bool> TieneReservasVivasAsync(long idUsuario);
+    Task<bool> TieneReservasVivasAsync(long idTrabajador);
 }

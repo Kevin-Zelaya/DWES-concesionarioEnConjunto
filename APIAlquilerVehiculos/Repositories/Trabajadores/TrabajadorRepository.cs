@@ -87,9 +87,9 @@ public class TrabajadorRepository(AppDbContext db) : ITrabajadorRepository {
     public async Task<bool> EsResponsableAsync(long idTrabajador) =>
         await db.Oficinas.AnyAsync(o => o.IdResponsable == idTrabajador);
 
-    public async Task<bool> TieneReservasVivasAsync(long idUsuario) =>
+    public async Task<bool> TieneReservasVivasAsync(long idTrabajador ) =>
         await db.Reservas
-            .AnyAsync(r => r.TrabajadorId == idUsuario &&
+            .AnyAsync(r => r.TrabajadorId == idTrabajador  &&
                                         (r.Estado == Estado.Pendiente
                                          || r.Estado == Estado.Confirmada
                                          || r.Estado == Estado.EnCurso));
