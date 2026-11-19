@@ -62,39 +62,6 @@ public static class VehiculoYRelacionadosConfig
             entity.HasOne<Marca>()
                 .WithMany()
                 .HasForeignKey(v => v.Marca_id).OnDelete(DeleteBehavior.Restrict); // no se elimina en cascada
-
-            entity.HasOne<Modelo>()
-                .WithMany()
-                .HasForeignKey(v => v.Modelo_id)
-                .OnDelete(DeleteBehavior.Restrict);
-        });
-
-        // ==========================================
-        // MODELOS
-        // ==========================================
-        modelBuilder.Entity<Modelo>(entity =>
-        {
-            entity.HasKey(m => m.Id);
-
-            entity.Property(m => m.Id).ValueGeneratedOnAdd();
-
-            entity.Property(m => m.Nombre).IsRequired();
-
-            entity.Property(m => m.Descricion).IsRequired();
-
-            entity.Property(m => m.Acriss).IsRequired().HasMaxLength(4);
-
-            // Índice para búsquedas por nombre
-            entity.HasIndex(m => m.Nombre);
-            
-            // Propiedades de control
-            entity.Property(m => m.CreatedAt).HasDefaultValue(null);
-            
-            entity.Property(m => m.UpdatedAt).HasDefaultValue(null);
-
-            entity.Property(m => m.DeletedAt).HasDefaultValue(null);
-            
-            entity.Property(m => m.Activo).HasDefaultValue(true);
         });
 
         // ==========================================
