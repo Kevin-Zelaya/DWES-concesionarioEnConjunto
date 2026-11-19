@@ -1,4 +1,6 @@
-﻿namespace APIAlquilerVehiculos.Models;
+﻿using APIAlquilerVehiculos.Models.Usuarios;
+
+namespace APIAlquilerVehiculos.Models;
 
 /// <summary>
 /// Representa la única oficina de la empresa

@@ -1,6 +1,5 @@
-using APIAlquilerVehiculos.Models;
-using APIAlquilerVehiculos.Models.Enums;
 using APIAlquilerVehiculos.Models.Reservas;
+using APIAlquilerVehiculos.Models.Usuarios;
 using Microsoft.EntityFrameworkCore;
 
 public class ReservaYRelacionadosConfigure
@@ -18,9 +17,7 @@ public class ReservaYRelacionadosConfigure
                 .ValueGeneratedOnAdd();
 
             // Código de referencia único
-            entity.Property(r => r.CodigoRefencia)
-                .IsRequired()
-                .HasMaxLength(50);
+            
 
             entity.HasIndex(r => r.CodigoRefencia)
                 .IsUnique();
@@ -110,7 +107,12 @@ public class ReservaYRelacionadosConfigure
             // Tipo: Póliza o Extra
             entity.Property(l => l.Tipo)
                 .IsRequired()
+                .HasConversion<string>()
                 .HasMaxLength(50);
+            
+            entity.Property(l => l.TipoPrecio)
+                .IsRequired()
+                .HasConversion<string>();
 
             // Concepto descriptivo
             entity.Property(l => l.Concepto)
@@ -152,7 +154,7 @@ public class ReservaYRelacionadosConfigure
                 .IsRequired()
                 .HasMaxLength(250);
 
-            entity.Property(e => e.PrecioDiario)
+            entity.Property(e => e.Precio)
                 .IsRequired()
                 .HasPrecision(10, 2);
 
@@ -193,6 +195,38 @@ public class ReservaYRelacionadosConfigure
         });
 
 
+        // ==========================================
+        // RECARGOS
+        // ==========================================
+        modelbuilder.Entity<Recargo>(entity =>
+        {
+            entity.HasKey(r => r.Id);
+
+            entity.Property(r => r.Nombre)
+                .IsRequired()
+                .HasMaxLength(100);
+
+            entity.Property(r => r.Descripcion)
+                .IsRequired()
+                .HasMaxLength(250);
+
+            entity.Property(r => r.TipoPrecio)
+                .IsRequired()
+                .HasConversion<string>()
+                .HasMaxLength(50);
+
+            entity.Property(r => r.Importe)
+                .IsRequired()
+                .HasPrecision(10, 2);
+
+            entity.Property(r => r.Activa)
+                .IsRequired()
+                .HasDefaultValue(true);
+
+            entity.HasQueryFilter(r => r.Activa);
+
+            entity.HasIndex(r => r.Nombre);
+        });
         // ==========================================
         // PAGOS
         // ==========================================

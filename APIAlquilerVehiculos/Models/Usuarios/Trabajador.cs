@@ -1,4 +1,4 @@
-﻿namespace APIAlquilerVehiculos.Models;
+﻿namespace APIAlquilerVehiculos.Models.Usuarios;
 
 /// <summary>
 /// Representa un Trabajador de la empresa
@@ -77,7 +77,7 @@ public enum TipoTrabajador
     /// <summary>
     /// Trabajador encargado de las tareas operativas.
     /// </summary>
-    Operario,
+    Operaciones,
     
     /// <summary>
     /// Trabajador encargado de las tareas de mantenimiento y reparación.

@@ -45,6 +45,7 @@ public class Vehiculo
     /// </summary>
     public long Concesionario_id { get; set; }
     
+    public decimal precioPorDia {get; set;}
     /// <summary>
     /// Color del vehículo.
     /// </summary>

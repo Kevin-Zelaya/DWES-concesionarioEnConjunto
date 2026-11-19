@@ -13,6 +13,13 @@ public interface IReservaRepository
     /// <param name="ct">Token para cancelar la operación.</param>
     /// <returns>La reserva encontrada o null si no existe.</returns>
     Task<Reserva?> GetByIdAsync(long id, CancellationToken ct = default);
+    /// <summary>
+    /// Obtiene una reservfa mediante su codigo de referencia
+    /// </summary>
+    /// <param name="codigo"></param>
+    /// <param name="ct"></param>
+    /// <returns></returns>
+    Task<Reserva?> GetReservaByCodigoReferenciaAsync(string codigo, CancellationToken ct = default);
 
     /// <summary>
     /// Obtiene todas las reservas registradas.
@@ -20,7 +27,7 @@ public interface IReservaRepository
     /// <param name="ct">Token para cancelar la operación.</param>
     /// <returns>Listado de reservas.</returns>
     Task<IEnumerable<Reserva>> GetAllAsync(CancellationToken ct = default);
-
+   
     /// <summary>
     /// Registra una nueva reserva.
     /// </summary>
@@ -29,13 +36,50 @@ public interface IReservaRepository
     /// <returns>La reserva creada.</returns>
     Task<Reserva> CreateAsync(Reserva reserva, CancellationToken ct = default);
 
-    /// <summary>
-    /// Actualiza los datos de una reserva existente.
+        /// <summary>
+    /// Actualiza las fechas de inicio y fin de una reserva.
     /// </summary>
-    /// <param name="reserva">Reserva con los datos actualizados.</param>
+    /// <param name="CodigoReferencia">Código de referencia de la reserva.</param>
+    /// <param name="request">Datos con las nuevas fechas de la reserva.</param>
     /// <param name="ct">Token para cancelar la operación.</param>
-    /// <returns>La reserva actualizada o null si no existe.</returns>
-    Task<Reserva?> UpdateAsync(Reserva reserva, CancellationToken ct = default);
+    /// <returns>Reserva actualizada o null si no existe.</returns>
+    Task<Reserva?> UpdateFechasAsync(string CodigoReferencia, ReservaUpdateFechaRequestDto request, CancellationToken ct = default);
+
+    /// <summary>
+    /// Actualiza la nota asociada a una reserva.
+    /// </summary>
+    /// <param name="CodigoReferencia">Código de referencia de la reserva.</param>
+    /// <param name="request">Datos con la nueva nota de la reserva.</param>
+    /// <param name="ct">Token para cancelar la operación.</param>
+    /// <returns>Reserva actualizada o null si no existe.</returns>
+    Task<Reserva?> UpdateNotaAsync(string CodigoReferencia, ReservaUpdateNotaRequestDto request, CancellationToken ct = default);
+
+    /// <summary>
+    /// Actualiza la información del pago de una reserva.
+    /// </summary>
+    /// <param name="CodigoReferencia">Código de referencia de la reserva.</param>
+    /// <param name="request">Datos con la nueva información del pago.</param>
+    /// <param name="ct">Token para cancelar la operación.</param>
+    /// <returns>Reserva actualizada o null si no existe.</returns>
+    Task<Reserva?> UpdatePagoAsync(string CodigoReferencia, ReservaUpdatePagoRequestDto request, CancellationToken ct = default);
+
+    /// <summary>
+    /// Actualiza el estado de una reserva.
+    /// </summary>
+    /// <param name="CodigoReferencia">Código de referencia de la reserva.</param>
+    /// <param name="request">Datos con el nuevo estado de la reserva.</param>
+    /// <param name="ct">Token para cancelar la operación.</param>
+    /// <returns>Reserva actualizada o null si no existe.</returns>
+    Task<Reserva?> UpdateStatusAsync(string CodigoReferencia, ReservaUpdateStatusRequestDto request, CancellationToken ct = default);
+
+    /// <summary>
+    /// Actualiza el vehículo asociado a una reserva.
+    /// </summary>
+    /// <param name="CodigoReferencia">Código de referencia de la reserva.</param>
+    /// <param name="request">Datos con el nuevo vehículo asignado.</param>
+    /// <param name="ct">Token para cancelar la operación.</param>
+    /// <returns>Reserva actualizada o null si no existe.</returns>
+    Task<Reserva?> UpdateVehicleAsync(string CodigoReferencia, ReservaUpdateVehicleRequestDto request, CancellationToken ct = default);
 
     /// <summary>
     /// Comprueba si existe una reserva con el identificador indicado.
@@ -55,7 +99,7 @@ public interface IReservaRepository
     /// Tupla con la lista de reservas, el total de registros,
     /// el número de páginas y los indicadores de navegación.
     /// </returns>
-    Task<(List<Reserva> items, int count, int totalPages, bool HasPreviousPage, bool HasNextPage)> GetPaginatedVehiculosAsync(int pageNumber, int pageSize, CancellationToken ct = default);
+    Task<(List<Reserva> items, int count, int totalPages, bool HasPreviousPage, bool HasNextPage)> GetPaginatedReservasAsync(int pageNumber, int pageSize, CancellationToken ct = default);
 
     /// <summary>
     /// Obtiene las reservas de un cliente de forma paginada.
@@ -68,7 +112,7 @@ public interface IReservaRepository
     /// Tupla con las reservas del cliente, el total de registros,
     /// el número de páginas y los indicadores de navegación.
     /// </returns>
-    Task<(List<Reserva> items, int count, int totalPages, bool HasPreviousPage, bool HasNextPage)> GetPaginatedVehiculosByCustomerIdAsync(long id, int pageNumber, int pageSize, CancellationToken ct = default);
+    Task<(List<Reserva> items, int count, int totalPages, bool HasPreviousPage, bool HasNextPage)> GetPaginatedReservasByCustomerIdAsync(long id, int pageNumber, int pageSize, CancellationToken ct = default);
 
     /// <summary>
     /// Obtiene las reservas de un trabajador de forma paginada.
@@ -81,6 +125,6 @@ public interface IReservaRepository
     /// Tupla con las reservas del trabajador, el total de registros,
     /// el número de páginas y los indicadores de navegación.
     /// </returns>
-    Task<(List<Reserva> items, int count, int totalPages, bool HasPreviousPage, bool HasNextPage)> GetPaginatedVehiculosByEmployeeIdAsync(long id, int pageNumber, int pageSize, CancellationToken ct = default);
+    Task<(List<Reserva> items, int count, int totalPages, bool HasPreviousPage, bool HasNextPage)> GetPaginatedReservasByEmployeeIdAsync(long id, int pageNumber, int pageSize, CancellationToken ct = default);
 
 }

@@ -23,69 +23,6 @@ namespace APIAlquilerVehiculos.Migrations
             NpgsqlModelBuilderExtensions.HasPostgresExtension(modelBuilder, "btree_gist");
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("APIAlquilerVehiculos.Models.Cliente", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
-
-                    b.Property<string>("Apellidos")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTime?>("DeletedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("Dni")
-                        .HasColumnType("text");
-
-                    b.Property<DateTime>("FechaNacimiento")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<long>("IdUsuario")
-                        .HasColumnType("bigint");
-
-                    b.Property<bool>("IsActivo")
-                        .HasColumnType("boolean");
-
-                    b.Property<string>("Nie")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Nombre")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("NumeroPermisoConducir")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Pasaporte")
-                        .HasColumnType("text");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Dni")
-                        .IsUnique();
-
-                    b.HasIndex("IdUsuario")
-                        .IsUnique();
-
-                    b.HasIndex("Nie")
-                        .IsUnique();
-
-                    b.HasIndex("Pasaporte")
-                        .IsUnique();
-
-                    b.ToTable("Cliente");
-                });
-
             modelBuilder.Entity("APIAlquilerVehiculos.Models.Marca", b =>
                 {
                     b.Property<long>("Id")
@@ -109,6 +46,10 @@ namespace APIAlquilerVehiculos.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<string>("Pais")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
 
@@ -120,7 +61,7 @@ namespace APIAlquilerVehiculos.Migrations
 
                     b.HasIndex("Nombre");
 
-                    b.ToTable("Marca");
+                    b.ToTable("Marcas");
                 });
 
             modelBuilder.Entity("APIAlquilerVehiculos.Models.Modelo", b =>
@@ -288,7 +229,70 @@ namespace APIAlquilerVehiculos.Migrations
                     b.ToTable("Reservas");
                 });
 
-            modelBuilder.Entity("APIAlquilerVehiculos.Models.Trabajador", b =>
+            modelBuilder.Entity("APIAlquilerVehiculos.Models.Usuarios.Cliente", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<string>("Apellidos")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Dni")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("FechaNacimiento")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<long>("IdUsuario")
+                        .HasColumnType("bigint");
+
+                    b.Property<bool>("IsActivo")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("Nie")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Nombre")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("NumeroPermisoConducir")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Pasaporte")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Dni")
+                        .IsUnique();
+
+                    b.HasIndex("IdUsuario")
+                        .IsUnique();
+
+                    b.HasIndex("Nie")
+                        .IsUnique();
+
+                    b.HasIndex("Pasaporte")
+                        .IsUnique();
+
+                    b.ToTable("Clientes");
+                });
+
+            modelBuilder.Entity("APIAlquilerVehiculos.Models.Usuarios.Trabajador", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -331,13 +335,16 @@ namespace APIAlquilerVehiculos.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Dni")
+                        .IsUnique();
+
                     b.HasIndex("IdUsuario")
                         .IsUnique();
 
-                    b.ToTable("Trabajador");
+                    b.ToTable("Trabajadores");
                 });
 
-            modelBuilder.Entity("APIAlquilerVehiculos.Models.Usuario", b =>
+            modelBuilder.Entity("APIAlquilerVehiculos.Models.Usuarios.Usuario", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -776,20 +783,9 @@ namespace APIAlquilerVehiculos.Migrations
                     b.ToTable("Polizas");
                 });
 
-            modelBuilder.Entity("APIAlquilerVehiculos.Models.Cliente", b =>
-                {
-                    b.HasOne("APIAlquilerVehiculos.Models.Usuario", "Usuario")
-                        .WithOne("Cliente")
-                        .HasForeignKey("APIAlquilerVehiculos.Models.Cliente", "IdUsuario")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Usuario");
-                });
-
             modelBuilder.Entity("APIAlquilerVehiculos.Models.Oficina", b =>
                 {
-                    b.HasOne("APIAlquilerVehiculos.Models.Trabajador", "Responsable")
+                    b.HasOne("APIAlquilerVehiculos.Models.Usuarios.Trabajador", "Responsable")
                         .WithMany()
                         .HasForeignKey("IdResponsable")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -860,7 +856,7 @@ namespace APIAlquilerVehiculos.Migrations
 
             modelBuilder.Entity("APIAlquilerVehiculos.Models.Reservas.Reserva", b =>
                 {
-                    b.HasOne("APIAlquilerVehiculos.Models.Cliente", null)
+                    b.HasOne("APIAlquilerVehiculos.Models.Usuarios.Cliente", null)
                         .WithMany()
                         .HasForeignKey("ClienteId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -871,7 +867,7 @@ namespace APIAlquilerVehiculos.Migrations
                         .HasForeignKey("APIAlquilerVehiculos.Models.Reservas.Reserva", "PagoId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("APIAlquilerVehiculos.Models.Trabajador", null)
+                    b.HasOne("APIAlquilerVehiculos.Models.Usuarios.Trabajador", null)
                         .WithMany()
                         .HasForeignKey("TrabajadorId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -888,11 +884,22 @@ namespace APIAlquilerVehiculos.Migrations
                     b.Navigation("Vehiculo");
                 });
 
-            modelBuilder.Entity("APIAlquilerVehiculos.Models.Trabajador", b =>
+            modelBuilder.Entity("APIAlquilerVehiculos.Models.Usuarios.Cliente", b =>
                 {
-                    b.HasOne("APIAlquilerVehiculos.Models.Usuario", "Usuario")
+                    b.HasOne("APIAlquilerVehiculos.Models.Usuarios.Usuario", "Usuario")
+                        .WithOne("Cliente")
+                        .HasForeignKey("APIAlquilerVehiculos.Models.Usuarios.Cliente", "IdUsuario")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Usuario");
+                });
+
+            modelBuilder.Entity("APIAlquilerVehiculos.Models.Usuarios.Trabajador", b =>
+                {
+                    b.HasOne("APIAlquilerVehiculos.Models.Usuarios.Usuario", "Usuario")
                         .WithOne("Trabajador")
-                        .HasForeignKey("APIAlquilerVehiculos.Models.Trabajador", "IdUsuario")
+                        .HasForeignKey("APIAlquilerVehiculos.Models.Usuarios.Trabajador", "IdUsuario")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
@@ -934,7 +941,7 @@ namespace APIAlquilerVehiculos.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<long>", b =>
                 {
-                    b.HasOne("APIAlquilerVehiculos.Models.Usuario", null)
+                    b.HasOne("APIAlquilerVehiculos.Models.Usuarios.Usuario", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -943,7 +950,7 @@ namespace APIAlquilerVehiculos.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<long>", b =>
                 {
-                    b.HasOne("APIAlquilerVehiculos.Models.Usuario", null)
+                    b.HasOne("APIAlquilerVehiculos.Models.Usuarios.Usuario", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -958,7 +965,7 @@ namespace APIAlquilerVehiculos.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("APIAlquilerVehiculos.Models.Usuario", null)
+                    b.HasOne("APIAlquilerVehiculos.Models.Usuarios.Usuario", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -967,7 +974,7 @@ namespace APIAlquilerVehiculos.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<long>", b =>
                 {
-                    b.HasOne("APIAlquilerVehiculos.Models.Usuario", null)
+                    b.HasOne("APIAlquilerVehiculos.Models.Usuarios.Usuario", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -979,7 +986,7 @@ namespace APIAlquilerVehiculos.Migrations
                     b.Navigation("Lineas");
                 });
 
-            modelBuilder.Entity("APIAlquilerVehiculos.Models.Usuario", b =>
+            modelBuilder.Entity("APIAlquilerVehiculos.Models.Usuarios.Usuario", b =>
                 {
                     b.Navigation("Cliente");
 

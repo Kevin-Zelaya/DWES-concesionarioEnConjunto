@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 
-namespace APIAlquilerVehiculos.Controller;
+namespace APIAlquilerVehiculos.Controlleres;
 
 /// <summary>
 /// Controller de autenticacion usando ASP.NET Core Identity.

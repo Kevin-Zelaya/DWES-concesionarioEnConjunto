@@ -1,4 +1,4 @@
-using APIAlquilerVehiculos;
+using APIAlquilerVehiculos.Infrastructure.AutenticationJWTAutorization;
 using APIAlquilerVehiculos.Seed;
 using APIAlquilerVehiculos.Services;
 using APIAlquilerVehiculos.Services.Auth;
@@ -40,7 +40,10 @@ builder.Services.AddControllers(options =>
 
 // ======= Infraestructura ==========
 builder.Services
-    .AddDatabases(builder.Configuration);
+    .AddDatabases(builder.Configuration)
+    .AddServices()
+    .AddRedisConnection(builder.Configuration);
+
 builder.Services.AddAuthenticationConfing(builder.Configuration);
 
 builder.Services.AddScoped<IAuthService, AuthService>();
@@ -58,18 +61,6 @@ var apiConfig = app.Services
     .GetRequiredService<IOptions<ApiConfig>>()
     .Value;
 
-// Seed de Usuarios
-using (var scope = app.Services.CreateScope())
-{
-    var logger = scope.ServiceProvider
-        .GetRequiredService<ILogger<Program>>();
-
-    await UserRoleSeeder.SeedIdentityAsync(
-        scope.ServiceProvider,
-        logger
-    );
-}
-
 // Inicializar bases de datos
 await app.InitializeDatabasesAsync();
 
@@ -80,6 +71,18 @@ if (apiConfig.shouldRecreateDb)
 
     // Inicialización de Mongo y PostgreSQL
     await app.RecreateDatabasesAsync();
+}
+
+// Seed de Usuarios
+using (var scope = app.Services.CreateScope())
+{
+    var logger = scope.ServiceProvider
+        .GetRequiredService<ILogger<Program>>();
+
+    await UserRoleSeeder.SeedIdentityAsync(
+        scope.ServiceProvider,
+        logger
+    );
 }
 //app.UseHttpsRedirection();
 

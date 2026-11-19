@@ -1,5 +1,6 @@
 ﻿using APIAlquilerVehiculos.Entities;
 using APIAlquilerVehiculos.Models;
+using APIAlquilerVehiculos.Models.Usuarios;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -56,7 +57,7 @@ public static class UserRoleSeeder {
         Trabajador? trabajadorResponsable = null;
         if (userResponsable is not null)
         {
-            trabajadorResponsable = await db.Trabajador
+            trabajadorResponsable = await db.Trabajadores
                 .FirstOrDefaultAsync(t => t.IdUsuario == userResponsable.Id);
 
             if (trabajadorResponsable is null)
@@ -68,11 +69,11 @@ public static class UserRoleSeeder {
                     Apellidos = "García López",
                     Dni = "11111111H",
                     FechaIngreso = DateTime.UtcNow.AddYears(-3),
-                    TipoTrabajador = TipoTrabajador.Operario,
+                    TipoTrabajador = TipoTrabajador.Operaciones,
                     IsActivo = true, 
                     CreatedAt = DateTime.UtcNow
                 };
-                db.Trabajador.Add(trabajadorResponsable);
+                db.Trabajadores.Add(trabajadorResponsable);
                 await db.SaveChangesAsync();
             }
         }
@@ -87,16 +88,16 @@ public static class UserRoleSeeder {
         );
 
         // si se ha creado bien lo mete a la bd
-        if (userOperario is not null && !await db.Trabajador.AnyAsync(t => t.IdUsuario == userOperario.Id))
+        if (userOperario is not null && !await db.Trabajadores.AnyAsync(t => t.IdUsuario == userOperario.Id))
         {
-            db.Trabajador.Add(new Trabajador
+            db.Trabajadores.Add(new Trabajador
             {
                 IdUsuario = userOperario.Id,
                 Nombre = "Lucía",
                 Apellidos = "Martínez Ruiz",
                 Dni = "22222222J",
                 FechaIngreso = DateTime.UtcNow.AddYears(-1),
-                TipoTrabajador = TipoTrabajador.Operario,
+                TipoTrabajador = TipoTrabajador.Operaciones,
                 IsActivo = true,
                 CreatedAt = DateTime.UtcNow
             });
@@ -113,9 +114,9 @@ public static class UserRoleSeeder {
         );
 
         // si se ha creado bien lo mete a la bd
-        if (userMecanico is not null && !await db.Trabajador.AnyAsync(t => t.IdUsuario == userMecanico.Id))
+        if (userMecanico is not null && !await db.Trabajadores.AnyAsync(t => t.IdUsuario == userMecanico.Id))
         {
-            db.Trabajador.Add(new Trabajador
+            db.Trabajadores.Add(new Trabajador
             {
                 IdUsuario = userMecanico.Id,
                 Nombre = "Miguel",
@@ -139,9 +140,9 @@ public static class UserRoleSeeder {
         );
 
         // si se ha creado bien lo mete a la bd
-        if (userCliente is not null && !await db.Cliente.AnyAsync(c => c.IdUsuario == userCliente.Id))
+        if (userCliente is not null && !await db.Clientes.AnyAsync(c => c.IdUsuario == userCliente.Id))
         {
-            db.Cliente.Add(new Cliente
+            db.Clientes.Add(new Cliente
             {
                 IdUsuario = userCliente.Id,
                 Nombre = "Ana",

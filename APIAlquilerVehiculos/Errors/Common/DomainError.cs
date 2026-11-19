@@ -21,6 +21,8 @@ public record NotFoundError(string Message, HttpStatusCode StatusCode) : DomainE
 /// </summary>
 public sealed record ConflictError(string Message, HttpStatusCode StatusCode) : DomainError(Message, StatusCode)
 {
+    public static ConflictError Business(string message) => new(message, HttpStatusCode.Conflict);
+    
     public static ConflictError Duplicate(string resourceType, string value) =>
         new($"Ya existe un {resourceType} con el valor '{value}'", HttpStatusCode.Conflict);
 }
