@@ -1,4 +1,7 @@
-﻿namespace APIAlquilerVehiculos.Repositories;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+
+namespace APIAlquilerVehiculos.Repositories;
 
 public interface ICrudRepository<T,TKey>
 {

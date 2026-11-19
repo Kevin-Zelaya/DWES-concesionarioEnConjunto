@@ -1,7 +1,6 @@
 using APIAlquilerVehiculos.Entities.FluenApi;
 using APIAlquilerVehiculos.Models;
 using APIAlquilerVehiculos.Models.Reservas;
-using APIAlquilerVehiculos.Models.Usuarios;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -13,20 +12,18 @@ public class AppDbContext(DbContextOptions<AppDbContext> options)
 {
     
 	public DbSet<Vehiculo> Vehiculos {get; set;}
-	public DbSet<Modelo> Modelos {get; set;}
-	public DbSet<Marca> Marcas {get; set;}
+	public DbSet<Marca> Marcas { get; set; }
 
 	// Reservas
 	public DbSet<Reserva> Reservas {get; set;}
 	public DbSet<LineaReserva> Lineas {get; set;}
 	public DbSet<Poliza> Polizas {get; set;}
 	public DbSet<Extra> Extras {get; set;}
-	public DbSet<Recargo> Recargos {get; set;}
 	// separar en otro archivo el fluent api
 	
 	//USUARIOS
-	public DbSet<Cliente> Clientes {get; set;}
-	public DbSet<Trabajador> Trabajadores {get; set;}
+	public DbSet<Cliente> Cliente {get; set;}
+	public DbSet<Trabajador> Trabajador {get; set;}
 	public DbSet<Oficina> Oficinas { get; set; }
 	
 	protected override void OnModelCreating(ModelBuilder modelBuilder)
