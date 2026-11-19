@@ -13,10 +13,30 @@ public class LineaReserva
    /// <summary> fk de reserva, así para poder agregar mismo
    /// concepto pero con diferente precio por día </summary>
    public long ReservaId{get; set;}
+   
    /// <summary> Referencia al nombre pero no con fk </summary>
-   public string Tipo {get; set;} = string.Empty;
+   public TipoLinea Tipo {get; set;} 
    public string Concepto {get; set;} = string.Empty;
+
    public int Cantidad {get; set;}
    public double PrecioUnitario {get; set;}
+   public TipoPrecio TipoPrecio {get; set;}
    public double Subtotal {get; set;}
+}
+
+
+public enum TipoLinea
+{
+    Vehiculo,
+    Poliza,
+    Extra,
+    Recargo
+}
+
+
+public enum TipoPrecio
+{
+    Diario,
+    Unico,
+    Porcentaje
 }
