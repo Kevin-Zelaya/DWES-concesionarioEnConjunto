@@ -69,7 +69,7 @@ public static class UserRoleSeeder {
                     Apellidos = "García López",
                     Dni = "11111111H",
                     FechaIngreso = DateTime.UtcNow.AddYears(-3),
-                    TipoTrabajador = TipoTrabajador.Operario,
+                    TipoTrabajador = TipoTrabajador.Operaciones,
                     IsActivo = true, 
                     CreatedAt = DateTime.UtcNow
                 };
@@ -97,7 +97,7 @@ public static class UserRoleSeeder {
                 Apellidos = "Martínez Ruiz",
                 Dni = "22222222J",
                 FechaIngreso = DateTime.UtcNow.AddYears(-1),
-                TipoTrabajador = TipoTrabajador.Operario,
+                TipoTrabajador = TipoTrabajador.Operaciones,
                 IsActivo = true,
                 CreatedAt = DateTime.UtcNow
             });
