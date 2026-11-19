@@ -53,8 +53,8 @@ public static class UsuarioYRelacionadosConfig
                 .HasForeignKey<Trabajador>(t => t.IdUsuario)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            entity.HasIndex(t => t.IdUsuario)
-                .IsUnique();
+            entity.HasIndex(t => t.IdUsuario).IsUnique();
+            entity.HasIndex(t => t.Dni).IsUnique();
             
             entity.Property(u => u.IsActivo).IsRequired();
         });
