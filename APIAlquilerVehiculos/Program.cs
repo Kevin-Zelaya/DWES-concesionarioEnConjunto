@@ -40,7 +40,9 @@ builder.Services.AddControllers(options =>
 
 // ======= Infraestructura ==========
 builder.Services
-    .AddDatabases(builder.Configuration);
+    .AddDatabases(builder.Configuration)
+    .AddServices();
+
 builder.Services.AddAuthenticationConfing(builder.Configuration);
 
 builder.Services.AddScoped<IAuthService, AuthService>();

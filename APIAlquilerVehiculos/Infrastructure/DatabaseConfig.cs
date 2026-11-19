@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 
 public static class DatabaseConfig
 {
-    public static void AddDatabases(
+    public static IServiceCollection AddDatabases(
         this IServiceCollection services,
         IConfiguration configuration
     )
@@ -14,5 +14,6 @@ public static class DatabaseConfig
             .Get<DbConnectionsConfig>();
         services.AddDbContext<AppDbContext>(options =>
         options.UseNpgsql(dbConfig!.Postgre.ConnectionStrings.DefaultConnection));
+        return services;
     }
 }
