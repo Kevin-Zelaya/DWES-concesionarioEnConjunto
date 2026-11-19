@@ -45,8 +45,19 @@ public class AuthService(IValidator<SignupDto> validatorSignupAsync, UserManager
                 (pasaporteNorm != null && c.Pasaporte == pasaporteNorm)))
         {
             var docDuplicado = dniNorm ?? nieNorm ?? pasaporteNorm ?? string.Empty;
+            logger.LogInformation("Documentos duplicados: {Documento}", docDuplicado);
             return Result.Failure<UsuarioResponseDto, DomainError>(AuthErrors.DuplicateDocument(docDuplicado));
         }
+        
+        // Comprobamos que no existe otro Email identico
+        if (await userManager.FindByEmailAsync(request.Email) is not null)
+        {
+            logger.LogInformation("Email duplicado: {Email}", request.Email);
+            return Result.Failure<UsuarioResponseDto, DomainError>(
+                AuthErrors.DuplicateEmail(request.Email)
+            );
+        }
+        
         await using var transaction = await dbContext.Database.BeginTransactionAsync();
 
         try
