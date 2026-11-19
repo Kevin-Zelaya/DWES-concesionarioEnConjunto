@@ -40,7 +40,7 @@ public class AuthService(IValidator<SignupDto> validatorSignupAsync, UserManager
         var nieNorm = request.Nie?.Trim().ToUpperInvariant();
         var pasaporteNorm = request.Pasaporte?.Trim().ToUpperInvariant();
         
-        if (await dbContext.Cliente.AnyAsync(c =>
+        if (await dbContext.Clientes.AnyAsync(c =>
                 (dniNorm != null && c.Dni == dniNorm) ||
                 (nieNorm != null && c.Nie == nieNorm) ||
                 (pasaporteNorm != null && c.Pasaporte == pasaporteNorm)))
@@ -96,7 +96,7 @@ public class AuthService(IValidator<SignupDto> validatorSignupAsync, UserManager
                 IsActivo = true
             };
 
-            dbContext.Cliente.Add(cliente);
+            dbContext.Clientes.Add(cliente);
             await dbContext.SaveChangesAsync();
             await transaction.CommitAsync();
 

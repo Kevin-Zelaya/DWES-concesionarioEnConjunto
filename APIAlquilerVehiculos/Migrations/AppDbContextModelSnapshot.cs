@@ -289,7 +289,7 @@ namespace APIAlquilerVehiculos.Migrations
                     b.HasIndex("Pasaporte")
                         .IsUnique();
 
-                    b.ToTable("Cliente");
+                    b.ToTable("Clientes");
                 });
 
             modelBuilder.Entity("APIAlquilerVehiculos.Models.Usuarios.Trabajador", b =>
@@ -335,10 +335,13 @@ namespace APIAlquilerVehiculos.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Dni")
+                        .IsUnique();
+
                     b.HasIndex("IdUsuario")
                         .IsUnique();
 
-                    b.ToTable("Trabajador");
+                    b.ToTable("Trabajadores");
                 });
 
             modelBuilder.Entity("APIAlquilerVehiculos.Models.Usuarios.Usuario", b =>

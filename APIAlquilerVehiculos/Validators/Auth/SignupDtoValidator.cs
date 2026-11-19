@@ -21,7 +21,7 @@ public class SignupDtoValidator : AbstractValidator<SignupDto> {
         RuleFor(x => x.FechaNacimiento)
             .Must(f => f != default)
             .WithMessage("La fecha de nacimiento es obligatoria.") 
-            .LessThan(DateTime.UtcNow.Date)
+            .Must(f => f.Date < DateTime.UtcNow.Date)
             .WithMessage("La fecha de nacimiento debe ser anterior a hoy.") 
             .GreaterThan(new DateTime(1900, 1, 1))
             .WithMessage("La fecha de nacimiento no es válida.");

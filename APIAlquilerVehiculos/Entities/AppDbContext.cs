@@ -21,11 +21,12 @@ public class AppDbContext(DbContextOptions<AppDbContext> options)
 	public DbSet<LineaReserva> Lineas {get; set;}
 	public DbSet<Poliza> Polizas {get; set;}
 	public DbSet<Extra> Extras {get; set;}
+	public DbSet<Recargo> Recargos {get; set;}
 	// separar en otro archivo el fluent api
 	
 	//USUARIOS
-	public DbSet<Cliente> Cliente {get; set;}
-	public DbSet<Trabajador> Trabajador {get; set;}
+	public DbSet<Cliente> Clientes {get; set;}
+	public DbSet<Trabajador> Trabajadores {get; set;}
 	public DbSet<Oficina> Oficinas { get; set; }
 	
 	protected override void OnModelCreating(ModelBuilder modelBuilder)
