@@ -2,9 +2,8 @@
 using APIAlquilerVehiculos.Entities;
 using APIAlquilerVehiculos.Errors.Common;
 using APIAlquilerVehiculos.Errors.Email;
-using APIAlquilerVehiculos.Models;
+using APIAlquilerVehiculos.Models.Usuarios;
 using APIAlquilerVehiculos.Services.Auth;
-using CSharpFunctionalExtensions;
 using FluentValidation;
 using FluentValidation.Results;
 using Microsoft.AspNetCore.Authentication;

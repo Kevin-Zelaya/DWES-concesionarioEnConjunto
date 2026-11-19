@@ -2,7 +2,7 @@
 using APIAlquilerVehiculos.Dtos.Auth;
 using APIAlquilerVehiculos.Entities;
 using APIAlquilerVehiculos.Errors.Common;
-using APIAlquilerVehiculos.Models;
+using APIAlquilerVehiculos.Models.Usuarios;
 using APIAlquilerVehiculos.Services.Auth;
 using FluentValidation;
 using FluentValidation.Results;

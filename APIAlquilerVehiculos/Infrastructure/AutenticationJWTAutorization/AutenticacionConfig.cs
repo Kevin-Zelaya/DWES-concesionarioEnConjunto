@@ -1,6 +1,7 @@
 ﻿using System.Text;
 using APIAlquilerVehiculos.Entities;
 using APIAlquilerVehiculos.Models;
+using APIAlquilerVehiculos.Models.Usuarios;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
