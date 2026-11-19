@@ -1,6 +1,7 @@
 using APIAlquilerVehiculos.Entities.FluenApi;
 using APIAlquilerVehiculos.Models;
 using APIAlquilerVehiculos.Models.Reservas;
+using APIAlquilerVehiculos.Models.Usuarios;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;

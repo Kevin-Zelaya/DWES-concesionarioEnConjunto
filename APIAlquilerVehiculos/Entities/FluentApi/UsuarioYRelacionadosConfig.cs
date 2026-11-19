@@ -1,4 +1,5 @@
 using APIAlquilerVehiculos.Models;
+using APIAlquilerVehiculos.Models.Usuarios;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
