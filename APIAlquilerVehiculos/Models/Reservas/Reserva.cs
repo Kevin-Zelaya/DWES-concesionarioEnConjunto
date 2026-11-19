@@ -22,13 +22,17 @@ public class Reserva
     public DateTime FechaRecogida {get; set;}
     public DateTime FechaDevolucion {get; set;}
     public Estado Estado {get; set;}
-    public List<LineaReserva>? Lineas {get; set;} = [];
+    public List<LineaReserva> Lineas {get; set;} = [];
     public decimal PrecioTotal { get; set; }
     public long? PagoId {get; set;}
     public Pago? Pago {get; set;}
     public string? Notas {get; set;}
     // control de concurrencia
     public uint RowVersion {get; set;}
+    public int CalcularDiasAlquiler()
+    {
+        return (FechaDevolucion.Date - FechaRecogida.Date).Days;
+    }
 }
 
 /// <summary>

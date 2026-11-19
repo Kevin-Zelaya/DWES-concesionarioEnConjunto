@@ -1,27 +1,109 @@
 using APIAlquilerVehiculos.Entities;
 using APIAlquilerVehiculos.Errors.Common;
 using APIAlquilerVehiculos.Errors.Reservas;
+using APIAlquilerVehiculos.Models;
 using APIAlquilerVehiculos.Models.Reservas;
+using APIAlquilerVehiculos.Repositories.Vehiculos;
 using CSharpFunctionalExtensions;
 using Microsoft.EntityFrameworkCore;
 
 public class ReservaService(
     IReservaRepository _repository,
-    ILogger<ReservaService> _logger
+    ILogger<ReservaService> _logger,
+    IUnitOfWork _unitOfWork,
+    IVehiculosRepository _vehiculoRepository,
+    ILineaReservaService _lineaService,
+    ILineaReservaFactory _lineaReservaFactory
 ) : IReservaService
 {
     // =========================================================
     // CREATE
     // =========================================================
-    /// <inheritdoc cref="IReservaService.CreateReservaAsync(Reserva, CancellationToken)"/>
-    public async Task<Result<Reserva, DomainError>> CreateReservaAsync(Reserva reserva, CancellationToken ct = default)
+    /// <inheritdoc cref="IReservaService.CreateReservaAsync(ReservaCreateRequestDto, long, CancellationToken)"/>
+    public async Task<Result<ReservaDto, DomainError>> CreateReservaAsync(ReservaCreateRequestDto reserva, long TrabajadorId, CancellationToken ct = default)
     {
         _logger.LogDebug("[SERVICE-CREATE] Intentando crear una reserva.");
-            var response = await _repository.CreateAsync(reserva, ct);
-            return Result.Success<Reserva, DomainError>(response)
+        //1. comprobamos si existe el vehiculo y el cliente
+        var vehiculo = await _vehiculoRepository.GetByIdAsync(reserva.VehiculoId);
+        if(vehiculo is null)
+            return Result.Failure<ReservaDto, DomainError>(
+                NotFoundError.FromResource("Vehículo", reserva.VehiculoId)
+            );
+        // comprobar en el futuro si existe un cliente
+        await _unitOfWork.BeginTransactionAsync(ct);
+        try
+        {
+            var lineasFactorizadas = await FactorizarLineas(reserva.Lineas, vehiculo, ct);
+            if (lineasFactorizadas.IsFailure)
+            {
+                await _unitOfWork.RollbackTransactionAsync(ct);
+                return Result.Failure<ReservaDto, DomainError>(lineasFactorizadas.Error);
+            }
+            var reservaTS = reserva.ToEntity(TrabajadorId);
+            // Se guarda sin asignar aún el total
+            reservaTS = await _repository.CreateAsync(reservaTS, ct);
+            // Crear lineas
+            lineasFactorizadas.Value.ForEach(l => l.ReservaId = reservaTS.Id);
+            var lineasCreadas = await _lineaService.CreateLineasReservaAsync(
+                lineasFactorizadas.Value, 
+                reservaTS.CalcularDiasAlquiler(),
+                ct);
+
+            if (lineasCreadas.IsFailure)
+            {
+                await _unitOfWork.RollbackTransactionAsync(ct);
+                return Result.Failure<ReservaDto, DomainError>(lineasCreadas.Error);
+            }
+            var total = _lineaService.CalculateTotalByLineas(lineasCreadas.Value);
+            reservaTS.PrecioTotal = total;
+            await _unitOfWork.SaveChangesAsync();
+            await _unitOfWork.CommitTransactionAsync();
+            reservaTS.Lineas = lineasCreadas.Value;
+            
+            return Result.Success<ReservaDto, DomainError>(reservaTS.ToDto())
                 .Tap(r => _logger.LogInformation(
                     "[SERVICE-CREATE] Reserva creada correctamente con ID {Id} y código {Codigo}.",
                     r.Id, r.CodigoRefencia));
+        } catch(Exception)
+        {
+            _logger.LogError("[SERVICE-CREATE] Error al crear la reserva, todos los cambios son eliminados.");
+            await _unitOfWork.RollbackTransactionAsync();
+            throw;
+        }
+    }
+    private async Task<Result<List<LineaReserva>, DomainError>> FactorizarLineas(
+        List<LineaReservaCreateRequestDto> lineas,
+        Vehiculo vehiculo,
+        CancellationToken ct)
+    {
+        var lineasFd = new List<LineaReserva>
+        {
+            CrearLineaVehiculo(vehiculo)
+        };
+
+        foreach (var linea in lineas)
+        {
+            var resultado = await _lineaReservaFactory.CreateAsync(linea, ct);
+
+            if (resultado.IsFailure)
+                return Result.Failure<List<LineaReserva>, DomainError>(
+                    resultado.Error);
+
+            lineasFd.Add(resultado.Value);
+        }
+
+        return Result.Success<List<LineaReserva>, DomainError>(lineasFd);
+    }
+    private static LineaReserva CrearLineaVehiculo(Vehiculo vehiculo)
+    {
+        return new LineaReserva
+        {
+            Tipo = TipoLinea.Vehiculo,
+            Concepto = "Vehiculo con id"+vehiculo.Id,
+            Cantidad = 1,
+            PrecioUnitario = vehiculo.precioPorDia,
+            TipoPrecio = TipoPrecio.Diario
+        };
     }
 
     // =========================================================

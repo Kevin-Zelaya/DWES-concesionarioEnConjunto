@@ -23,10 +23,12 @@ public class ReservaController(
     [SwaggerResponse(401, "No autenticado.")]
     [SwaggerResponse(409, "Conflicto al crear la reserva.")]
     public async Task<ActionResult<Reserva>> CreateReserva(
-        [FromBody] Reserva reserva,
+        [FromBody] ReservaCreateRequestDto reserva,
         CancellationToken ct)
     {
-        var response = await _service.CreateReservaAsync(reserva, ct);
+        // en algún momento obtner con id del usuario
+        //var TrabajadorId
+        var response = await _service.CreateReservaAsync(reserva, reserva.EmpleadoId, ct);
 
         return response.IsSuccess
             ? CreatedAtAction(nameof(GetReservaByCodigoReferencia),

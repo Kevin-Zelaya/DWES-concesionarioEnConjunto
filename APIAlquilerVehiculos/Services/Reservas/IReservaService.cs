@@ -14,7 +14,7 @@ public interface IReservaService
     /// <param name="reserva">Datos de la reserva que se desea crear.</param>
     /// <param name="ct">Token para cancelar la operación.</param>
     /// <returns>El resultado de la creación de la reserva o un error de dominio.</returns>
-    Task<Result<Reserva, DomainError>> CreateReservaAsync(Reserva reserva, CancellationToken ct = default);
+    Task<Result<ReservaDto, DomainError>> CreateReservaAsync(ReservaCreateRequestDto reserva, long TrabajadorId, CancellationToken ct = default);
 
     /// <summary>
     /// Obtiene una reserva mediante su identificador.

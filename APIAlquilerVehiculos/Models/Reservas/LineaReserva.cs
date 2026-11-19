@@ -1,3 +1,5 @@
+using APIAlquilerVehiculos.Models.Reservas;
+
 /// <summary>
 /// Caracteristicas de una linea dentro de las reservas
 /// relacion de uno a muchos en el que una reserva tiene muchas lineas
@@ -13,15 +15,26 @@ public class LineaReserva
    /// <summary> fk de reserva, así para poder agregar mismo
    /// concepto pero con diferente precio por día </summary>
    public long ReservaId{get; set;}
+   public Reserva Reserva { get; set; } = null!;
    
    /// <summary> Referencia al nombre pero no con fk </summary>
    public TipoLinea Tipo {get; set;} 
    public string Concepto {get; set;} = string.Empty;
 
    public int Cantidad {get; set;}
-   public double PrecioUnitario {get; set;}
+   public decimal PrecioUnitario {get; set;}
    public TipoPrecio TipoPrecio {get; set;}
-   public double Subtotal {get; set;}
+   public decimal Subtotal {get; set;}
+   // Evita el delegar este calculo al servicio
+   public void CalcularSubtotal(int dias)
+    {
+        Subtotal = TipoPrecio switch
+        {
+            TipoPrecio.Diario => PrecioUnitario * Cantidad * dias,
+            TipoPrecio.Unico => PrecioUnitario * Cantidad,
+            _ => 0m
+        };
+    }
 }
 
 
@@ -37,6 +50,5 @@ public enum TipoLinea
 public enum TipoPrecio
 {
     Diario,
-    Unico,
-    Porcentaje
+    Unico
 }
