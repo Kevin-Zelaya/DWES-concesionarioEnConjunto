@@ -3,7 +3,7 @@ using Serilog;
 
 public static class RepositoryConfiguration
 {
-    public static IServiceCollection AddServices(
+    public static IServiceCollection AddRepositories(
         this IServiceCollection services
     )
     {
