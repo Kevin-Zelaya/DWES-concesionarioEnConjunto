@@ -1,4 +1,4 @@
-using APIAlquilerVehiculos;
+using APIAlquilerVehiculos.Infrastructure.AutenticationJWTAutorization;
 using APIAlquilerVehiculos.Seed;
 using APIAlquilerVehiculos.Services;
 using APIAlquilerVehiculos.Services.Auth;

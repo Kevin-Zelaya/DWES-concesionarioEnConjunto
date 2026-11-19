@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 
-namespace APIAlquilerVehiculos;
+namespace APIAlquilerVehiculos.Infrastructure.AutenticationJWTAutorization;
 
 /// <summary>
 ///  Configuración de autenticación y autorización.
