@@ -77,7 +77,7 @@ public enum TipoTrabajador
     /// <summary>
     /// Trabajador encargado de las tareas operativas.
     /// </summary>
-    Operario,
+    Operaciones,
     
     /// <summary>
     /// Trabajador encargado de las tareas de mantenimiento y reparación.
