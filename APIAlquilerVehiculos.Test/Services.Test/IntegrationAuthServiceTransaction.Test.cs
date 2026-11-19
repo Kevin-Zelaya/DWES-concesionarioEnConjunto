@@ -135,7 +135,7 @@ private PostgreSqlContainer _postgresContainer = null!;
     {
         if (_dbContext.Database.GetDbConnection().State == ConnectionState.Open)
         {
-            await _dbContext.Cliente.ExecuteDeleteAsync();
+            await _dbContext.Clientes.ExecuteDeleteAsync();
             await _dbContext.UserRoles.ExecuteDeleteAsync();
             await _dbContext.Users.ExecuteDeleteAsync();
         }
@@ -230,7 +230,7 @@ private PostgreSqlContainer _postgresContainer = null!;
 
         await using var verifyCtx = await CrearContextoIndependienteAsync();
         Assert.That(await verifyCtx.Users.AnyAsync(u => u.Email == email), Is.False);
-        Assert.That(await verifyCtx.Cliente.AnyAsync(), Is.False);
+        Assert.That(await verifyCtx.Clientes.AnyAsync(), Is.False);
     }
     
 
@@ -255,7 +255,7 @@ private PostgreSqlContainer _postgresContainer = null!;
 
         await using var verifyCtx = await CrearContextoIndependienteAsync();
         Assert.That(await verifyCtx.Users.AnyAsync(u => u.Email == email), Is.False);
-        Assert.That(await verifyCtx.Cliente.AnyAsync(), Is.False);
+        Assert.That(await verifyCtx.Clientes.AnyAsync(), Is.False);
     }
 
     [Test]
@@ -319,7 +319,7 @@ private PostgreSqlContainer _postgresContainer = null!;
         await using var verifyCtx = await CrearContextoIndependienteAsync();
         Assert.That(await verifyCtx.Users.AnyAsync(u => u.Email == email), Is.False);
         Assert.That(await verifyCtx.UserRoles.AnyAsync(), Is.False);
-        Assert.That(await verifyCtx.Cliente.AnyAsync(), Is.False);
+        Assert.That(await verifyCtx.Clientes.AnyAsync(), Is.False);
     }
 
     [Test]
@@ -354,7 +354,7 @@ private PostgreSqlContainer _postgresContainer = null!;
 
         await using var verifyCtx = await CrearContextoIndependienteAsync();
         Assert.That(await verifyCtx.Users.AnyAsync(u => u.Email == email), Is.False);
-        Assert.That(await verifyCtx.Cliente.AnyAsync(), Is.False);
+        Assert.That(await verifyCtx.Clientes.AnyAsync(), Is.False);
     }
 
     [Test]
@@ -382,6 +382,6 @@ private PostgreSqlContainer _postgresContainer = null!;
         await using var verifyCtx = await CrearContextoIndependienteAsync();
         Assert.That(await verifyCtx.Users.AnyAsync(u => u.Email == email), Is.False);
         Assert.That(await verifyCtx.UserRoles.AnyAsync(), Is.False);
-        Assert.That(await verifyCtx.Cliente.AnyAsync(), Is.False);
+        Assert.That(await verifyCtx.Clientes.AnyAsync(), Is.False);
     }  
 }

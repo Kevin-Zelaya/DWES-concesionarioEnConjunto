@@ -200,8 +200,8 @@ public class AuthServiceTest
         }
 
         // Primero limpiamos las tablas dependientes (incluyendo inactivos) antes de borrar usuarios
-        await _dbContext.Cliente.IgnoreQueryFilters().ExecuteDeleteAsync();
-        await _dbContext.Trabajador.IgnoreQueryFilters().ExecuteDeleteAsync();
+        await _dbContext.Clientes.IgnoreQueryFilters().ExecuteDeleteAsync();
+        await _dbContext.Trabajadores.IgnoreQueryFilters().ExecuteDeleteAsync();
         await _dbContext.Users.IgnoreQueryFilters().ExecuteDeleteAsync();
 
         // Eliminamos el contexto para que no afecte al trabajo real
@@ -423,7 +423,7 @@ public class AuthServiceTest
         Assert.That(resultado.IsSuccess, Is.True);
         Assert.That(_usuarioPrueba, Is.Not.Null);
 
-        var clienteGuardado = await _dbContext.Cliente
+        var clienteGuardado = await _dbContext.Clientes
             .Include(c => c.Usuario)
             .FirstOrDefaultAsync(c => c.Usuario.Id == _usuarioPrueba.Id);
 
@@ -522,7 +522,7 @@ public class AuthServiceTest
 
         _userManagerMock.Verify(u => u.CreateAsync(It.IsAny<Usuario>(), It.IsAny<string>()), Times.Never);
         _userManagerMock.Verify(u => u.AddToRoleAsync(It.IsAny<Usuario>(), It.IsAny<string>()), Times.Never);
-        Assert.That(await _dbContext.Cliente.AnyAsync(), Is.False);
+        Assert.That(await _dbContext.Clientes.AnyAsync(), Is.False);
     }
 
     [Test]
@@ -551,7 +551,7 @@ public class AuthServiceTest
 
         _userManagerMock.Verify(u => u.CreateAsync(It.IsAny<Usuario>(), It.IsAny<string>()), Times.Never);
         _userManagerMock.Verify(u => u.AddToRoleAsync(It.IsAny<Usuario>(), It.IsAny<string>()), Times.Never);
-        Assert.That(await _dbContext.Cliente.AnyAsync(), Is.False);
+        Assert.That(await _dbContext.Clientes.AnyAsync(), Is.False);
     }
     
     [TestCase("12345678Z", null, null, null)]
@@ -595,7 +595,7 @@ public class AuthServiceTest
 
         _userManagerMock.Verify(u => u.CreateAsync(It.IsAny<Usuario>(), It.IsAny<string>()), Times.Never);
         _userManagerMock.Verify(u => u.AddToRoleAsync(It.IsAny<Usuario>(), It.IsAny<string>()), Times.Never);
-        Assert.That(await _dbContext.Cliente.AnyAsync(), Is.False);
+        Assert.That(await _dbContext.Clientes.AnyAsync(), Is.False);
     }
 
     // +++++++++++++++++++++++++++++++++++++++ TESTS 145 - 161: UNICIDAD DE DOCUMENTOS ++++++++++++++++++++++++++++++++++
@@ -604,7 +604,7 @@ public class AuthServiceTest
     {
         // Arrange
         _clientePrueba.Dni = "12345678Z";
-        _dbContext.Cliente.Add(_clientePrueba);
+        _dbContext.Clientes.Add(_clientePrueba);
         await _dbContext.SaveChangesAsync();
 
         var request = CrearSignupDto(dni: "12345678Z");
@@ -623,7 +623,7 @@ public class AuthServiceTest
         // Arrange
         _clientePrueba.Dni = null;
         _clientePrueba.Nie = "X1234567L";
-        _dbContext.Cliente.Add(_clientePrueba);
+        _dbContext.Clientes.Add(_clientePrueba);
         await _dbContext.SaveChangesAsync();
 
         var request = CrearSignupDto(nie: "X1234567L");
@@ -642,7 +642,7 @@ public class AuthServiceTest
         // Arrange
         _clientePrueba.Dni = null;
         _clientePrueba.Pasaporte = "PAA123456";
-        _dbContext.Cliente.Add(_clientePrueba);
+        _dbContext.Clientes.Add(_clientePrueba);
         await _dbContext.SaveChangesAsync();
 
         var request = CrearSignupDto(pasaporte: "PAA123456");
@@ -660,7 +660,7 @@ public class AuthServiceTest
     {
         // Arrange
         _clientePrueba.Dni = "12345678Z";
-        _dbContext.Cliente.Add(_clientePrueba);
+        _dbContext.Clientes.Add(_clientePrueba);
         await _dbContext.SaveChangesAsync();
 
         var request = CrearSignupDto(dni: "87654321X");
@@ -679,7 +679,7 @@ public class AuthServiceTest
         // Arrange
         _clientePrueba.Dni = null;
         _clientePrueba.Nie = "X1234567L";
-        _dbContext.Cliente.Add(_clientePrueba);
+        _dbContext.Clientes.Add(_clientePrueba);
         await _dbContext.SaveChangesAsync();
 
         var request = CrearSignupDto(nie: "Y7654321M");
@@ -698,7 +698,7 @@ public class AuthServiceTest
         // Arrange
         _clientePrueba.Dni = null;
         _clientePrueba.Pasaporte = "PAA123456";
-        _dbContext.Cliente.Add(_clientePrueba);
+        _dbContext.Clientes.Add(_clientePrueba);
         await _dbContext.SaveChangesAsync();
 
         var request = CrearSignupDto(pasaporte: "PBB987654");
@@ -722,7 +722,7 @@ public class AuthServiceTest
 
         // Assert
         Assert.That(result.IsSuccess, Is.True);
-        Assert.That(await _dbContext.Cliente.CountAsync(), Is.EqualTo(1));
+        Assert.That(await _dbContext.Clientes.CountAsync(), Is.EqualTo(1));
     }
 
     [Test]
@@ -730,7 +730,7 @@ public class AuthServiceTest
     {
         // Arrange
         _clientePrueba.Dni = "12345678Z";
-        _dbContext.Cliente.Add(_clientePrueba);
+        _dbContext.Clientes.Add(_clientePrueba);
         await _dbContext.SaveChangesAsync();
 
         var request = CrearSignupDto(dni: "12345678Z", nie: "Y7654321M");
@@ -749,7 +749,7 @@ public class AuthServiceTest
         // Arrange
         _clientePrueba.Dni = null;
         _clientePrueba.Nie = "X1234567L";
-        _dbContext.Cliente.Add(_clientePrueba);
+        _dbContext.Clientes.Add(_clientePrueba);
         await _dbContext.SaveChangesAsync();
 
         var request = CrearSignupDto(dni: "87654321X", nie: "X1234567L");
@@ -768,7 +768,7 @@ public class AuthServiceTest
         // Arrange
         _clientePrueba.Dni = null;
         _clientePrueba.Pasaporte = "PAA123456";
-        _dbContext.Cliente.Add(_clientePrueba);
+        _dbContext.Clientes.Add(_clientePrueba);
         await _dbContext.SaveChangesAsync();
 
         var request = CrearSignupDto(dni: "87654321X", nie: "Y7654321M", pasaporte: "PAA123456");
@@ -786,7 +786,7 @@ public class AuthServiceTest
     {
         // Arrange
         _clientePrueba.Dni = "12345678Z";
-        _dbContext.Cliente.Add(_clientePrueba);
+        _dbContext.Clientes.Add(_clientePrueba);
         await _dbContext.SaveChangesAsync();
 
         var request = CrearSignupDto(dni: "12345678z");
@@ -805,7 +805,7 @@ public class AuthServiceTest
         // Arrange
         _clientePrueba.Dni = null;
         _clientePrueba.Nie = "X1234567L";
-        _dbContext.Cliente.Add(_clientePrueba);
+        _dbContext.Clientes.Add(_clientePrueba);
         await _dbContext.SaveChangesAsync();
 
         var request = CrearSignupDto(nie: "x1234567l");
@@ -824,7 +824,7 @@ public class AuthServiceTest
         // Arrange
         _clientePrueba.Dni = null;
         _clientePrueba.Pasaporte = "PAA123456";
-        _dbContext.Cliente.Add(_clientePrueba);
+        _dbContext.Clientes.Add(_clientePrueba);
         await _dbContext.SaveChangesAsync();
 
         var request = CrearSignupDto(pasaporte: "paa123456");
@@ -842,7 +842,7 @@ public class AuthServiceTest
     {
         // Arrange
         _clientePrueba.Dni = "12345678Z";
-        _dbContext.Cliente.Add(_clientePrueba);
+        _dbContext.Clientes.Add(_clientePrueba);
         await _dbContext.SaveChangesAsync();
 
         var request = CrearSignupDto(dni: "   12345678Z   ");
@@ -861,7 +861,7 @@ public class AuthServiceTest
         // Arrange
         _clientePrueba.Dni = null;
         _clientePrueba.Nie = "X1234567L";
-        _dbContext.Cliente.Add(_clientePrueba);
+        _dbContext.Clientes.Add(_clientePrueba);
         await _dbContext.SaveChangesAsync();
 
         var request = CrearSignupDto(dni: null, nie: "X1234567L");
@@ -880,7 +880,7 @@ public class AuthServiceTest
         // Arrange
         _clientePrueba.Dni = null;
         _clientePrueba.Pasaporte = "PAA123456";
-        _dbContext.Cliente.Add(_clientePrueba);
+        _dbContext.Clientes.Add(_clientePrueba);
         await _dbContext.SaveChangesAsync();
 
         var request = CrearSignupDto(dni: null, pasaporte: "PAA123456");
@@ -899,7 +899,7 @@ public class AuthServiceTest
         // Arrange
         _clientePrueba.Dni = null;
         _clientePrueba.Pasaporte = "PAA123456";
-        _dbContext.Cliente.Add(_clientePrueba);
+        _dbContext.Clientes.Add(_clientePrueba);
         await _dbContext.SaveChangesAsync();
 
         var request = CrearSignupDto(nie: null, pasaporte: "PAA123456");
@@ -1047,7 +1047,7 @@ public class AuthServiceTest
 
         // Assert
         Assert.That(result.IsFailure, Is.True);
-        Assert.That(await _dbContext.Cliente.AnyAsync(), Is.False);
+        Assert.That(await _dbContext.Clientes.AnyAsync(), Is.False);
     }
 
     // +++++++++++++++++++++++++++++++++++++++ TESTS CREATEASYNC / CREACIÓN DE USUARIO ++++++++++++++++++++++++++++++++++
@@ -1064,7 +1064,7 @@ public class AuthServiceTest
         // Assert
         Assert.That(result.IsSuccess, Is.True);
         _userManagerMock.Verify(u => u.AddToRoleAsync(It.IsAny<Usuario>(), Roles.Cliente), Times.Once);
-        Assert.That(await _dbContext.Cliente.CountAsync(), Is.EqualTo(1));
+        Assert.That(await _dbContext.Clientes.CountAsync(), Is.EqualTo(1));
     }
 
     [Test]
@@ -1159,7 +1159,7 @@ public class AuthServiceTest
         Assert.That(result.IsFailure, Is.True);
         Assert.That(_dbContext.Database.CurrentTransaction, Is.Null);
         Assert.That(await _dbContext.Users.AnyAsync(), Is.False);
-        Assert.That(await _dbContext.Cliente.AnyAsync(), Is.False);
+        Assert.That(await _dbContext.Clientes.AnyAsync(), Is.False);
     }
 
     [Test]
@@ -1197,7 +1197,7 @@ public class AuthServiceTest
 
         // Assert
         Assert.That(result.IsFailure, Is.True);
-        Assert.That(await _dbContext.Cliente.AnyAsync(), Is.False);
+        Assert.That(await _dbContext.Clientes.AnyAsync(), Is.False);
     }
 
     [Test]
@@ -1341,7 +1341,7 @@ public class AuthServiceTest
 
         // Assert
         Assert.That(result.IsSuccess, Is.True);
-        Assert.That(await _dbContext.Cliente.CountAsync(), Is.EqualTo(1));
+        Assert.That(await _dbContext.Clientes.CountAsync(), Is.EqualTo(1));
     }
 
     [Test]
@@ -1383,7 +1383,7 @@ public class AuthServiceTest
         Assert.That(result.IsFailure, Is.True);
         Assert.That(_dbContext.Database.CurrentTransaction, Is.Null);
         Assert.That(await _dbContext.Users.AnyAsync(), Is.False);
-        Assert.That(await _dbContext.Cliente.AnyAsync(), Is.False);
+        Assert.That(await _dbContext.Clientes.AnyAsync(), Is.False);
     }
 
     [Test]
@@ -1401,7 +1401,7 @@ public class AuthServiceTest
 
         // Assert
         Assert.That(result.IsFailure, Is.True);
-        Assert.That(await _dbContext.Cliente.AnyAsync(), Is.False);
+        Assert.That(await _dbContext.Clientes.AnyAsync(), Is.False);
     }
 
     [Test]
@@ -1449,7 +1449,7 @@ public class AuthServiceTest
 
         // Assert
         Assert.That(result.IsSuccess, Is.True);
-        Assert.That(await _dbContext.Cliente.CountAsync(), Is.EqualTo(1));
+        Assert.That(await _dbContext.Clientes.CountAsync(), Is.EqualTo(1));
     }
 
     [Test]
@@ -1463,7 +1463,7 @@ public class AuthServiceTest
 
         // Assert
         Assert.That(result.IsSuccess, Is.True);
-        var cliente = await _dbContext.Cliente.FirstOrDefaultAsync();
+        var cliente = await _dbContext.Clientes.FirstOrDefaultAsync();
         Assert.That(cliente, Is.Not.Null);
         Assert.That(cliente!.IdUsuario, Is.EqualTo(_usuarioPrueba.Id));
     }
@@ -1479,7 +1479,7 @@ public class AuthServiceTest
 
         // Assert
         Assert.That(result.IsSuccess, Is.True);
-        var cliente = await _dbContext.Cliente.FirstOrDefaultAsync();
+        var cliente = await _dbContext.Clientes.FirstOrDefaultAsync();
         Assert.That(cliente, Is.Not.Null);
         Assert.That(cliente!.Nombre, Is.EqualTo("Elena"));
     }
@@ -1495,7 +1495,7 @@ public class AuthServiceTest
 
         // Assert
         Assert.That(result.IsSuccess, Is.True);
-        var cliente = await _dbContext.Cliente.FirstOrDefaultAsync();
+        var cliente = await _dbContext.Clientes.FirstOrDefaultAsync();
         Assert.That(cliente, Is.Not.Null);
         Assert.That(cliente!.Apellidos, Is.EqualTo("Martín Ruiz"));
     }
@@ -1512,7 +1512,7 @@ public class AuthServiceTest
 
         // Assert
         Assert.That(result.IsSuccess, Is.True);
-        var cliente = await _dbContext.Cliente.FirstOrDefaultAsync();
+        var cliente = await _dbContext.Clientes.FirstOrDefaultAsync();
         Assert.That(cliente, Is.Not.Null);
         Assert.That(cliente!.FechaNacimiento, Is.EqualTo(fechaNacimiento));
     }
@@ -1529,7 +1529,7 @@ public class AuthServiceTest
 
         // Assert
         Assert.That(result.IsSuccess, Is.True);
-        var cliente = await _dbContext.Cliente.FirstOrDefaultAsync();
+        var cliente = await _dbContext.Clientes.FirstOrDefaultAsync();
         Assert.That(cliente, Is.Not.Null);
         Assert.That(cliente!.FechaNacimiento.Kind, Is.EqualTo(DateTimeKind.Utc));
     }
@@ -1545,7 +1545,7 @@ public class AuthServiceTest
 
         // Assert
         Assert.That(result.IsSuccess, Is.True);
-        var cliente = await _dbContext.Cliente.FirstOrDefaultAsync();
+        var cliente = await _dbContext.Clientes.FirstOrDefaultAsync();
         Assert.That(cliente, Is.Not.Null);
         Assert.That(cliente!.Dni, Is.EqualTo("87654321X"));
     }
@@ -1561,7 +1561,7 @@ public class AuthServiceTest
 
         // Assert
         Assert.That(result.IsSuccess, Is.True);
-        var cliente = await _dbContext.Cliente.FirstOrDefaultAsync();
+        var cliente = await _dbContext.Clientes.FirstOrDefaultAsync();
         Assert.That(cliente, Is.Not.Null);
         Assert.That(cliente!.Nie, Is.EqualTo("Y7654321M"));
     }
@@ -1577,7 +1577,7 @@ public class AuthServiceTest
 
         // Assert
         Assert.That(result.IsSuccess, Is.True);
-        var cliente = await _dbContext.Cliente.FirstOrDefaultAsync();
+        var cliente = await _dbContext.Clientes.FirstOrDefaultAsync();
         Assert.That(cliente, Is.Not.Null);
         Assert.That(cliente!.Pasaporte, Is.EqualTo("PBB987654"));
     }
@@ -1593,7 +1593,7 @@ public class AuthServiceTest
 
         // Assert
         Assert.That(result.IsSuccess, Is.True);
-        var cliente = await _dbContext.Cliente.FirstOrDefaultAsync();
+        var cliente = await _dbContext.Clientes.FirstOrDefaultAsync();
         Assert.That(cliente, Is.Not.Null);
         Assert.That(cliente!.NumeroPermisoConducir, Is.EqualTo("PERMISO12345"));
     }
@@ -1611,7 +1611,7 @@ public class AuthServiceTest
 
         // Assert
         Assert.That(result.IsSuccess, Is.True);
-        var cliente = await _dbContext.Cliente.FirstOrDefaultAsync();
+        var cliente = await _dbContext.Clientes.FirstOrDefaultAsync();
         Assert.That(cliente, Is.Not.Null);
         Assert.That(cliente!.CreatedAt, Is.Not.EqualTo(default(DateTime)));
         Assert.That(cliente.CreatedAt, Is.InRange(antes, despues));
@@ -1628,7 +1628,7 @@ public class AuthServiceTest
 
         // Assert
         Assert.That(result.IsSuccess, Is.True);
-        var cliente = await _dbContext.Cliente.FirstOrDefaultAsync();
+        var cliente = await _dbContext.Clientes.FirstOrDefaultAsync();
         Assert.That(cliente, Is.Not.Null);
         Assert.That(cliente!.IsActivo, Is.True);
     }
@@ -1644,7 +1644,7 @@ public class AuthServiceTest
 
         // Assert
         Assert.That(result.IsSuccess, Is.True);
-        var cliente = await _dbContext.Cliente.FirstOrDefaultAsync();
+        var cliente = await _dbContext.Clientes.FirstOrDefaultAsync();
         Assert.That(cliente, Is.Not.Null);
         Assert.That(cliente!.Dni, Is.EqualTo("87654321X"));
     }
@@ -1660,7 +1660,7 @@ public class AuthServiceTest
 
         // Assert
         Assert.That(result.IsSuccess, Is.True);
-        var cliente = await _dbContext.Cliente.FirstOrDefaultAsync();
+        var cliente = await _dbContext.Clientes.FirstOrDefaultAsync();
         Assert.That(cliente, Is.Not.Null);
         Assert.That(cliente!.Nie, Is.EqualTo("Y7654321M"));
     }
@@ -1676,7 +1676,7 @@ public class AuthServiceTest
 
         // Assert
         Assert.That(result.IsSuccess, Is.True);
-        var cliente = await _dbContext.Cliente.FirstOrDefaultAsync();
+        var cliente = await _dbContext.Clientes.FirstOrDefaultAsync();
         Assert.That(cliente, Is.Not.Null);
         Assert.That(cliente!.Pasaporte, Is.EqualTo("PBB987654"));
     }
@@ -1700,7 +1700,7 @@ public class AuthServiceTest
                 .UseNpgsql(_connectionString)
                 .Options);
 
-        Assert.That(await nuevoContexto.Cliente.CountAsync(), Is.EqualTo(1));
+        Assert.That(await nuevoContexto.Clientes.CountAsync(), Is.EqualTo(1));
         Assert.That(await nuevoContexto.Users.CountAsync(), Is.EqualTo(1));
     }
     
@@ -1878,7 +1878,7 @@ public class AuthServiceTest
             .Options;
         await using var verifyCtx = new AppDbContext(options);
 
-        var clienteEnBd = await verifyCtx.Cliente
+        var clienteEnBd = await verifyCtx.Clientes
             .FirstOrDefaultAsync(c => c.Id == result.Value.ClienteId);
 
         Assert.That(clienteEnBd, Is.Not.Null);
@@ -1997,7 +1997,7 @@ public class AuthServiceTest
             CreatedAt = DateTime.UtcNow,
             IsActivo = true
         };
-        _dbContext.Cliente.Add(cliente);
+        _dbContext.Clientes.Add(cliente);
         await _dbContext.SaveChangesAsync();
 
         _signInManagerMock
@@ -2047,7 +2047,7 @@ public class AuthServiceTest
             CreatedAt = DateTime.UtcNow,
             IsActivo = true
         };
-        _dbContext.Trabajador.Add(trabajador);
+        _dbContext.Trabajadores.Add(trabajador);
         await _dbContext.SaveChangesAsync();
 
         _signInManagerMock
@@ -2106,8 +2106,8 @@ public class AuthServiceTest
             CreatedAt = DateTime.UtcNow,
             IsActivo = true
         };
-        _dbContext.Cliente.Add(cliente);
-        _dbContext.Trabajador.Add(trabajador);
+        _dbContext.Clientes.Add(cliente);
+        _dbContext.Trabajadores.Add(trabajador);
         await _dbContext.SaveChangesAsync();
 
         _signInManagerMock
@@ -2232,7 +2232,7 @@ public async Task Login_ClienteActivo_ContinuaElLogin()
         CreatedAt = DateTime.UtcNow,
         IsActivo = true
     };
-    _dbContext.Cliente.Add(cliente);
+    _dbContext.Clientes.Add(cliente);
     await _dbContext.SaveChangesAsync();
 
     _signInManagerMock
@@ -2283,7 +2283,7 @@ public async Task Login_ClienteInactivo_DevuelveInactiveAccountYNoVerificaPasswo
         CreatedAt = DateTime.UtcNow,
         IsActivo = false
     };
-    _dbContext.Cliente.Add(cliente);
+    _dbContext.Clientes.Add(cliente);
     await _dbContext.SaveChangesAsync();
 
     var request = new LoginDto(email, "Password123!");
@@ -2326,7 +2326,7 @@ public async Task Login_TrabajadorActivo_ContinuaElLogin()
         CreatedAt = DateTime.UtcNow,
         IsActivo = true
     };
-    _dbContext.Trabajador.Add(trabajador);
+    _dbContext.Trabajadores.Add(trabajador);
     await _dbContext.SaveChangesAsync();
 
     _signInManagerMock
@@ -2376,7 +2376,7 @@ public async Task Login_TrabajadorInactivo_DevuelveInactiveAccountYNoVerificaPas
         CreatedAt = DateTime.UtcNow,
         IsActivo = false
     };
-    _dbContext.Trabajador.Add(trabajador);
+    _dbContext.Trabajadores.Add(trabajador);
     await _dbContext.SaveChangesAsync();
 
     var request = new LoginDto(email, "Password123!");
@@ -2446,7 +2446,7 @@ public async Task Login_ClienteActivoYTrabajadorActivo_ContinuaElLogin()
     _dbContext.Users.Add(usuario);
     await _dbContext.SaveChangesAsync();
 
-    _dbContext.Cliente.Add(new Cliente
+    _dbContext.Clientes.Add(new Cliente
     {
         IdUsuario = usuario.Id,
         Nombre = "Lucía",
@@ -2457,7 +2457,7 @@ public async Task Login_ClienteActivoYTrabajadorActivo_ContinuaElLogin()
         CreatedAt = DateTime.UtcNow,
         IsActivo = true
     });
-    _dbContext.Trabajador.Add(new Trabajador
+    _dbContext.Trabajadores.Add(new Trabajador
     {
         IdUsuario = usuario.Id,
         Nombre = "Lucía",
@@ -2506,7 +2506,7 @@ public async Task Login_ClienteActivoYTrabajadorActivo_ContinuaElLogin()
         _dbContext.Users.Add(usuario);
         await _dbContext.SaveChangesAsync();
 
-        _dbContext.Cliente.Add(new Cliente
+        _dbContext.Clientes.Add(new Cliente
         {
             IdUsuario = usuario.Id,
             Nombre = "Lucía",
@@ -2517,7 +2517,7 @@ public async Task Login_ClienteActivoYTrabajadorActivo_ContinuaElLogin()
             CreatedAt = DateTime.UtcNow,
             IsActivo = false
         });
-        _dbContext.Trabajador.Add(new Trabajador
+        _dbContext.Trabajadores.Add(new Trabajador
         {
             IdUsuario = usuario.Id,
             Nombre = "Lucía",
@@ -2563,7 +2563,7 @@ public async Task Login_ClienteActivoYTrabajadorActivo_ContinuaElLogin()
         _dbContext.Users.Add(usuario);
         await _dbContext.SaveChangesAsync();
 
-        _dbContext.Cliente.Add(new Cliente
+        _dbContext.Clientes.Add(new Cliente
         {
             IdUsuario = usuario.Id,
             Nombre = "Lucía",
@@ -2574,7 +2574,7 @@ public async Task Login_ClienteActivoYTrabajadorActivo_ContinuaElLogin()
             CreatedAt = DateTime.UtcNow,
             IsActivo = true
         });
-        _dbContext.Trabajador.Add(new Trabajador
+        _dbContext.Trabajadores.Add(new Trabajador
         {
             IdUsuario = usuario.Id,
             Nombre = "Lucía",
@@ -2620,7 +2620,7 @@ public async Task Login_ClienteActivoYTrabajadorActivo_ContinuaElLogin()
         _dbContext.Users.Add(usuario);
         await _dbContext.SaveChangesAsync();
 
-        _dbContext.Cliente.Add(new Cliente
+        _dbContext.Clientes.Add(new Cliente
         {
             IdUsuario = usuario.Id,
             Nombre = "Lucía",
@@ -2631,7 +2631,7 @@ public async Task Login_ClienteActivoYTrabajadorActivo_ContinuaElLogin()
             CreatedAt = DateTime.UtcNow,
             IsActivo = false
         });
-        _dbContext.Trabajador.Add(new Trabajador
+        _dbContext.Trabajadores.Add(new Trabajador
         {
             IdUsuario = usuario.Id,
             Nombre = "Lucía",
@@ -3799,7 +3799,7 @@ public async Task Login_UsuarioCliente_DevuelveClienteId()
         CreatedAt = DateTime.UtcNow,
         IsActivo = true
     };
-    _dbContext.Cliente.Add(cliente);
+    _dbContext.Clientes.Add(cliente);
     await _dbContext.SaveChangesAsync();
 
     ConfigurarMocksDto(usuario, new List<string> { Roles.Cliente });
@@ -3830,7 +3830,7 @@ public async Task Login_UsuarioTrabajador_DevuelveTrabajadorId()
         CreatedAt = DateTime.UtcNow,
         IsActivo = true
     };
-    _dbContext.Trabajador.Add(trabajador);
+    _dbContext.Trabajadores.Add(trabajador);
     await _dbContext.SaveChangesAsync();
 
     ConfigurarMocksDto(usuario, new List<string> { Roles.Mecanico });
@@ -4279,7 +4279,7 @@ public async Task Login_LoginCorrecto_DevuelveLaExpiracionDelToken()
             CreatedAt = DateTime.UtcNow,
             IsActivo = true
         };
-        _dbContext.Cliente.Add(cliente);
+        _dbContext.Clientes.Add(cliente);
         await _dbContext.SaveChangesAsync();
 
         var principal = CrearClaimsPrincipal(
@@ -4323,7 +4323,7 @@ public async Task Login_LoginCorrecto_DevuelveLaExpiracionDelToken()
             CreatedAt = DateTime.UtcNow,
             IsActivo = true
         };
-        _dbContext.Trabajador.Add(trabajador);
+        _dbContext.Trabajadores.Add(trabajador);
         await _dbContext.SaveChangesAsync();
 
         var principal = CrearClaimsPrincipal(
@@ -4411,8 +4411,8 @@ public async Task Login_LoginCorrecto_DevuelveLaExpiracionDelToken()
             CreatedAt = DateTime.UtcNow,
             IsActivo = true
         };
-        _dbContext.Cliente.Add(cliente);
-        _dbContext.Trabajador.Add(trabajador);
+        _dbContext.Clientes.Add(cliente);
+        _dbContext.Trabajadores.Add(trabajador);
         await _dbContext.SaveChangesAsync();
 
         var principal = CrearClaimsPrincipal(
@@ -4648,7 +4648,7 @@ public async Task Login_LoginCorrecto_DevuelveLaExpiracionDelToken()
             CreatedAt = DateTime.UtcNow,
             IsActivo = true
         };
-        _dbContext.Cliente.Add(cliente);
+        _dbContext.Clientes.Add(cliente);
         await _dbContext.SaveChangesAsync();
 
         var principal = CrearClaimsPrincipal(
@@ -4692,7 +4692,7 @@ public async Task Login_LoginCorrecto_DevuelveLaExpiracionDelToken()
             CreatedAt = DateTime.UtcNow,
             IsActivo = true
         };
-        _dbContext.Trabajador.Add(trabajador);
+        _dbContext.Trabajadores.Add(trabajador);
         await _dbContext.SaveChangesAsync();
 
         var principal = CrearClaimsPrincipal(
