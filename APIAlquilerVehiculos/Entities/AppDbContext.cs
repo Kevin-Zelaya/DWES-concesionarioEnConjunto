@@ -20,6 +20,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options)
 	public DbSet<LineaReserva> Lineas {get; set;}
 	public DbSet<Poliza> Polizas {get; set;}
 	public DbSet<Extra> Extras {get; set;}
+	public DbSet<Recargo> Recargos {get; set;}
 	// separar en otro archivo el fluent api
 	
 	//USUARIOS
