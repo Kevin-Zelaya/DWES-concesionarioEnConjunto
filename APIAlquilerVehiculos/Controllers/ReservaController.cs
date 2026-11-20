@@ -31,8 +31,10 @@ public class ReservaController(
         var response = await _service.CreateReservaAsync(reserva, reserva.EmpleadoId, ct);
 
         return response.IsSuccess
-            ? CreatedAtAction(nameof(GetReservaByCodigoReferencia),
-                new { codigo = response.Value.CodigoRefencia }, response.Value)
+            ? CreatedAtRoute(
+                "GetReservaByCodigoReferencia",
+                new { codigo = response.Value.CodigoRefencia },
+                response.Value)
             : response.Error.ToHttpResult<Reserva>();
     }
 
@@ -59,13 +61,13 @@ public class ReservaController(
             : response.Error.ToHttpResult<Reserva>();
     }
 
-    [HttpGet("codigo/{codigo}")]
     [SwaggerOperation(
         Summary = "Obtener una reserva por código de referencia",
         Description = "Devuelve los datos de una reserva mediante su código de referencia."
     )]
     [SwaggerResponse(200, "Reserva encontrada.", typeof(Reserva))]
     [SwaggerResponse(404, "No se ha encontrado la reserva.")]
+    [HttpGet("codigo/{codigo}", Name = "GetReservaByCodigoReferencia")]
     public async Task<ActionResult<Reserva>> GetReservaByCodigoReferencia(
         [SwaggerParameter("Código de referencia de la reserva.")]
         string codigo,

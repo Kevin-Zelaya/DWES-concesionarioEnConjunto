@@ -21,7 +21,7 @@ public class ReservaYRelacionadosConfigure
 
             entity.HasIndex(r => r.CodigoRefencia)
                 .IsUnique();
-
+            entity.Property(v => v.CodigoRefencia).HasValueGenerator<CodigoReferenciaGenerator>().ValueGeneratedOnAdd().HasMaxLength(6);
             // Relación con vehículo
             entity.HasOne(r => r.Vehiculo)
                 .WithMany()
@@ -58,10 +58,12 @@ public class ReservaYRelacionadosConfigure
                 .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
             entity.Property(r => r.FechaRecogida)
-                .IsRequired();
+                .IsRequired()
+                .HasColumnType("timestamp without time zone");
 
             entity.Property(r => r.FechaDevolucion)
-                .IsRequired();
+                .IsRequired()
+                .HasColumnType("timestamp without time zone");
 
             // Estado de la reserva
             entity.Property(r => r.Estado)

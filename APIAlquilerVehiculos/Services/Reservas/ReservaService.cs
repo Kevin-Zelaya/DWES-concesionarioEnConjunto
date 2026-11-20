@@ -296,7 +296,7 @@ public class ReservaService(
     public async Task<Result<Reserva, DomainError>> UpdateVehicleAsync(string codigoReferencia, ReservaUpdateVehicleRequestDto request, CancellationToken ct = default)
     {
         _logger.LogDebug("[SERVICE-UPDATE] Actualizando vehículo de la reserva {Codigo}.", codigoReferencia);
-
+        var exist = await _vehiculoRepository.GetByIdAsync(request.VehiculoId);
         var response = await _repository.UpdateVehicleAsync(codigoReferencia, request, ct);
 
         if (response is null)
