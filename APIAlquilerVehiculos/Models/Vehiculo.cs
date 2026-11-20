@@ -82,11 +82,6 @@ public class Vehiculo
     public EstadoEnum Estado { get; set; }
     
     /// <summary>
-    /// Precio por día del alquiler de vehículo
-    /// </summary>
-    public double PrecioPorDia { get; set; }
-    
-    /// <summary>
     /// Fecha de la última revisión del vehículo.
     /// </summary>
     public DateTime UltimaRevision { get; set; }
