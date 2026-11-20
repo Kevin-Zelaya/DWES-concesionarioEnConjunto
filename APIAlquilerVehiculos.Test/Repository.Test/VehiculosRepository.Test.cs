@@ -40,13 +40,7 @@ public class VehiculosRepository_Test
         await _context.Database.EnsureCreatedAsync();
 
         var marca = new Marca { Nombre = "Test", Wb = "https://example.test", Activo = true };
-        var modelo = new Modelo
-        {
-            Nombre = "Modelo de prueba",
-            Descricion = "Modelo para pruebas",
-            Acriss = "ECMR",
-            Activo = true
-        };
+        var modelo = "Golf";
         _context.AddRange(marca, modelo);
         await _context.SaveChangesAsync();
 
@@ -315,12 +309,12 @@ public class VehiculosRepository_Test
         Id = id,
         Matricula = matricula,
         Marca_id = 1,
-        Modelo_id = 1,
+        Modelo = "GOLF",
         Acriss = "ECMR",
         categoria = CategoriaEnum.Sedan,
         Concesionario_id = 1,
         Color = "Blanco",
-        Combustible = "Gasolina",
+        Combustible = CombustibleEnum.Gasolina,
         Maletero = 400,
         NumeroPlazas = 5,
         Autonomia = 600,

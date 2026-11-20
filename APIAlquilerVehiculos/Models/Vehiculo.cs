@@ -1,4 +1,5 @@
-﻿using APIAlquilerVehiculos.Models.Enums;
+﻿using System;
+using APIAlquilerVehiculos.Models.Enums;
 
 namespace APIAlquilerVehiculos.Models;
 
@@ -27,7 +28,7 @@ public class Vehiculo
     /// <summary>
     /// Establece el identificador del modelo del vehículo.
     /// </summary>
-    public long Modelo_id { get; set; }
+    public string Modelo { get; set; }
 
     /// <summary>
     /// Establece el código Acriss del vehículo.
@@ -53,7 +54,7 @@ public class Vehiculo
     /// <summary>
     /// Tipo de combustible del vehículo.
     /// </summary>
-    public string Combustible { get; set; } = string.Empty;
+    public CombustibleEnum Combustible { get; set; }
     
     /// <summary>
     /// Capacidad del maletero del vehículo en litros.
@@ -79,6 +80,11 @@ public class Vehiculo
     /// Estado actual del vehículo.
     /// </summary>
     public EstadoEnum Estado { get; set; }
+    
+    /// <summary>
+    /// Precio por día del alquiler de vehículo
+    /// </summary>
+    public double PrecioPorDia { get; set; }
     
     /// <summary>
     /// Fecha de la última revisión del vehículo.

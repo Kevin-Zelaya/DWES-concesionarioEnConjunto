@@ -2,7 +2,7 @@
 using System.Text.Json;
 using StackExchange.Redis;
 
-public class RedisCache(IConnectionMultiplexer redis) : ICache, IScoped
+public class RedisCache(IConnectionMultiplexer redis) : ICache
 {
     private readonly IDatabase _db = redis.GetDatabase();
 

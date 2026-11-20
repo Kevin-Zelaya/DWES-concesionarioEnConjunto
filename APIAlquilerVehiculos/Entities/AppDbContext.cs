@@ -13,15 +13,13 @@ public class AppDbContext(DbContextOptions<AppDbContext> options)
 {
     
 	public DbSet<Vehiculo> Vehiculos {get; set;}
-	public DbSet<Modelo> Modelos {get; set;}
-	public DbSet<Marca> Marcas {get; set;}
+	public DbSet<Marca> Marcas { get; set; }
 
 	// Reservas
 	public DbSet<Reserva> Reservas {get; set;}
 	public DbSet<LineaReserva> Lineas {get; set;}
 	public DbSet<Poliza> Polizas {get; set;}
 	public DbSet<Extra> Extras {get; set;}
-	public DbSet<Recargo> Recargos {get; set;}
 	// separar en otro archivo el fluent api
 	
 	//USUARIOS

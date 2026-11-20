@@ -1,3 +1,8 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using APIAlquilerVehiculos.Entities;
 using APIAlquilerVehiculos.Models;
 using Microsoft.EntityFrameworkCore;
@@ -26,8 +31,9 @@ public class VehiculoRepository : IVehiculosRepository
     }
     
     /// <inheritdoc cref="GetPaginatedVehiculosAsync"/>
-    public async Task<(List<Vehiculo> items, int count, int totalPages, bool HasPreviousPage, bool HasNextPage)> GetPaginatedVehiculosAsync
-    (int pageNumber, int pageSize, CancellationToken ct = default)
+    public async Task<(List<Vehiculo> items, int count, int totalPages, bool HasPreviousPage, bool HasNextPage)>
+        GetPaginatedVehiculosAsync
+        (int pageNumber, int pageSize, CancellationToken ct = default)
     {
         // Obtener todos los registros disponibles
         var query = _context.Vehiculos.AsNoTracking().Where(v => v.Activo);
