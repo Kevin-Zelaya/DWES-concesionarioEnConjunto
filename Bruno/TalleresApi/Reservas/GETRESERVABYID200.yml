@@ -1,0 +1,34 @@
+info:
+  name: GETRESERVABYID200
+  type: http
+  seq: 2
+
+http:
+  method: POST
+  url: http://{{host}}:{{port}}/api/reservas
+  body:
+    type: json
+    data: |-
+      {
+        "clienteId": 1,
+        "empleadoId": 1,
+        "categoria": "Descapotable",
+        "vehiculoId": "8YIOgl77F6m",
+        "fechaRecogida": "2026-11-25T10:00:00",
+        "fechaDevolucion": "2026-11-28T10:00:00",
+        "lineas": [
+          {
+            "tipo": "Poliza",
+            "tipoId": 1,
+            "cantidad": 1
+          }
+        ]
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false
