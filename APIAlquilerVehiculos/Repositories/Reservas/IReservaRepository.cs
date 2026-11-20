@@ -127,4 +127,10 @@ public interface IReservaRepository
     /// </returns>
     Task<(List<Reserva> items, int count, int totalPages, bool HasPreviousPage, bool HasNextPage)> GetPaginatedReservasByEmployeeIdAsync(long id, int pageNumber, int pageSize, CancellationToken ct = default);
 
-}
+   Task<bool> ExistsReservaSolapadaAsync(
+        string vehiculoId,
+        DateTime fechaRecogida,
+        DateTime fechaDevolucion,
+        long? reservaIdExcluir = null,
+        CancellationToken ct = default);
+    }

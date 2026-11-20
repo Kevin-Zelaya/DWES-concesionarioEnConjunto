@@ -33,6 +33,13 @@ public class Reserva
     {
         return (FechaDevolucion.Date - FechaRecogida.Date).Days;
     }
+    public static int CalcularDiasAlquiler(
+        DateTime FechaRecogida,
+        DateTime FechaDevolución
+    )
+    {
+        return (FechaRecogida.Date - FechaDevolución.Date).Days;
+    }
 }
 
 /// <summary>

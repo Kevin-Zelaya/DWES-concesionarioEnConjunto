@@ -28,6 +28,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options)
 	public DbSet<Trabajador> Trabajadores {get; set;}
 	public DbSet<Oficina> Oficinas { get; set; }
 	
+	
 	protected override void OnModelCreating(ModelBuilder modelBuilder)
 	{
 		base.OnModelCreating(modelBuilder);

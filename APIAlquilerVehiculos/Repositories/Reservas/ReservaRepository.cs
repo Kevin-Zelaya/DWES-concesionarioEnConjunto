@@ -213,4 +213,30 @@ public class ReservaRepository(
         return await _context.Reservas
             .AnyAsync(r => r.Id == id, ct);
     }
+
+    /// <summary>
+    /// Comprueba si un vehículo tiene alguna reserva que se solape
+    /// con el rango de fechas indicado.
+    /// </summary>
+    public async Task<bool> ExistsReservaSolapadaAsync(
+        string vehiculoId,
+        DateTime fechaRecogida,
+        DateTime fechaDevolucion,
+        long? reservaIdExcluir = null,
+        CancellationToken ct = default)
+    {
+        return await _context.Reservas
+            .AsNoTracking()
+            .AnyAsync(r =>
+                r.VehiculoId == vehiculoId &&
+                (
+                    r.Estado == Estado.Pendiente ||
+                    r.Estado == Estado.Confirmada ||
+                    r.Estado == Estado.EnCurso
+                ) &&
+                (reservaIdExcluir == null || r.Id != reservaIdExcluir) &&
+                r.FechaRecogida < fechaDevolucion &&
+                r.FechaDevolucion > fechaRecogida,
+                ct);
+    }
 }
