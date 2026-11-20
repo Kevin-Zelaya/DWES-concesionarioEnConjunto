@@ -41,7 +41,7 @@ public static class UsuarioYRelacionadosConfig
             entity.HasIndex(c => c.Pasaporte).IsUnique();
             
             entity.Property(u => u.IsActivo).IsRequired();
-            entity.HasQueryFilter(p => !p.IsActivo);
+            entity.HasQueryFilter(p => p.IsActivo);
         });
 
         // trabajadores
@@ -58,7 +58,7 @@ public static class UsuarioYRelacionadosConfig
             entity.HasIndex(t => t.Dni).IsUnique();
             
             entity.Property(u => u.IsActivo).IsRequired();
-            entity.HasQueryFilter(p => !p.IsActivo);
+            entity.HasQueryFilter(p => p.IsActivo);
         });
         
         // oficina
