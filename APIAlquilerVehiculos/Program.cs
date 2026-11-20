@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using APIAlquilerVehiculos.Infrastructure.AutenticationJWTAutorization;
 using APIAlquilerVehiculos.Seed;
 using APIAlquilerVehiculos.Services;
@@ -36,7 +37,12 @@ builder.Services.AddControllers(options =>
 {
     options.RespectBrowserAcceptHeader = true;
     options.ReturnHttpNotAcceptable = true;
-});
+}).AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.Converters.Add(
+            new JsonStringEnumConverter()
+        );
+    });;
 
 // ======= Infraestructura ==========
 builder.Services
@@ -75,6 +81,7 @@ if (apiConfig.shouldRecreateDb)
 }
 
 // Seed de Usuarios
+// esto se debe controlar de otra forma por el modo desarrollo y producción
 using (var scope = app.Services.CreateScope())
 {
     var logger = scope.ServiceProvider
@@ -83,6 +90,19 @@ using (var scope = app.Services.CreateScope())
     await UserRoleSeeder.SeedIdentityAsync(
         scope.ServiceProvider,
         logger
+    );
+    await CatalogoSeeder.SeedMarcasAsync(
+        scope.ServiceProvider,
+        logger
+    );
+    await CatalogoSeeder.SeedPolizasAsync(
+        scope.ServiceProvider,
+        logger
+    );
+    await CatalogoSeeder.SeedVehiculosAsync(
+        scope.ServiceProvider,
+        logger,
+        1
     );
 }
 //app.UseHttpsRedirection();

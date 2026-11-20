@@ -11,7 +11,7 @@ namespace APIAlquilerVehiculos.Models.Reservas;
 public class Reserva
 {
     public long Id {get; set;}
-    public string CodigoRefencia {get; set;} = string.Empty;
+    public string? CodigoRefencia {get; set;}
     public long ClienteId {get; set;}
     // Trabajador que lo crea
     public long TrabajadorId {get; set;}

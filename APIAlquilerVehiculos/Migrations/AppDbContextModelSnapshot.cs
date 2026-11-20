@@ -125,8 +125,9 @@ namespace APIAlquilerVehiculos.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<string>("CodigoRefencia")
-                        .IsRequired()
-                        .HasColumnType("text");
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(6)
+                        .HasColumnType("character varying(6)");
 
                     b.Property<string>("Estado")
                         .IsRequired()
@@ -140,10 +141,10 @@ namespace APIAlquilerVehiculos.Migrations
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
                     b.Property<DateTime>("FechaDevolucion")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<DateTime>("FechaRecogida")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("Notas")
                         .HasMaxLength(500)
