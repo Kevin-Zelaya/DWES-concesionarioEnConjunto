@@ -1,0 +1,28 @@
+info:
+  name: GetAll401Unauthorized
+  type: http
+  seq: 2
+
+http:
+  method: GET
+  url: "{{baseUrl}}/api/trabajador?page=1&pageSize=5&incluirInactivos=true"
+  params:
+    - name: page
+      value: "1"
+      type: query
+    - name: pageSize
+      value: "5"
+      type: query
+    - name: incluirInactivos
+      value: "true"
+      type: query
+  auth:
+    type: bearer
+    token: ""
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false

@@ -5,7 +5,7 @@ public static class ReservasMappers
 
     public static Reserva ToEntity(
         this ReservaCreateRequestDto dto,
-        long trabajadorId)
+        long? trabajadorId)
     {
         return new Reserva
         {
