@@ -163,7 +163,7 @@ namespace APIAlquilerVehiculos.Migrations
                         .HasColumnType("xid")
                         .HasColumnName("xmin");
 
-                    b.Property<long>("TrabajadorId")
+                    b.Property<long?>("TrabajadorId")
                         .HasColumnType("bigint");
 
                     b.Property<string>("VehiculoId")
@@ -878,8 +878,7 @@ namespace APIAlquilerVehiculos.Migrations
                     b.HasOne("APIAlquilerVehiculos.Models.Usuarios.Trabajador", null)
                         .WithMany()
                         .HasForeignKey("TrabajadorId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("APIAlquilerVehiculos.Models.Vehiculo", "Vehiculo")
                         .WithMany()

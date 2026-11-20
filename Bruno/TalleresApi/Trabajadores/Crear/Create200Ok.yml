@@ -1,0 +1,31 @@
+info:
+  name: Create200Ok
+  type: http
+  seq: 2
+
+http:
+  method: POST
+  url: "{{baseUrl}}/api/trabajador/"
+  body:
+    type: json
+    data: |-
+      {
+        "email": "aitoraros11@gmail.com",
+        "telefono": "123456789",
+        "contraseña": "Aitoraros11!",
+        "nombre": "Aitor",
+        "apellidos": "Arostegui Navarro",
+        "dni": "48271935H",
+        "fecha_ingreso": "2005-10-22",
+        "tipo_trabajador": "Operaciones"
+      }
+  auth:
+    type: bearer
+    token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwiZW1haWwiOiJhZG1pbkBhbHF1aWxlci5jb20iLCJqdGkiOiJjMmFlN2RlNC0zODhmLTRiYWEtOTJkOS0xY2FkYmU1MmNiMGQiLCJpYXQiOjE3OTUxOTI2NTYsInJvbGUiOiJBZG1pbmlzdHJhZG9yIiwibmJmIjoxNzk1MTkyNjU2LCJleHAiOjE3OTUxOTM1NTYsImlzcyI6IkFscXVpbGVyVmVoaWN1bG9zQXBpIiwiYXVkIjoiQWxxdWlsZXJWZWhpY3Vsb3NDbGllbnQifQ.edgpfKMyioXd_tZx_NSW0UiuD_ikL1G3Z5qReKzPbTU
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false

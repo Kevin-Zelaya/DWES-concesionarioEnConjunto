@@ -5,7 +5,7 @@ public record ReservaDto(
     long Id,
     string CodigoRefencia,
     long ClienteId,
-    long TrabajadorId,
+    long? TrabajadorId,
     CategoriaEnum Categoria,
     string VehiculoId,
     DateTime FechaCreacion,
