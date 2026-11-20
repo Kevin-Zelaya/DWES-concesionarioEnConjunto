@@ -12,8 +12,8 @@ http:
       {
         "clienteId": 1,
         "empleadoId": 1,
-        "categoria": "Sedan",
-        "vehiculoId": "0uOlC5CtETI",
+        "categoria": "Descapotable",
+        "vehiculoId": "8YIOgl77F6m",
         "fechaRecogida": "2026-11-25T10:00:00",
         "fechaDevolucion": "2026-11-28T10:00:00",
         "lineas": [

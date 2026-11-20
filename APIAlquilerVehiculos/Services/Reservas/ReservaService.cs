@@ -29,7 +29,8 @@ public class ReservaService(
             return Result.Failure<ReservaDto, DomainError>(
                 NotFoundError.FromResource("Vehículo", reserva.VehiculoId)
             );
-        // comprobar en el futuro si existe un cliente
+        // !! comprobar en el futuro si existe un cliente
+        // !! comprobar en el futuro el horario
         await _unitOfWork.BeginTransactionAsync(ct);
         try
         {
