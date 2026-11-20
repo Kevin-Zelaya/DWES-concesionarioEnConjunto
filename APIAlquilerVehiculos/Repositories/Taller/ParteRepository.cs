@@ -20,7 +20,7 @@ public class ParteRepository : IParteRepository
             Apellidos = "Gómez",
             IsActivo = true,
             Dni = null,
-            TipoTrabajador = TipoTrabajador.Operario
+            TipoTrabajador = TipoTrabajador.Operaciones
         }
     ];
 
