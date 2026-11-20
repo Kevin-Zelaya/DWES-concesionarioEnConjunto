@@ -6,6 +6,8 @@ using APIAlquilerVehiculos.Validators.Auth;
 using FluentValidation;
 using Microsoft.Extensions.Options;
 using Serilog;
+using APIAlquilerVehiculos.Repositories.Marcas;
+using APIAlquilerVehiculos.Services.Marcas;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -47,6 +49,10 @@ builder.Services
 builder.Services.AddAuthenticationConfing(builder.Configuration);
 
 builder.Services.AddScoped<IAuthService, AuthService>();
+
+// ======= Módulo de Marcas =======
+builder.Services.AddScoped<IMarcaRepository, MarcaRepository>();
+builder.Services.AddScoped<IMarcaService, MarcaService>();
 
 
 
