@@ -14,7 +14,7 @@ public class Reserva
     public string? CodigoRefencia {get; set;}
     public long ClienteId {get; set;}
     // Trabajador que lo crea
-    public long TrabajadorId {get; set;}
+    public long? TrabajadorId {get; set;}
     public CategoriaEnum Categoria {get; set;}
     public string VehiculoId {get; set;}
     public Vehiculo? Vehiculo {get; set;}

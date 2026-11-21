@@ -119,6 +119,8 @@ if (app.Environment.IsDevelopment())
 {
     //app.MapOpenApi();
     app.UseSwagger();
+    app.UseSwaggerUI(c =>
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "API Alquiler Vehículos v1"));
 }
 // ======= Buscar todos los controladores ==========
 app.MapControllers();
@@ -131,8 +133,9 @@ Console.WriteLine("                Concesionario                  ");
 Console.WriteLine("==============================================");
 Console.ResetColor();
 
+
 Console.WriteLine($"  Entorno:          {app.Environment.EnvironmentName}");
-Console.WriteLine($"  Swagger:          http://localhost:5205/swagger");
+Console.WriteLine($"  Swagger:          http://localhost:5017/swagger");
 Console.WriteLine($"  Reconstruir Db:   {(apiConfig.shouldRecreateDb ? "Sí" : "No")}");
 
 Console.ForegroundColor = ConsoleColor.Blue;
