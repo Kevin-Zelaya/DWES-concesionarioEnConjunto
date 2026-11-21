@@ -1,4 +1,4 @@
-﻿using APIAlquilerVehiculos.Entities;
+using APIAlquilerVehiculos.Entities;
 using APIAlquilerVehiculos.Models.Reservas;
 using APIAlquilerVehiculos.Models.Usuarios;
 using Microsoft.EntityFrameworkCore;
@@ -22,8 +22,11 @@ public class TrabajadorRepository(AppDbContext db) : ITrabajadorRepository {
             .Include(t => t.Usuario)
             .AsQueryable();
 
-        // si no hay que incluir inactivos se añade la condicion
-        if (!incluirInactivos) query = query.Where(t => t.IsActivo);
+        // si hay que incluir inactivos se ignora el query filter global (solo activos)
+        if (incluirInactivos)
+            query = query.IgnoreQueryFilters();
+        else
+            query = query.Where(t => t.IsActivo);
         // si se pide un tipo se añade la condición
         if (tipo is not null) query = query.Where(t => t.TipoTrabajador == tipo);
 
@@ -38,14 +41,16 @@ public class TrabajadorRepository(AppDbContext db) : ITrabajadorRepository {
         return (items, total);
     }
     
-    // devuelve inactivos
+    // devuelve inactivos tambien (IgnoreQueryFilters salta el filtro global de activos)
     public async Task<Trabajador?> GetByIdAsync(long id) =>
         await db.Trabajadores.AsNoTracking()
+            .IgnoreQueryFilters()
             .Include(t => t.Usuario)
             .FirstOrDefaultAsync(t => t.Id == id);
     
     public async Task<Trabajador?> GetByIdUsuarioAsync(long idUsuario) =>
         await db.Trabajadores.AsNoTracking()
+            .IgnoreQueryFilters()
             .Include(t => t.Usuario)
             .FirstOrDefaultAsync(t => t.IdUsuario == idUsuario);
     
@@ -56,7 +61,9 @@ public class TrabajadorRepository(AppDbContext db) : ITrabajadorRepository {
     }
     
     public async Task<Trabajador?> UpdateAsync(Trabajador trabajador) {
-        var existente = await db.Trabajadores.FindAsync(trabajador.Id);
+        var existente = await db.Trabajadores
+            .IgnoreQueryFilters()
+            .FirstOrDefaultAsync(t => t.Id == trabajador.Id);
         if (existente is null) return null;
 
         existente.Nombre = trabajador.Nombre;
@@ -72,7 +79,9 @@ public class TrabajadorRepository(AppDbContext db) : ITrabajadorRepository {
     
     public async Task<bool> DeleteAsync(long id) {
         
-        var t = await db.Trabajadores.FindAsync(id);
+        var t = await db.Trabajadores
+            .IgnoreQueryFilters()
+            .FirstOrDefaultAsync(x => x.Id == id);
         if (t is null) return false; // si no lo encuentra
 
         t.IsActivo = false;
@@ -82,7 +91,7 @@ public class TrabajadorRepository(AppDbContext db) : ITrabajadorRepository {
     }
     
     public async Task<bool> ExistsByDniAsync(string dni) =>
-        await db.Trabajadores.AnyAsync(t => t.Dni == dni);
+        await db.Trabajadores.IgnoreQueryFilters().AnyAsync(t => t.Dni == dni);
 
     public async Task<bool> EsResponsableAsync(long idTrabajador) =>
         await db.Oficinas.AnyAsync(o => o.IdResponsable == idTrabajador);

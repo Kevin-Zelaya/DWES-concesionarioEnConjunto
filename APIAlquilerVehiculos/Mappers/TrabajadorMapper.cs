@@ -66,7 +66,6 @@ public static class TrabajadorMapper
     // dni siempre en mayusc. y sin espacios, para que el índice único funcione bien
     private static string NormalizarDocumento(string doc) => doc.Trim().ToUpperInvariant();
 
-    // Npgsql (timestamptz) solo acepta DateTime con Kind = Utc
     private static DateTime ToUtc(DateTime fecha) => fecha.Kind switch
     {
         DateTimeKind.Utc => fecha,
