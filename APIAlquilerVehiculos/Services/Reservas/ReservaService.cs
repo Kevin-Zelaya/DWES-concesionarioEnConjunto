@@ -1,7 +1,9 @@
+
 using APIAlquilerVehiculos.Entities;
 using APIAlquilerVehiculos.Errors.Common;
 using APIAlquilerVehiculos.Errors.Reservas;
 using APIAlquilerVehiculos.Models;
+using APIAlquilerVehiculos.Models.Enums;
 using APIAlquilerVehiculos.Models.Reservas;
 using APIAlquilerVehiculos.Repositories.Vehiculos;
 using CSharpFunctionalExtensions;
@@ -11,96 +13,148 @@ public class ReservaService(
     IReservaRepository _repository,
     ILogger<ReservaService> _logger,
     IUnitOfWork _unitOfWork,
-    IVehiculosRepository _vehiculoRepository,
     ILineaReservaService _lineaService,
-    ILineaReservaFactory _lineaReservaFactory
+    ILineaReservaFactory _lineaReservaFactory,
+    IDisponibilidadService _disponibilidadService,
+    IVehiculosRepository _vehiculoRepository
 ) : IReservaService
 {
     // =========================================================
     // CREATE
     // =========================================================
+
     /// <inheritdoc cref="IReservaService.CreateReservaAsync(ReservaCreateRequestDto, long, CancellationToken)"/>
-    public async Task<Result<ReservaDto, DomainError>> CreateReservaAsync(ReservaCreateRequestDto reserva, long TrabajadorId, CancellationToken ct = default)
+    public async Task<Result<ReservaDto, DomainError>> CreateReservaAsync(
+        ReservaCreateRequestDto reserva,
+        long TrabajadorId,
+        CancellationToken ct = default)
     {
         _logger.LogDebug("[SERVICE-CREATE] Intentando crear una reserva.");
-        //1. comprobamos si existe el vehiculo y el cliente
-        var vehiculo = await _vehiculoRepository.GetByIdAsync(reserva.VehiculoId);
-        if(vehiculo is null)
+
+        var disponibilidad = await _disponibilidadService.EstaDisponibleAsync(
+            reserva.VehiculoId,
+            reserva.FechaRecogida,
+            reserva.FechaDevolucion,
+            ct: ct);
+
+        if (disponibilidad.IsFailure)
+        {
             return Result.Failure<ReservaDto, DomainError>(
-                NotFoundError.FromResource("Vehículo", reserva.VehiculoId)
-            );
-        // comprobar en el futuro si existe un cliente
+                disponibilidad.Error);
+        }
+
+        var vehiculo = disponibilidad.Value;
+
+        // TODO: Comprobar en el futuro si existe el cliente.
+        // TODO: Comprobar en el futuro el horario.
+
         await _unitOfWork.BeginTransactionAsync(ct);
+
         try
         {
-            var lineasFactorizadas = await FactorizarLineas(reserva.Lineas, vehiculo, ct);
+            var lineasFactorizadas = await FactorizarLineas(
+                reserva.Lineas,
+                vehiculo,
+                Reserva.CalcularDiasAlquiler(
+                    reserva.FechaRecogida,
+                    reserva.FechaDevolucion),
+                ct);
+
             if (lineasFactorizadas.IsFailure)
             {
                 await _unitOfWork.RollbackTransactionAsync(ct);
-                return Result.Failure<ReservaDto, DomainError>(lineasFactorizadas.Error);
+
+                return Result.Failure<ReservaDto, DomainError>(
+                    lineasFactorizadas.Error);
             }
+
             var reservaTS = reserva.ToEntity(TrabajadorId);
-            // Se guarda sin asignar aún el total
+
             reservaTS = await _repository.CreateAsync(reservaTS, ct);
-            // Crear lineas
-            lineasFactorizadas.Value.ForEach(l => l.ReservaId = reservaTS.Id);
+
+            lineasFactorizadas.Value.ForEach(l =>
+                l.ReservaId = reservaTS.Id);
+
             var lineasCreadas = await _lineaService.CreateLineasReservaAsync(
-                lineasFactorizadas.Value, 
+                lineasFactorizadas.Value,
                 reservaTS.CalcularDiasAlquiler(),
                 ct);
 
             if (lineasCreadas.IsFailure)
             {
                 await _unitOfWork.RollbackTransactionAsync(ct);
-                return Result.Failure<ReservaDto, DomainError>(lineasCreadas.Error);
+
+                return Result.Failure<ReservaDto, DomainError>(
+                    lineasCreadas.Error);
             }
-            var total = _lineaService.CalculateTotalByLineas(lineasCreadas.Value);
+
+            var total = _lineaService.CalculateTotalByLineas(
+                lineasCreadas.Value);
+
             reservaTS.PrecioTotal = total;
+
             await _unitOfWork.SaveChangesAsync();
             await _unitOfWork.CommitTransactionAsync();
+
             reservaTS.Lineas = lineasCreadas.Value;
-            
-            return Result.Success<ReservaDto, DomainError>(reservaTS.ToDto())
+
+            return Result.Success<ReservaDto, DomainError>(
+                reservaTS.ToDto())
                 .Tap(r => _logger.LogInformation(
                     "[SERVICE-CREATE] Reserva creada correctamente con ID {Id} y código {Codigo}.",
-                    r.Id, r.CodigoRefencia));
-        } catch(Exception)
+                    r.Id,
+                    r.CodigoRefencia));
+        }
+        catch (Exception)
         {
-            _logger.LogError("[SERVICE-CREATE] Error al crear la reserva, todos los cambios son eliminados.");
+            _logger.LogError(
+                "[SERVICE-CREATE] Error al crear la reserva, todos los cambios son eliminados.");
+
             await _unitOfWork.RollbackTransactionAsync();
+
             throw;
         }
     }
+
     private async Task<Result<List<LineaReserva>, DomainError>> FactorizarLineas(
         List<LineaReservaCreateRequestDto> lineas,
         Vehiculo vehiculo,
+        int dias,
         CancellationToken ct)
     {
         var lineasFd = new List<LineaReserva>
         {
-            CrearLineaVehiculo(vehiculo)
+            CrearLineaVehiculo(vehiculo, dias)
         };
 
         foreach (var linea in lineas)
         {
-            var resultado = await _lineaReservaFactory.CreateAsync(linea, ct);
+            var resultado = await _lineaReservaFactory.CreateAsync(
+                linea,
+                ct);
 
             if (resultado.IsFailure)
+            {
                 return Result.Failure<List<LineaReserva>, DomainError>(
                     resultado.Error);
+            }
 
             lineasFd.Add(resultado.Value);
         }
 
-        return Result.Success<List<LineaReserva>, DomainError>(lineasFd);
+        return Result.Success<List<LineaReserva>, DomainError>(
+            lineasFd);
     }
-    private static LineaReserva CrearLineaVehiculo(Vehiculo vehiculo)
+
+    private static LineaReserva CrearLineaVehiculo(
+        Vehiculo vehiculo,
+        int dias)
     {
         return new LineaReserva
         {
             Tipo = TipoLinea.Vehiculo,
-            Concepto = "Vehiculo con id"+vehiculo.Id,
-            Cantidad = 1,
+            Concepto = "Vehiculo con id" + vehiculo.Id,
+            Cantidad = dias,
             PrecioUnitario = vehiculo.precioPorDia,
             TipoPrecio = TipoPrecio.Diario
         };
@@ -109,18 +163,26 @@ public class ReservaService(
     // =========================================================
     // READ
     // =========================================================
-    /// <inheritdoc cref="IReservaService.GetReservaByIdAsync(long, CancellationToken)(CancellationToken)(long, int, int, CancellationToken)"/>
-    public async Task<Result<Reserva, DomainError>> GetReservaByIdAsync(long id, CancellationToken ct = default)
+
+    /// <inheritdoc cref="IReservaService.GetReservaByIdAsync(long, CancellationToken)"/>
+    public async Task<Result<Reserva, DomainError>> GetReservaByIdAsync(
+        long id,
+        CancellationToken ct = default)
     {
-        _logger.LogDebug("[SERVICE-GET] Buscando reserva con ID {Id}.", id);
+        _logger.LogDebug(
+            "[SERVICE-GET] Buscando reserva con ID {Id}.",
+            id);
 
         var response = await _repository.GetByIdAsync(id, ct);
 
         if (response is null)
-            return Result.Failure<Reserva, DomainError>( 
+        {
+            return Result.Failure<Reserva, DomainError>(
                 ReservaErrors.NotFound(id))
                 .Tap(_ => _logger.LogWarning(
-                    "[SERVICE-GET] No se encontró la reserva con ID {Id}.", id));
+                    "[SERVICE-GET] No se encontró la reserva con ID {Id}.",
+                    id));
+        }
 
         return Result.Success<Reserva, DomainError>(response)
             .Tap(r => _logger.LogInformation(
@@ -129,17 +191,26 @@ public class ReservaService(
     }
 
     /// <inheritdoc cref="IReservaService.GetReservaByCodigoReferenciaAsync(string, CancellationToken)"/>
-    public async Task<Result<Reserva, DomainError>> GetReservaByCodigoReferenciaAsync(string codigo, CancellationToken ct = default)
+    public async Task<Result<Reserva, DomainError>> GetReservaByCodigoReferenciaAsync(
+        string codigo,
+        CancellationToken ct = default)
     {
-        _logger.LogDebug("[SERVICE-GET] Buscando reserva con código {Codigo}.", codigo);
+        _logger.LogDebug(
+            "[SERVICE-GET] Buscando reserva con código {Codigo}.",
+            codigo);
 
-        var response = await _repository.GetReservaByCodigoReferenciaAsync(codigo, ct);
+        var response = await _repository.GetReservaByCodigoReferenciaAsync(
+            codigo,
+            ct);
 
         if (response is null)
+        {
             return Result.Failure<Reserva, DomainError>(
                 ReservaErrors.NotFound(codigo))
                 .Tap(_ => _logger.LogWarning(
-                    "[SERVICE-GET] No se encontró la reserva con código {Codigo}.", codigo));
+                    "[SERVICE-GET] No se encontró la reserva con código {Codigo}.",
+                    codigo));
+        }
 
         return Result.Success<Reserva, DomainError>(response)
             .Tap(r => _logger.LogInformation(
@@ -148,9 +219,11 @@ public class ReservaService(
     }
 
     /// <inheritdoc cref="IReservaService.GetAllReservasAsync(CancellationToken)"/>
-    public async Task<Result<List<Reserva>, DomainError>> GetAllReservasAsync(CancellationToken ct = default)
+    public async Task<Result<List<Reserva>, DomainError>> GetAllReservasAsync(
+        CancellationToken ct = default)
     {
-        _logger.LogDebug("[SERVICE-GETALL] Recuperando todas las reservas.");
+        _logger.LogDebug(
+            "[SERVICE-GETALL] Recuperando todas las reservas.");
 
         var response = await _repository.GetAllAsync(ct);
 
@@ -165,67 +238,100 @@ public class ReservaService(
     // =========================================================
     // PAGINATION
     // =========================================================
+
     /// <inheritdoc cref="IReservaService.GetPaginatedReservasAsync(int, int, CancellationToken)"/>
-    public async Task<Result<PaginatedResouce<Reserva>, DomainError>> GetPaginatedReservasAsync(int pageNumber, int pageSize, CancellationToken ct)
+    public async Task<Result<PaginatedResouce<Reserva>, DomainError>> GetPaginatedReservasAsync(
+        int pageNumber,
+        int pageSize,
+        CancellationToken ct)
     {
         _logger.LogDebug(
             "[SERVICE-GETPAGINATED] Recuperando reservas. Página {PageNumber}, tamaño {PageSize}.",
-            pageNumber, pageSize);
+            pageNumber,
+            pageSize);
 
-        var response = await _repository.GetPaginatedReservasAsync(pageNumber, pageSize, ct);
+        var response = await _repository.GetPaginatedReservasAsync(
+            pageNumber,
+            pageSize,
+            ct);
+
         var toResponse = new PaginatedResouce<Reserva>(
             response.items,
             response.count,
             response.totalPages,
             response.HasPreviousPage,
-            response.HasNextPage
-        );
-        return Result.Success<PaginatedResouce<Reserva>, DomainError>(toResponse)
+            response.HasNextPage);
+
+        return Result.Success<PaginatedResouce<Reserva>, DomainError>(
+            toResponse)
             .Tap(r => _logger.LogInformation(
                 "[SERVICE-GETPAGINATED] Se recuperaron {Count} reservas de la página {PageNumber}.",
-                r.Count, pageNumber));
+                r.Count,
+                pageNumber));
     }
 
     /// <inheritdoc cref="IReservaService.GetPaginatedReservasByCustomerIdAsync(long, int, int, CancellationToken)"/>
-    public async Task<Result<PaginatedResouce<Reserva>, DomainError>> GetPaginatedReservasByCustomerIdAsync(long id, int pageNumber, int pageSize, CancellationToken ct = default)
+    public async Task<Result<PaginatedResouce<Reserva>, DomainError>> GetPaginatedReservasByCustomerIdAsync(
+        long id,
+        int pageNumber,
+        int pageSize,
+        CancellationToken ct = default)
     {
         _logger.LogDebug(
             "[SERVICE-GETPAGINATED] Recuperando reservas del cliente {Id}.",
             id);
 
-        var response = await _repository.GetPaginatedReservasByCustomerIdAsync(id, pageNumber, pageSize, ct);
+        var response = await _repository.GetPaginatedReservasByCustomerIdAsync(
+            id,
+            pageNumber,
+            pageSize,
+            ct);
+
         var toResponse = new PaginatedResouce<Reserva>(
             response.items,
             response.count,
             response.totalPages,
             response.HasPreviousPage,
-            response.HasNextPage
-        );
-        return Result.Success<PaginatedResouce<Reserva>, DomainError>(toResponse)
+            response.HasNextPage);
+
+        return Result.Success<PaginatedResouce<Reserva>, DomainError>(
+            toResponse)
             .Tap(r => _logger.LogInformation(
                 "[SERVICE-GETPAGINATED] Se recuperaron {Count} reservas del cliente {Id}.",
-                r.Count, pageNumber));
+                r.Count,
+                id));
     }
 
     /// <inheritdoc cref="IReservaService.GetPaginatedReservasByEmployeeIdAsync(long, int, int, CancellationToken)"/>
-    public async Task<Result<PaginatedResouce<Reserva>, DomainError>> GetPaginatedReservasByEmployeeIdAsync(long id, int pageNumber, int pageSize, CancellationToken ct = default)
+    public async Task<Result<PaginatedResouce<Reserva>, DomainError>> GetPaginatedReservasByEmployeeIdAsync(
+        long id,
+        int pageNumber,
+        int pageSize,
+        CancellationToken ct = default)
     {
         _logger.LogDebug(
             "[SERVICE-GETPAGINATED] Recuperando reservas del trabajador {Id}.",
             id);
 
-        var response = await _repository.GetPaginatedReservasByEmployeeIdAsync(id, pageNumber, pageSize, ct);
+        var response = await _repository.GetPaginatedReservasByEmployeeIdAsync(
+            id,
+            pageNumber,
+            pageSize,
+            ct);
+
         var toResponse = new PaginatedResouce<Reserva>(
             response.items,
             response.count,
             response.totalPages,
             response.HasPreviousPage,
-            response.HasNextPage
-        );
-        return Result.Success<PaginatedResouce<Reserva>, DomainError>(toResponse)
+            response.HasNextPage);
+
+        return Result.Success<PaginatedResouce<Reserva>, DomainError>(
+            toResponse)
             .Tap(r => _logger.LogInformation(
                 "[SERVICE-GETPAGINATED] Se recuperaron {Count} reservas del trabajador {Id}.",
-                r.Count, pageNumber));
+                r.Count,
+                id));
     }
 
     // =========================================================
@@ -233,93 +339,258 @@ public class ReservaService(
     // =========================================================
 
     /// <inheritdoc cref="IReservaService.UpdateNotaAsync(string, ReservaUpdateNotaRequestDto, CancellationToken)"/>
-   public async Task<Result<Reserva, DomainError>> UpdateNotaAsync(string codigoReferencia, ReservaUpdateNotaRequestDto request, CancellationToken ct = default)
+    public async Task<Result<Reserva, DomainError>> UpdateNotaAsync(
+        string codigoReferencia,
+        ReservaUpdateNotaRequestDto request,
+        CancellationToken ct = default)
     {
-        _logger.LogDebug("[SERVICE-UPDATE] Actualizando notas de la reserva {Codigo}.", codigoReferencia);
+        _logger.LogDebug(
+            "[SERVICE-UPDATE] Actualizando notas de la reserva {Codigo}.",
+            codigoReferencia);
 
-        var response = await _repository.UpdateNotaAsync(codigoReferencia, request, ct);
+        var response = await _repository.UpdateNotaAsync(
+            codigoReferencia,
+            request,
+            ct);
 
         if (response is null)
-            return Result.Failure<Reserva, DomainError>(ReservaErrors.NotFound(codigoReferencia))
-                .Tap(_ => _logger.LogWarning("[SERVICE-UPDATE] No se encontró la reserva {Codigo}.", codigoReferencia));
+        {
+            return Result.Failure<Reserva, DomainError>(
+                ReservaErrors.NotFound(codigoReferencia))
+                .Tap(_ => _logger.LogWarning(
+                    "[SERVICE-UPDATE] No se encontró la reserva {Codigo}.",
+                    codigoReferencia));
+        }
 
         return Result.Success<Reserva, DomainError>(response)
-            .Tap(r => _logger.LogInformation("[SERVICE-UPDATE] Notas de la reserva {Codigo} actualizadas correctamente.", r.CodigoRefencia));
+            .Tap(r => _logger.LogInformation(
+                "[SERVICE-UPDATE] Notas de la reserva {Codigo} actualizadas correctamente.",
+                r.CodigoRefencia));
     }
 
     /// <inheritdoc cref="IReservaService.UpdatePagoAsync(string, ReservaUpdatePagoRequestDto, CancellationToken)"/>
-    public async Task<Result<Reserva, DomainError>> UpdatePagoAsync(string codigoReferencia, ReservaUpdatePagoRequestDto request, CancellationToken ct = default)
+    public async Task<Result<Reserva, DomainError>> UpdatePagoAsync(
+        string codigoReferencia,
+        ReservaUpdatePagoRequestDto request,
+        CancellationToken ct = default)
     {
-        _logger.LogDebug("[SERVICE-UPDATE] Actualizando pago de la reserva {Codigo}.", codigoReferencia);
+        _logger.LogDebug(
+            "[SERVICE-UPDATE] Actualizando pago de la reserva {Codigo}.",
+            codigoReferencia);
 
-        var response = await _repository.UpdatePagoAsync(codigoReferencia, request, ct);
+        var response = await _repository.UpdatePagoAsync(
+            codigoReferencia,
+            request,
+            ct);
 
         if (response is null)
-            return Result.Failure<Reserva, DomainError>(ReservaErrors.NotFound(codigoReferencia))
-                .Tap(_ => _logger.LogWarning("[SERVICE-UPDATE] No se encontró la reserva {Codigo}.", codigoReferencia));
+        {
+            return Result.Failure<Reserva, DomainError>(
+                ReservaErrors.NotFound(codigoReferencia))
+                .Tap(_ => _logger.LogWarning(
+                    "[SERVICE-UPDATE] No se encontró la reserva {Codigo}.",
+                    codigoReferencia));
+        }
 
         return Result.Success<Reserva, DomainError>(response)
-            .Tap(r => _logger.LogInformation("[SERVICE-UPDATE] Pago de la reserva {Codigo} actualizado correctamente.", r.CodigoRefencia));
+            .Tap(r => _logger.LogInformation(
+                "[SERVICE-UPDATE] Pago de la reserva {Codigo} actualizado correctamente.",
+                r.CodigoRefencia));
     }
 
     /// <inheritdoc cref="IReservaService.UpdateFechasAsync(string, ReservaUpdateFechaRequestDto, CancellationToken)"/>
-    public async Task<Result<Reserva, DomainError>> UpdateFechasAsync(string codigoReferencia, ReservaUpdateFechaRequestDto request, CancellationToken ct = default)
+    public async Task<Result<Reserva, DomainError>> UpdateFechasAsync(
+        string codigoReferencia,
+        ReservaUpdateFechaRequestDto request,
+        CancellationToken ct = default)
     {
-        _logger.LogDebug("[SERVICE-UPDATE] Actualizando fechas de la reserva {Codigo}.", codigoReferencia);
+        _logger.LogDebug(
+            "[SERVICE-UPDATE] Actualizando fechas de la reserva {Codigo}.",
+            codigoReferencia);
 
-        var response = await _repository.UpdateFechasAsync(codigoReferencia, request, ct);
+        var reserva = await _repository.GetReservaByCodigoReferenciaAsync(
+            codigoReferencia,
+            ct);
+
+        if (reserva is null)
+        {
+            return Result.Failure<Reserva, DomainError>(
+                ReservaErrors.NotFound(codigoReferencia));
+        }
+
+        var disponibilidad = await _disponibilidadService.EstaDisponibleAsync(
+            reserva.VehiculoId,
+            request.FechaRecogida,
+            request.FechaDevolucion,
+            reserva.Id,
+            ct);
+
+        if (disponibilidad.IsFailure)
+        {
+            return Result.Failure<Reserva, DomainError>(
+                disponibilidad.Error);
+        }
+
+        var response = await _repository.UpdateFechasAsync(
+            codigoReferencia,
+            request,
+            ct);
 
         if (response is null)
-            return Result.Failure<Reserva, DomainError>(ReservaErrors.NotFound(codigoReferencia))
-                .Tap(_ => _logger.LogWarning("[SERVICE-UPDATE] No se encontró la reserva {Codigo}.", codigoReferencia));
+        {
+            return Result.Failure<Reserva, DomainError>(
+                ReservaErrors.NotFound(codigoReferencia));
+        }
 
         return Result.Success<Reserva, DomainError>(response)
-            .Tap(r => _logger.LogInformation("[SERVICE-UPDATE] Fechas de la reserva {Codigo} actualizadas correctamente.", r.CodigoRefencia));
+            .Tap(r => _logger.LogInformation(
+                "[SERVICE-UPDATE] Fechas de la reserva {Codigo} actualizadas correctamente.",
+                r.CodigoRefencia));
     }
 
     /// <inheritdoc cref="IReservaService.UpdateStatusAsync(string, ReservaUpdateStatusRequestDto, CancellationToken)"/>
-    public async Task<Result<Reserva, DomainError>> UpdateStatusAsync(string codigoReferencia, ReservaUpdateStatusRequestDto request, CancellationToken ct = default)
+    public async Task<Result<Reserva, DomainError>> UpdateStatusAsync(
+        string codigoReferencia,
+        ReservaUpdateStatusRequestDto request,
+        CancellationToken ct = default)
     {
-        _logger.LogDebug("[SERVICE-UPDATE] Actualizando estado de la reserva {Codigo}.", codigoReferencia);
+        _logger.LogDebug(
+            "[SERVICE-UPDATE] Actualizando estado de la reserva {Codigo}.",
+            codigoReferencia);
 
-        var response = await _repository.UpdateStatusAsync(codigoReferencia, request, ct);
+        var reserva = await _repository.GetReservaByCodigoReferenciaAsync(
+            codigoReferencia,
+            ct);
 
-        if (response is null)
-            return Result.Failure<Reserva, DomainError>(ReservaErrors.NotFound(codigoReferencia))
-                .Tap(_ => _logger.LogWarning("[SERVICE-UPDATE] No se encontró la reserva {Codigo}.", codigoReferencia));
+        if (reserva is null)
+        {
+            return Result.Failure<Reserva, DomainError>(
+                ReservaErrors.NotFound(codigoReferencia));
+        }
 
-        return Result.Success<Reserva, DomainError>(response)
-            .Tap(r => _logger.LogInformation("[SERVICE-UPDATE] Estado de la reserva {Codigo} actualizado correctamente.", r.CodigoRefencia));
+        EstadoEnum? nuevoEstadoVehiculo = request.Estado switch
+        {
+            Estado.Confirmada => EstadoEnum.Reservado,
+            Estado.EnCurso => EstadoEnum.EnAlquiler,
+            Estado.Finalizada => EstadoEnum.Disponible,
+            Estado.Cancelada => EstadoEnum.Disponible,
+            _ => null
+        };
+
+        await _unitOfWork.BeginTransactionAsync(ct);
+
+        try
+        {
+            var response = await _repository.UpdateStatusAsync(
+                codigoReferencia,
+                request,
+                ct);
+
+            if (response is null)
+            {
+                await _unitOfWork.RollbackTransactionAsync(ct);
+
+                return Result.Failure<Reserva, DomainError>(
+                    ReservaErrors.NotFound(codigoReferencia));
+            }
+
+            if (nuevoEstadoVehiculo.HasValue)
+            {
+                await _vehiculoRepository.UpdateEstadoAsync(
+                    reserva.VehiculoId,
+                    nuevoEstadoVehiculo.Value,
+                    ct);
+            }
+
+            await _unitOfWork.SaveChangesAsync();
+            await _unitOfWork.CommitTransactionAsync();
+
+            return Result.Success<Reserva, DomainError>(response)
+                .Tap(r => _logger.LogInformation(
+                    "[SERVICE-UPDATE] Estado de la reserva {Codigo} actualizado correctamente.",
+                    r.CodigoRefencia));
+        }
+        catch (Exception)
+        {
+            await _unitOfWork.RollbackTransactionAsync(ct);
+
+            _logger.LogError(
+                "[SERVICE-UPDATE] Error al actualizar el estado de la reserva {Codigo}.",
+                codigoReferencia);
+
+            throw;
+        }
     }
 
     /// <inheritdoc cref="IReservaService.UpdateVehicleAsync(string, ReservaUpdateVehicleRequestDto, CancellationToken)"/>
-    public async Task<Result<Reserva, DomainError>> UpdateVehicleAsync(string codigoReferencia, ReservaUpdateVehicleRequestDto request, CancellationToken ct = default)
+    public async Task<Result<Reserva, DomainError>> UpdateVehicleAsync(
+        string codigoReferencia,
+        ReservaUpdateVehicleRequestDto request,
+        CancellationToken ct = default)
     {
-        _logger.LogDebug("[SERVICE-UPDATE] Actualizando vehículo de la reserva {Codigo}.", codigoReferencia);
-        var exist = await _vehiculoRepository.GetByIdAsync(request.VehiculoId);
-        var response = await _repository.UpdateVehicleAsync(codigoReferencia, request, ct);
+        _logger.LogDebug(
+            "[SERVICE-UPDATE] Actualizando vehículo de la reserva {Codigo}.",
+            codigoReferencia);
+
+        var reserva = await _repository.GetReservaByCodigoReferenciaAsync(
+            codigoReferencia,
+            ct);
+
+        if (reserva is null)
+        {
+            return Result.Failure<Reserva, DomainError>(
+                ReservaErrors.NotFound(codigoReferencia));
+        }
+
+        var disponibilidad = await _disponibilidadService.EstaDisponibleAsync(
+            request.VehiculoId,
+            reserva.FechaRecogida,
+            reserva.FechaDevolucion,
+            reserva.Id,
+            ct);
+
+        if (disponibilidad.IsFailure)
+        {
+            return Result.Failure<Reserva, DomainError>(
+                disponibilidad.Error);
+        }
+
+        var response = await _repository.UpdateVehicleAsync(
+            codigoReferencia,
+            request,
+            ct);
 
         if (response is null)
-            return Result.Failure<Reserva, DomainError>(ReservaErrors.NotFound(codigoReferencia))
-                .Tap(_ => _logger.LogWarning("[SERVICE-UPDATE] No se encontró la reserva {Codigo}.", codigoReferencia));
+        {
+            return Result.Failure<Reserva, DomainError>(
+                ReservaErrors.NotFound(codigoReferencia));
+        }
 
         return Result.Success<Reserva, DomainError>(response)
-            .Tap(r => _logger.LogInformation("[SERVICE-UPDATE] Vehículo de la reserva {Codigo} actualizado correctamente.", r.CodigoRefencia));
+            .Tap(r => _logger.LogInformation(
+                "[SERVICE-UPDATE] Vehículo de la reserva {Codigo} actualizado correctamente.",
+                r.CodigoRefencia));
     }
+
     // =========================================================
     // EXISTS
     // =========================================================
-    
+
     /// <inheritdoc cref="IReservaService.ExistsAsync(long, CancellationToken)"/>
-    public async Task<Result<bool, DomainError>> ExistsAsync(long id, CancellationToken ct = default)
+    public async Task<Result<bool, DomainError>> ExistsAsync(
+        long id,
+        CancellationToken ct = default)
     {
-        _logger.LogDebug("[SERVICE-EXISTS] Comprobando existencia de la reserva {Id}.", id);
+        _logger.LogDebug(
+            "[SERVICE-EXISTS] Comprobando existencia de la reserva {Id}.",
+            id);
 
         var response = await _repository.ExistsAsync(id, ct);
 
         return Result.Success<bool, DomainError>(response)
             .Tap(exists => _logger.LogDebug(
                 "[SERVICE-EXISTS] La reserva {Id} {Estado}.",
-                id, exists ? "existe" : "no existe"));
+                id,
+                exists ? "existe" : "no existe"));
     }
 }

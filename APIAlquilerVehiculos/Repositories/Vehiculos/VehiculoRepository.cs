@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using APIAlquilerVehiculos.Entities;
 using APIAlquilerVehiculos.Models;
+using APIAlquilerVehiculos.Models.Enums;
 using Microsoft.EntityFrameworkCore;
 
 namespace APIAlquilerVehiculos.Repositories.Vehiculos;
@@ -63,6 +64,16 @@ public class VehiculoRepository : IVehiculosRepository
         return await _context.Vehiculos.AsNoTracking().FirstOrDefaultAsync(v => v.Id == id && v.Activo == true);
     }
 
+    public async Task<List<Vehiculo>> GetByCategoriaAsync(
+        CategoriaEnum categoria,
+        CancellationToken ct = default)
+    {
+        return await _context.Vehiculos
+            .AsNoTracking()
+            .Where(v => v.categoria == categoria && v.Activo)
+            .ToListAsync(ct);
+}
+
     /// <inheritdoc cref="GetByMatriculaAsync"/>
     public async Task<Vehiculo?> GetByMatriculaAsync(string matricula)
     {
@@ -110,5 +121,23 @@ public class VehiculoRepository : IVehiculosRepository
         await _context.SaveChangesAsync();
 
         return true;
+    }
+
+    public async Task<Vehiculo?> UpdateEstadoAsync(
+        string id,
+        EstadoEnum estado,
+        CancellationToken ct = default)
+    {
+        var vehiculo = await _context.Vehiculos
+            .FirstOrDefaultAsync(v => v.Id == id, ct);
+
+        if (vehiculo is null)
+            return null;
+
+        vehiculo.Estado = estado;
+
+        await _context.SaveChangesAsync(ct);
+
+        return vehiculo;
     }
 }

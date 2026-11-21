@@ -241,8 +241,7 @@ namespace APIAlquilerVehiculos.Migrations
                     Categoria = table.Column<string>(type: "text", nullable: false),
                     VehiculoId = table.Column<string>(type: "character varying(11)", nullable: false),
                     FechaCreacion = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "CURRENT_TIMESTAMP"),
-                    FechaRecogida = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    FechaDevolucion = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    FechaRecogida = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),FechaDevolucion = table.Column<DateTime>(type: "timestamp without time zone",nullable: false),
                     Estado = table.Column<string>(type: "text", nullable: false, defaultValue: "Pendiente"),
                     PrecioTotal = table.Column<decimal>(type: "numeric(10,2)", precision: 10, scale: 2, nullable: false),
                     PagoId = table.Column<long>(type: "bigint", nullable: true),
@@ -399,6 +398,8 @@ namespace APIAlquilerVehiculos.Migrations
                     'EnCurso'
                 ));
             """);
+
+            
         }
 
         /// <inheritdoc />

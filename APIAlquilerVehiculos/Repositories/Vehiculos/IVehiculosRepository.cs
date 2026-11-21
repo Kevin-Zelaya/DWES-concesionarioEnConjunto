@@ -2,6 +2,8 @@
 using System.Threading;
 using System.Threading.Tasks;
 using APIAlquilerVehiculos.Models;
+using APIAlquilerVehiculos.Models.Enums;
+using APIAlquilerVehiculos.Models.Reservas;
 
 namespace APIAlquilerVehiculos.Repositories.Vehiculos;
 
@@ -25,7 +27,13 @@ public interface IVehiculosRepository: ICrudRepository<Vehiculo,string>
     /// <param name="pageSize"> Cantidad de elementos por página</param>
     /// <param name="ct"> Token de cancelacion</param>
     /// <returns> Retorna la página correspondent y una tuple con los datos de pagination </returns>
-    public Task<(List<Vehiculo> items, int count, int totalPages, bool HasPreviousPage, bool HasNextPage)>
-        GetPaginatedVehiculosAsync
+    public Task<(List<Vehiculo> items, int count, int totalPages, bool HasPreviousPage, bool HasNextPage)>GetPaginatedVehiculosAsync
         (int pageNumber, int pageSize, CancellationToken ct = default);
+
+    Task<List<Vehiculo>> GetByCategoriaAsync(CategoriaEnum categoria, CancellationToken ct = default);
+
+    Task<Vehiculo?> UpdateEstadoAsync(
+    string id,
+    EstadoEnum estado,
+    CancellationToken ct = default);
 }
