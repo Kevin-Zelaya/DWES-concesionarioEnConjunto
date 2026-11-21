@@ -3,6 +3,8 @@ using APIAlquilerVehiculos.Models.Usuarios;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
+namespace APIAlquilerVehiculos.Entities.FluentApi;
+
 public static class UsuarioYRelacionadosConfig
 {
     public static void EntityConfigure(ModelBuilder modelBuilder)
