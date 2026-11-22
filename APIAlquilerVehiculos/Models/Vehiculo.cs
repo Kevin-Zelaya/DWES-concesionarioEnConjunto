@@ -13,7 +13,7 @@ public class Vehiculo
     /// El cual es un sting de 11 caracteres codificado igual que el sistema de YouTuve.
     /// Este se genera en el servidor.
     /// </summary>
-    public string Id { get; set; } = string.Empty;
+    public string Id { get; set; }
 
     /// <summary>
     /// Matrícula del vehículo.
@@ -23,7 +23,7 @@ public class Vehiculo
     /// <summary>
     /// Identificador de la marca del vehículo.
     /// </summary>
-    public long Marca_id { get; set; }
+    public string Marca {get; set;} = string.Empty;
 
     /// <summary>
     /// Establece el identificador del modelo del vehículo.

@@ -11,10 +11,10 @@ namespace APIAlquilerVehiculos.Models.Reservas;
 public class Reserva
 {
     public long Id {get; set;}
-    public string CodigoRefencia {get; set;} = string.Empty;
+    public string? CodigoRefencia {get; set;}
     public long ClienteId {get; set;}
     // Trabajador que lo crea
-    public long TrabajadorId {get; set;}
+    public long? TrabajadorId {get; set;}
     public CategoriaEnum Categoria {get; set;}
     public string VehiculoId {get; set;}
     public Vehiculo? Vehiculo {get; set;}
@@ -33,6 +33,13 @@ public class Reserva
     {
         return (FechaDevolucion.Date - FechaRecogida.Date).Days;
     }
+    public static int CalcularDiasAlquiler(
+        DateTime FechaRecogida,
+        DateTime FechaDevolución
+    )
+    {
+        return (FechaRecogida.Date - FechaDevolución.Date).Days;
+    }
 }
 
 /// <summary>
@@ -47,5 +54,5 @@ public enum Estado
     Finalizada,
     Caducada,
     Cancelada,
-    NoPresendato
+    NoPresentado
 }

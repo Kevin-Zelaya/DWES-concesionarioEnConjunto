@@ -15,6 +15,8 @@ public static class ClienteMapper
         IdUsuario: c.IdUsuario,
         Nombre: c.Nombre,
         Apellidos: c.Apellidos,
+        Email: c.Usuario?.Email ?? string.Empty,
+        Telefono: c.Usuario?.PhoneNumber,
         FechaNacimiento: c.FechaNacimiento,
         Dni: c.Dni,
         Nie: c.Nie,

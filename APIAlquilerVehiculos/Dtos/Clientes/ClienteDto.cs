@@ -17,6 +17,12 @@ public record ClienteDto (
     [property: SwaggerSchema(Description = "Nombre del cliente")]
     string Apellidos,
     
+    [property: SwaggerSchema(Description = "Correo electronico del cliente")]
+    string Email,
+    
+    [property: SwaggerSchema(Description = "Telefono del cliente")]
+    string? Telefono,
+    
     [property: SwaggerSchema(Description = "Fecha de nacimiento del cliente", Format = "DateTime")]
     DateTime FechaNacimiento,
     

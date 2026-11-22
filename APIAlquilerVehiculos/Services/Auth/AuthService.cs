@@ -48,6 +48,16 @@ public class AuthService(IValidator<SignupDto> validatorSignupAsync, UserManager
             var docDuplicado = dniNorm ?? nieNorm ?? pasaporteNorm ?? string.Empty;
             return Result.Failure<UsuarioResponseDto, DomainError>(AuthErrors.DuplicateDocument(docDuplicado));
         }
+        
+        // Comprobamos que no existe otro Email identico
+        if (await userManager.FindByEmailAsync(request.Email) is not null)
+        {
+            logger.LogInformation("Email duplicado: {Email}", request.Email);
+            return Result.Failure<UsuarioResponseDto, DomainError>(
+                AuthErrors.DuplicateEmail(request.Email)
+            );
+        }
+        
         await using var transaction = await dbContext.Database.BeginTransactionAsync();
 
         try
@@ -178,7 +188,8 @@ public class AuthService(IValidator<SignupDto> validatorSignupAsync, UserManager
         var key = Encoding.UTF8.GetBytes(configuration["Jwt:Secret"]
                                          ?? throw new InvalidOperationException("JWT Secret no configurado"));
 
-        var expiresAt = DateTime.UtcNow.AddMinutes(15);
+        var expiresAt = DateTime.UtcNow.AddMinutes(120);
+        // var expiresAt = DateTime.UtcNow.AddMinutes(15);
         var tokenHandler = new JwtSecurityTokenHandler();
 
         var token = tokenHandler.CreateToken(new SecurityTokenDescriptor

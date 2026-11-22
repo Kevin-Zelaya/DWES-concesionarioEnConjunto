@@ -7,12 +7,13 @@ public class CodigoReferenciaGenerator : ValueGenerator<string>
 {
     private const string Caracteres = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 
-    public override bool GeneratesTemporaryValues => throw new NotImplementedException();
+    public override bool GeneratesTemporaryValues => false;
 
     public override string Next(EntityEntry entry)
     {
         return GenerarCodigo(6);
     }
+
     public static string GenerarCodigo(int longitud = 6)
     {
         return new string(
@@ -21,5 +22,4 @@ public class CodigoReferenciaGenerator : ValueGenerator<string>
                 .ToArray()
         );
     }
-
 }

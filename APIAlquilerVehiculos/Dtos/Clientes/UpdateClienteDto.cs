@@ -24,6 +24,20 @@ public record UpdateClienteDto(
     [SwaggerSchema(Description = "Apellidos del cliente a actualizar", Nullable = false)]
     string Apellidos,
     
+    [property: JsonPropertyName("email")]
+    [Required(ErrorMessage = "El email es obligatorio")]
+    [EmailAddress(ErrorMessage = "El formato del email no es válido")]
+    [MaxLength(255, ErrorMessage = "El email no puede superar los 255 caracteres")]
+    [SwaggerSchema(Description = "Correo electronico del cliente a actualizar", Nullable = false)]
+    string Email,
+
+    [property: JsonPropertyName("telefono")]
+    [Required(ErrorMessage = "El teléfono es obligatorio")]
+    [Phone(ErrorMessage = "El formato del teléfono no es válido")]
+    [MaxLength(20, ErrorMessage = "El teléfono no puede superar los 20 caracteres")]
+    [SwaggerSchema(Description = "Telefono del cliente a actualizar", Nullable = false)]
+    string Telefono,
+    
     [property: JsonPropertyName("fecha_nacimiento")]
     [Required(ErrorMessage = "La fecha de nacimiento es obligatoria")] 
     [SwaggerSchema(Description = "Fecha de nacimiento del cliente a actualizar", Nullable = false)]

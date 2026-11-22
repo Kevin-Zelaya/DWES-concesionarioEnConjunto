@@ -7,7 +7,7 @@
 public enum CategoriaEnum
 {
     Sedan,
-    Sub,
+    Suv,
     Hatchback,
     Coupe,
     Descapotable,

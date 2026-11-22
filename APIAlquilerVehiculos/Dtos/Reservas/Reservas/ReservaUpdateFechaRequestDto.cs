@@ -10,6 +10,6 @@ using APIAlquilerVehiculos.Models.Reservas;
 public record ReservaUpdateFechaRequestDto(
     DateTime FechaRecogida,
     DateTime FechaDevolucion,
-    [property: Required]
+    [Required]
     uint RowVersion
 );
