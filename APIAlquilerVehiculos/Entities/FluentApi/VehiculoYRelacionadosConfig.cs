@@ -61,10 +61,6 @@ public static class VehiculoYRelacionadosConfig
             // Fecha de revisión
             entity.Property(v => v.UltimaRevision).IsRequired();
 
-            // Relaciones
-            entity.HasOne<Marca>()
-                .WithMany()
-                .HasForeignKey(v => v.Marca_id).OnDelete(DeleteBehavior.Restrict); // no se elimina en cascada
         });
 
         // ==========================================

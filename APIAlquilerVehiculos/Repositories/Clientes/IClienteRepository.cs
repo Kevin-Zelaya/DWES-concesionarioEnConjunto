@@ -7,6 +7,7 @@ public interface IClienteRepository
 {
     Task<(List<Cliente> Items, int TotalCount)> FindAllPagedAsync(ClienteFilterDto dto);
     Task<Cliente?> FindByIdAsync(long id);
+    Task<Cliente?> FindByUserId(long id);
 
     Task<Cliente?> UpdateAsync(long id, Cliente updatedCliente);
     Task<bool> DeleteAsync(long id);

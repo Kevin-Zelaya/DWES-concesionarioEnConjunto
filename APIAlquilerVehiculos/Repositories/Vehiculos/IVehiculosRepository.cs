@@ -32,8 +32,7 @@ public interface IVehiculosRepository: ICrudRepository<Vehiculo,string>
 
     Task<List<Vehiculo>> GetByCategoriaAsync(CategoriaEnum categoria, CancellationToken ct = default);
 
-    Task<Vehiculo?> UpdateEstadoAsync(
-    string id,
-    EstadoEnum estado,
-    CancellationToken ct = default);
+    Task<Vehiculo?> UpdateEstadoAsync(string id, EstadoEnum estado, CancellationToken ct = default);
+
+    Task BloquearVehiculoAsync(string vehiculoId, CancellationToken ct = default);
 }

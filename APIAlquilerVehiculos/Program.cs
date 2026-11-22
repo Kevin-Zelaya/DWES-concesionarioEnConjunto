@@ -5,6 +5,7 @@ using APIAlquilerVehiculos.Services;
 using APIAlquilerVehiculos.Services.Auth;
 using APIAlquilerVehiculos.Validators.Auth;
 using FluentValidation;
+using FluentValidation.AspNetCore;
 using Microsoft.Extensions.Options;
 using Serilog;
 
@@ -25,7 +26,8 @@ Log.Logger = new LoggerConfiguration()
         retainedFileCountLimit: 7,
         outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff} [{Level:u3}] {Message:lj}{NewLine}{Exception}")
     .CreateLogger();
-
+// Integrar Serilog con ASP.NET Core
+builder.Host.UseSerilog();
 Log.Information("Iniciando aplicación...");
 
 // ======= Configuración de Swagger ==========
@@ -55,15 +57,16 @@ builder.Services.AddAuthenticationConfing(builder.Configuration);
 
 builder.Services.AddScoped<IAuthService, AuthService>();
 
-
-
+builder.Services.AddValidatorsFromAssemblyContaining<Program>();
+builder.Services.AddFluentValidationAutoValidation();
 
 // ======= FluentValidation =======
 builder.Services.AddValidatorsFromAssemblyContaining<SignupDtoValidator>();
 
 // ======= MIDDLEWARES ==========
-var app = builder.Build();
 
+var app = builder.Build();
+app.UseGlobalExceptionHandler();
 var apiConfig = app.Services
     .GetRequiredService<IOptions<ApiConfig>>()
     .Value;
@@ -73,13 +76,13 @@ await app.InitializeDatabasesAsync();
 
 if (apiConfig.shouldRecreateDb)
 {
-    // Inicialización del servicio storage
-    app.InitializeStorage(true);
-
-    // Inicialización de Mongo y PostgreSQL
     await app.RecreateDatabasesAsync();
+    app.InitializeStorage(true);
 }
-
+else
+{
+    await app.InitializeDatabasesAsync();
+}
 // Seed de Usuarios
 // esto se debe controlar de otra forma por el modo desarrollo y producción
 using (var scope = app.Services.CreateScope())

@@ -178,7 +178,8 @@ public class AuthService(IValidator<SignupDto> validatorSignupAsync, UserManager
         var key = Encoding.UTF8.GetBytes(configuration["Jwt:Secret"]
                                          ?? throw new InvalidOperationException("JWT Secret no configurado"));
 
-        var expiresAt = DateTime.UtcNow.AddMinutes(15);
+        var expiresAt = DateTime.UtcNow.AddMinutes(120);
+        // var expiresAt = DateTime.UtcNow.AddMinutes(15);
         var tokenHandler = new JwtSecurityTokenHandler();
 
         var token = tokenHandler.CreateToken(new SecurityTokenDescriptor

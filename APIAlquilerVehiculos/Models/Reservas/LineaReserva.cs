@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using APIAlquilerVehiculos.Models.Reservas;
 
 /// <summary>
@@ -15,6 +16,7 @@ public class LineaReserva
    /// <summary> fk de reserva, así para poder agregar mismo
    /// concepto pero con diferente precio por día </summary>
    public long ReservaId{get; set;}
+   [JsonIgnore]
    public Reserva Reserva { get; set; } = null!;
    
    /// <summary> Referencia al nombre pero no con fk </summary>

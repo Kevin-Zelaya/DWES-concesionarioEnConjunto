@@ -95,14 +95,22 @@ public class VehiculoRepository : IVehiculosRepository
     }
 
     /// <inheritdoc cref="UpdateAsync"/>
+    /// <inheritdoc cref="UpdateAsync"/>
     public async Task<Vehiculo?> UpdateAsync(Vehiculo obj)
     {
-        var response = await _context.Vehiculos.FirstOrDefaultAsync(v=> v.Id == obj.Id && v.Activo == true); 
-        if (response == null) return null;
+        var response = await _context.Vehiculos
+            .FirstOrDefaultAsync(v => v.Id == obj.Id && v.Activo);
 
-        obj.UpdatedAt = DateTime.Now;
+        if (response == null)
+            return null;
+
+        var createdAt = response.CreatedAt;
+
         _context.Entry(response).CurrentValues.SetValues(obj);
-        await _context.SaveChangesAsync();
+
+        response.CreatedAt = createdAt;
+        response.UpdatedAt = DateTime.UtcNow;
+
         await _context.SaveChangesAsync();
 
         return response;
@@ -139,5 +147,18 @@ public class VehiculoRepository : IVehiculosRepository
         await _context.SaveChangesAsync(ct);
 
         return vehiculo;
+    }
+
+    public async Task BloquearVehiculoAsync(
+        string vehiculoId,
+        CancellationToken ct = default)
+    {
+        await _context.Vehiculos
+            .FromSqlInterpolated(
+                $"SELECT * FROM \"Vehiculos\" WHERE \"Id\" = {vehiculoId} FOR UPDATE")
+            .IgnoreQueryFilters()
+            .AsNoTracking()
+            .Select(v => v.Id)
+            .FirstOrDefaultAsync(ct);
     }
 }

@@ -1,4 +1,8 @@
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using APIAlquilerVehiculos.Models.Reservas;
+using APIAlquilerVehiculos.Models.Usuarios;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Serilog;
 using Swashbuckle.AspNetCore.Annotations;
@@ -14,6 +18,7 @@ public class ReservaController(
     // =========================================================
 
     [HttpPost]
+    [Authorize(Roles = $"{Roles.Operario},{Roles.Responsable}")]
     [SwaggerOperation(
         Summary = "Crear una reserva",
         Description = "Crea una nueva reserva."
@@ -21,14 +26,17 @@ public class ReservaController(
     [SwaggerResponse(201, "Reserva creada correctamente.", typeof(Reserva))]
     [SwaggerResponse(400, "Los datos proporcionados no son válidos.")]
     [SwaggerResponse(401, "No autenticado.")]
+    [SwaggerResponse(403, "No tienes permisos para crear reservas.")]
     [SwaggerResponse(409, "Conflicto al crear la reserva.")]
     public async Task<ActionResult<Reserva>> CreateReserva(
         [FromBody] ReservaCreateRequestDto reserva,
         CancellationToken ct)
     {
-        // en algún momento obtner con id del usuario
-        //var TrabajadorId
-        var response = await _service.CreateReservaAsync(reserva, reserva.EmpleadoId, ct);
+        // Busca el id que se guarda como subject del usuario, si no lo tiene retorna un unauthorize
+        if (!long.TryParse(User.FindFirstValue(JwtRegisteredClaimNames.Sub), out var userId))
+            return Unauthorized();
+        
+        var response = await _service.CreateReservaAsync(reserva, userId, ct);
 
         return response.IsSuccess
             ? CreatedAtRoute(
@@ -43,11 +51,14 @@ public class ReservaController(
     // =========================================================
 
     [HttpGet("{id:long}")]
+    [Authorize(Roles = $"{Roles.Cliente},{Roles.Operario},{Roles.Responsable}")]
     [SwaggerOperation(
         Summary = "Obtener una reserva por ID",
         Description = "Devuelve los datos de una reserva identificada por su ID."
     )]
     [SwaggerResponse(200, "Reserva encontrada.", typeof(Reserva))]
+    [SwaggerResponse(401, "No autenticado.")]
+    [SwaggerResponse(403, "No tienes permisos para consultar esta reserva.")]
     [SwaggerResponse(404, "No se ha encontrado la reserva.")]
     public async Task<ActionResult<Reserva>> GetReservaById(
         [SwaggerParameter("Identificador de la reserva.")]
@@ -61,13 +72,16 @@ public class ReservaController(
             : response.Error.ToHttpResult<Reserva>();
     }
 
+    [HttpGet("codigo/{codigo}", Name = "GetReservaByCodigoReferencia")]
+    [Authorize(Roles = $"{Roles.Cliente},{Roles.Operario},{Roles.Responsable}")]
     [SwaggerOperation(
         Summary = "Obtener una reserva por código de referencia",
         Description = "Devuelve los datos de una reserva mediante su código de referencia."
     )]
     [SwaggerResponse(200, "Reserva encontrada.", typeof(Reserva))]
+    [SwaggerResponse(401, "No autenticado.")]
+    [SwaggerResponse(403, "No tienes permisos para consultar esta reserva.")]
     [SwaggerResponse(404, "No se ha encontrado la reserva.")]
-    [HttpGet("codigo/{codigo}", Name = "GetReservaByCodigoReferencia")]
     public async Task<ActionResult<Reserva>> GetReservaByCodigoReferencia(
         [SwaggerParameter("Código de referencia de la reserva.")]
         string codigo,
@@ -81,11 +95,14 @@ public class ReservaController(
     }
 
     [HttpGet("all")]
+    [Authorize(Roles = $"{Roles.Operario},{Roles.Mecanico},{Roles.Responsable}")]
     [SwaggerOperation(
         Summary = "Obtener todas las reservas",
         Description = "Devuelve el listado completo de reservas."
     )]
     [SwaggerResponse(200, "Listado de reservas obtenido correctamente.", typeof(List<Reserva>))]
+    [SwaggerResponse(401, "No autenticado.")]
+    [SwaggerResponse(403, "No tienes permisos para consultar todas las reservas.")]
     public async Task<ActionResult<List<Reserva>>> GetAllReservas(
         CancellationToken ct)
     {
@@ -101,12 +118,15 @@ public class ReservaController(
     // =========================================================
 
     [HttpGet]
+    [Authorize(Roles = $"{Roles.Operario},{Roles.Mecanico},{Roles.Responsable}")]
     [SwaggerOperation(
         Summary = "Obtener reservas paginadas",
         Description = "Devuelve una página de reservas según el número de página y el tamaño solicitado."
     )]
     [SwaggerResponse(200, "Página obtenida correctamente.", typeof(PaginatedResouce<Reserva>))]
     [SwaggerResponse(400, "El número de página o el tamaño son inválidos.")]
+    [SwaggerResponse(401, "No autenticado.")]
+    [SwaggerResponse(403, "No tienes permisos para consultar las reservas.")]
     public async Task<ActionResult<PaginatedResouce<Reserva>>> GetPaginatedReservas(
         [FromQuery, SwaggerParameter("Número de página (mínimo 1).")]
         int pageNumber = 1,
@@ -131,12 +151,15 @@ public class ReservaController(
     }
 
     [HttpGet("cliente/{id:long}")]
+    [Authorize(Roles = $"{Roles.Cliente},{Roles.Operario},{Roles.Responsable}")]
     [SwaggerOperation(
         Summary = "Obtener reservas de un cliente",
         Description = "Devuelve las reservas de un cliente de forma paginada."
     )]
     [SwaggerResponse(200, "Reservas del cliente obtenidas correctamente.", typeof(PaginatedResouce<Reserva>))]
     [SwaggerResponse(400, "El número de página o el tamaño son inválidos.")]
+    [SwaggerResponse(401, "No autenticado.")]
+    [SwaggerResponse(403, "No tienes permisos para consultar estas reservas.")]
     public async Task<ActionResult<PaginatedResouce<Reserva>>> GetPaginatedReservasByCustomerId(
         [SwaggerParameter("Identificador del cliente.")]
         long id,
@@ -161,12 +184,15 @@ public class ReservaController(
     }
 
     [HttpGet("trabajador/{id:long}")]
+    [Authorize(Roles = $"{Roles.Operario},{Roles.Mecanico},{Roles.Responsable}")]
     [SwaggerOperation(
         Summary = "Obtener reservas de un trabajador",
         Description = "Devuelve las reservas asignadas a un trabajador de forma paginada."
     )]
     [SwaggerResponse(200, "Reservas del trabajador obtenidas correctamente.", typeof(PaginatedResouce<Reserva>))]
     [SwaggerResponse(400, "El número de página o el tamaño son inválidos.")]
+    [SwaggerResponse(401, "No autenticado.")]
+    [SwaggerResponse(403, "No tienes permisos para consultar estas reservas.")]
     public async Task<ActionResult<PaginatedResouce<Reserva>>> GetPaginatedReservasByEmployeeId(
         [SwaggerParameter("Identificador del trabajador.")]
         long id,
@@ -195,13 +221,14 @@ public class ReservaController(
     // =========================================================
 
     [HttpPatch("{codigo}/nota")]
+    [Authorize(Roles = $"{Roles.Operario},{Roles.Responsable}")]
     [SwaggerOperation(
         Summary = "Actualizar las notas de una reserva",
-        Description = "Modifica las notas de una reserva. Solo accesible para administradores."
+        Description = "Modifica las notas de una reserva."
     )]
     [SwaggerResponse(200, "Notas actualizadas correctamente.", typeof(Reserva))]
     [SwaggerResponse(401, "No autenticado.")]
-    [SwaggerResponse(403, "No tienes permisos de administrador.")]
+    [SwaggerResponse(403, "No tienes permisos para modificar las notas.")]
     [SwaggerResponse(404, "Reserva no encontrada.")]
     public async Task<ActionResult<Reserva>> UpdateNota(
         [SwaggerParameter("Código de referencia de la reserva.")]
@@ -217,13 +244,14 @@ public class ReservaController(
     }
 
     [HttpPatch("{codigo}/pago")]
+    [Authorize(Roles = $"{Roles.Cliente},{Roles.Operario},{Roles.Responsable}")]
     [SwaggerOperation(
         Summary = "Actualizar el pago de una reserva",
-        Description = "Modifica el pago asociado a una reserva. Solo accesible para administradores."
+        Description = "Modifica el pago asociado a una reserva."
     )]
     [SwaggerResponse(200, "Pago actualizado correctamente.", typeof(Reserva))]
     [SwaggerResponse(401, "No autenticado.")]
-    [SwaggerResponse(403, "No tienes permisos de administrador.")]
+    [SwaggerResponse(403, "No tienes permisos para modificar este pago.")]
     [SwaggerResponse(404, "Reserva no encontrada.")]
     public async Task<ActionResult<Reserva>> UpdatePago(
         [SwaggerParameter("Código de referencia de la reserva.")]
@@ -239,14 +267,15 @@ public class ReservaController(
     }
 
     [HttpPatch("{codigo}/fechas")]
+    [Authorize(Roles = $"{Roles.Cliente},{Roles.Operario},{Roles.Responsable}")]
     [SwaggerOperation(
         Summary = "Actualizar las fechas de una reserva",
-        Description = "Modifica las fechas de recogida y devolución de una reserva. Solo accesible para administradores."
+        Description = "Modifica las fechas de recogida y devolución de una reserva."
     )]
     [SwaggerResponse(200, "Fechas actualizadas correctamente.", typeof(Reserva))]
     [SwaggerResponse(400, "Las fechas proporcionadas no son válidas.")]
     [SwaggerResponse(401, "No autenticado.")]
-    [SwaggerResponse(403, "No tienes permisos de administrador.")]
+    [SwaggerResponse(403, "No tienes permisos para modificar estas fechas.")]
     [SwaggerResponse(404, "Reserva no encontrada.")]
     public async Task<ActionResult<Reserva>> UpdateFechas(
         [SwaggerParameter("Código de referencia de la reserva.")]
@@ -262,14 +291,15 @@ public class ReservaController(
     }
 
     [HttpPatch("{codigo}/estado")]
+    [Authorize(Roles = $"{Roles.Operario},{Roles.Responsable}")]
     [SwaggerOperation(
         Summary = "Actualizar el estado de una reserva",
-        Description = "Modifica el estado de una reserva. Solo accesible para administradores."
+        Description = "Modifica el estado de una reserva."
     )]
     [SwaggerResponse(200, "Estado actualizado correctamente.", typeof(Reserva))]
     [SwaggerResponse(400, "El estado proporcionado no es válido.")]
     [SwaggerResponse(401, "No autenticado.")]
-    [SwaggerResponse(403, "No tienes permisos de administrador.")]
+    [SwaggerResponse(403, "No tienes permisos para modificar el estado.")]
     [SwaggerResponse(404, "Reserva no encontrada.")]
     public async Task<ActionResult<Reserva>> UpdateStatus(
         [SwaggerParameter("Código de referencia de la reserva.")]
@@ -285,14 +315,15 @@ public class ReservaController(
     }
 
     [HttpPatch("{codigo}/vehiculo")]
+    [Authorize(Roles = $"{Roles.Operario},{Roles.Responsable}")]
     [SwaggerOperation(
         Summary = "Actualizar el vehículo de una reserva",
-        Description = "Modifica el vehículo asignado a una reserva. Solo accesible para administradores."
+        Description = "Modifica el vehículo asignado a una reserva."
     )]
     [SwaggerResponse(200, "Vehículo actualizado correctamente.", typeof(Reserva))]
     [SwaggerResponse(400, "Los datos proporcionados no son válidos.")]
     [SwaggerResponse(401, "No autenticado.")]
-    [SwaggerResponse(403, "No tienes permisos de administrador.")]
+    [SwaggerResponse(403, "No tienes permisos para modificar el vehículo.")]
     [SwaggerResponse(404, "Reserva o vehículo no encontrados.")]
     [SwaggerResponse(409, "El vehículo no está disponible para las fechas de la reserva.")]
     public async Task<ActionResult<Reserva>> UpdateVehicle(
@@ -313,11 +344,14 @@ public class ReservaController(
     // =========================================================
 
     [HttpGet("{id:long}/exists")]
+    [Authorize(Roles = $"{Roles.Operario},{Roles.Mecanico},{Roles.Responsable}")]
     [SwaggerOperation(
         Summary = "Comprobar si existe una reserva",
         Description = "Comprueba si existe una reserva mediante su identificador."
     )]
     [SwaggerResponse(200, "Comprobación realizada correctamente.", typeof(bool))]
+    [SwaggerResponse(401, "No autenticado.")]
+    [SwaggerResponse(403, "No tienes permisos para realizar esta comprobación.")]
     public async Task<ActionResult<bool>> Exists(
         [SwaggerParameter("Identificador de la reserva.")]
         long id,

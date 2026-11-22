@@ -58,6 +58,18 @@ public class ClienteRepository(AppDbContext db) : IClienteRepository
         var cliente = await db.Clientes.AsNoTracking().FirstOrDefaultAsync(f => f.Id == id);
         return cliente;
     }
+    /// <summary>
+    ///  Buscar un cliente concreto con su identificador
+    ///  Con acceso el Administrador y el propio cliente
+    ///  mediante el id de su usuario
+    /// </summary>
+    /// <param name="id">Identificador del usuario del cliente</param>
+    /// <returns>Devuelve los datos especificos del cliente</returns>
+    public async Task<Cliente?> FindByUserId(long id)
+    {
+        var cliente = await db.Clientes.AsNoTracking().FirstOrDefaultAsync(f => f.IdUsuario == id);
+        return cliente;
+    }
 
     // La creación del cliente es donde el signup de Auth
     // Si pusieramos Post de Add cliente duplicariamos funcionalidad

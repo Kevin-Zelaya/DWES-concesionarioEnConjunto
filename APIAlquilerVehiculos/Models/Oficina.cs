@@ -37,8 +37,8 @@ public class Oficina
     public Localizacion Localizacion { get; set; } = null!;
     
     /// <summary>
-    /// Horario de atención.
-    /// Si se excede del horario, oficina cerrada.
+    /// Horario de atención de la oficina.
+    /// Se almacena en formato HH:mm-HH:mm.
     /// </summary>
     public string Horario { get; init; } = string.Empty;
     
@@ -71,6 +71,7 @@ public class Oficina
     /// Fecha de eliminación del modelo (si ha sido eliminado).
     /// </summary>
     public DateTime? DeletedAt { get; set; }
+
 }
 
 // OwnsOne
