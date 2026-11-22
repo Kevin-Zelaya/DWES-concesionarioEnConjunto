@@ -2,9 +2,11 @@
 using APIAlquilerVehiculos.Entities;
 using APIAlquilerVehiculos.Errors.Common;
 using APIAlquilerVehiculos.Errors.Reservas;
+using APIAlquilerVehiculos.Extensions;
 using APIAlquilerVehiculos.Models;
 using APIAlquilerVehiculos.Models.Enums;
 using APIAlquilerVehiculos.Models.Reservas;
+using APIAlquilerVehiculos.Repositories.Clientes;
 using APIAlquilerVehiculos.Repositories.Vehiculos;
 using CSharpFunctionalExtensions;
 using Microsoft.EntityFrameworkCore;
@@ -16,13 +18,15 @@ public class ReservaService(
     ILineaReservaService _lineaService,
     ILineaReservaFactory _lineaReservaFactory,
     IDisponibilidadService _disponibilidadService,
-    IVehiculosRepository _vehiculoRepository
+    IVehiculosRepository _vehiculoRepository,
+    IClienteRepository _clienteRepository
 ) : IReservaService
 {
     // =========================================================
     // CREATE
     // =========================================================
 
+    
     /// <inheritdoc cref="IReservaService.CreateReservaAsync(ReservaCreateRequestDto, long, CancellationToken)"/>
     public async Task<Result<ReservaDto, DomainError>> CreateReservaAsync(
         ReservaCreateRequestDto reserva,
@@ -31,27 +35,60 @@ public class ReservaService(
     {
         _logger.LogDebug("[SERVICE-CREATE] Intentando crear una reserva.");
 
-        var disponibilidad = await _disponibilidadService.EstaDisponibleAsync(
-            reserva.VehiculoId,
-            reserva.FechaRecogida,
-            reserva.FechaDevolucion,
-            ct: ct);
+        // Comprobar que existe el cliente.
+        var cliente = await _clienteRepository.FindByUserId(reserva.ClienteId);
 
-        if (disponibilidad.IsFailure)
+        if (cliente is null)
         {
             return Result.Failure<ReservaDto, DomainError>(
-                disponibilidad.Error);
+                NotFoundError.FromResource("Cliente", reserva.ClienteId.ToString()));
         }
 
-        var vehiculo = disponibilidad.Value;
+        // Comprobar que existe la oficina.
+        var oficina = await _repository.GetOficinaById(1, ct);
 
-        // TODO: Comprobar en el futuro si existe el cliente.
-        // TODO: Comprobar en el futuro el horario.
+        if (oficina is null)
+        {
+            return Result.Failure<ReservaDto, DomainError>(
+                NotFoundError.FromResource("Oficina", "1"));
+        }
 
+        // Comprobar el horario de atención.
+        if (!oficina.EstaDentroDelHorario(reserva.FechaRecogida) ||
+            !oficina.EstaDentroDelHorario(reserva.FechaDevolucion))
+        {
+            return Result.Failure<ReservaDto, DomainError>(
+                ReservaErrors.HorarioNoValido());
+        }
+
+        // Iniciar la transacción.
         await _unitOfWork.BeginTransactionAsync(ct);
 
         try
         {
+            // Bloquear el vehículo mientras se comprueba y genera la reserva.
+            await _vehiculoRepository.BloquearVehiculoAsync(
+                reserva.VehiculoId,
+                ct);
+
+            // Comprobar nuevamente la disponibilidad con el vehículo bloqueado.
+            var disponibilidad = await _disponibilidadService.EstaDisponibleAsync(
+                reserva.VehiculoId,
+                reserva.FechaRecogida,
+                reserva.FechaDevolucion,
+                ct: ct);
+
+            if (disponibilidad.IsFailure)
+            {
+                await _unitOfWork.RollbackTransactionAsync(ct);
+
+                return Result.Failure<ReservaDto, DomainError>(
+                    disponibilidad.Error);
+            }
+
+            var vehiculo = disponibilidad.Value;
+
+            // Factorizar las líneas de la reserva.
             var lineasFactorizadas = await FactorizarLineas(
                 reserva.Lineas,
                 vehiculo,
@@ -68,10 +105,13 @@ public class ReservaService(
                     lineasFactorizadas.Error);
             }
 
+            // Crear la reserva.
             var reservaTS = reserva.ToEntity(TrabajadorId);
-
+            // asignar el id del cliente
+            reservaTS.ClienteId = cliente.Id;
             reservaTS = await _repository.CreateAsync(reservaTS, ct);
 
+            // Asociar las líneas a la reserva creada.
             lineasFactorizadas.Value.ForEach(l =>
                 l.ReservaId = reservaTS.Id);
 
@@ -88,11 +128,14 @@ public class ReservaService(
                     lineasCreadas.Error);
             }
 
-            var total = _lineaService.CalculateTotalByLineas(
+            // Calcular el precio total.
+            reservaTS.PrecioTotal = _lineaService.CalculateTotalByLineas(
                 lineasCreadas.Value);
 
-            reservaTS.PrecioTotal = total;
+            // Cambiar el estado del vehículo.
+            vehiculo.Estado = EstadoEnum.Reservado;
 
+            // Guardar y confirmar los cambios.
             await _unitOfWork.SaveChangesAsync();
             await _unitOfWork.CommitTransactionAsync();
 
@@ -105,16 +148,18 @@ public class ReservaService(
                     r.Id,
                     r.CodigoRefencia));
         }
-        catch (Exception)
+        catch (Exception ex)
         {
             _logger.LogError(
+                ex,
                 "[SERVICE-CREATE] Error al crear la reserva, todos los cambios son eliminados.");
 
-            await _unitOfWork.RollbackTransactionAsync();
+            await _unitOfWork.RollbackTransactionAsync(ct);
 
             throw;
         }
     }
+
 
     private async Task<Result<List<LineaReserva>, DomainError>> FactorizarLineas(
         List<LineaReservaCreateRequestDto> lineas,
@@ -397,55 +442,96 @@ public class ReservaService(
                 "[SERVICE-UPDATE] Pago de la reserva {Codigo} actualizado correctamente.",
                 r.CodigoRefencia));
     }
-
-    /// <inheritdoc cref="IReservaService.UpdateFechasAsync(string, ReservaUpdateFechaRequestDto, CancellationToken)"/>
+    
     public async Task<Result<Reserva, DomainError>> UpdateFechasAsync(
         string codigoReferencia,
         ReservaUpdateFechaRequestDto request,
         CancellationToken ct = default)
     {
-        _logger.LogDebug(
-            "[SERVICE-UPDATE] Actualizando fechas de la reserva {Codigo}.",
-            codigoReferencia);
-
-        var reserva = await _repository.GetReservaByCodigoReferenciaAsync(
-            codigoReferencia,
-            ct);
-
-        if (reserva is null)
+        try
         {
-            return Result.Failure<Reserva, DomainError>(
-                ReservaErrors.NotFound(codigoReferencia));
+            _logger.LogDebug(
+                "[SERVICE-UPDATE] Actualizando fechas de la reserva {Codigo}.",
+                codigoReferencia);
+
+            var reserva = await _repository.GetReservaByCodigoReferenciaAsync(
+                codigoReferencia, ct);
+
+            if (reserva is null)
+                return Result.Failure<Reserva, DomainError>(
+                    ReservaErrors.NotFound(codigoReferencia));
+
+            var oficina = await _repository.GetOficinaById(1, ct);
+
+            if (oficina is null)
+                return Result.Failure<Reserva, DomainError>(
+                    NotFoundError.FromResource("Oficina", "1"));
+
+            if (!oficina.EstaDentroDelHorario(request.FechaRecogida) ||
+                !oficina.EstaDentroDelHorario(request.FechaDevolucion))
+                return Result.Failure<Reserva, DomainError>(
+                    ReservaErrors.HorarioNoValido());
+
+            await _unitOfWork.BeginTransactionAsync(ct);
+
+            try
+            {
+                await _vehiculoRepository.BloquearVehiculoAsync(
+                    reserva.VehiculoId, ct);
+
+                var disponibilidad = await _disponibilidadService.EstaDisponibleAsync(
+                    reserva.VehiculoId,
+                    request.FechaRecogida,
+                    request.FechaDevolucion,
+                    reserva.Id,
+                    ct);
+
+                if (disponibilidad.IsFailure)
+                {
+                    await _unitOfWork.RollbackTransactionAsync(ct);
+                    return Result.Failure<Reserva, DomainError>(disponibilidad.Error);
+                }
+
+                var response = await _repository.UpdateFechasAsync(
+                    codigoReferencia, request, ct);
+
+                if (response is null)
+                {
+                    await _unitOfWork.RollbackTransactionAsync(ct);
+                    return Result.Failure<Reserva, DomainError>(
+                        ReservaErrors.NotFound(codigoReferencia));
+                }
+
+                await _unitOfWork.SaveChangesAsync();
+                await _unitOfWork.CommitTransactionAsync();
+
+                return Result.Success<Reserva, DomainError>(response)
+                    .Tap(r => _logger.LogInformation(
+                        "[SERVICE-UPDATE] Fechas de la reserva {Codigo} actualizadas correctamente.",
+                        r.CodigoRefencia));
+            }
+            catch (Exception ex)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("\n========== ERROR EN LA TRANSACCIÓN ==========");
+                Console.WriteLine(ex.ToString());
+                Console.WriteLine("==============================================\n");
+                Console.ResetColor();
+
+                await _unitOfWork.RollbackTransactionAsync(ct);
+                throw;
+            }
         }
-
-        var disponibilidad = await _disponibilidadService.EstaDisponibleAsync(
-            reserva.VehiculoId,
-            request.FechaRecogida,
-            request.FechaDevolucion,
-            reserva.Id,
-            ct);
-
-        if (disponibilidad.IsFailure)
+        catch (Exception ex)
         {
-            return Result.Failure<Reserva, DomainError>(
-                disponibilidad.Error);
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine("\n========== ERROR EN UpdateFechasAsync ==========");
+            Console.WriteLine(ex.ToString());
+            Console.WriteLine("================================================\n");
+            Console.ResetColor();
+
+            throw;
         }
-
-        var response = await _repository.UpdateFechasAsync(
-            codigoReferencia,
-            request,
-            ct);
-
-        if (response is null)
-        {
-            return Result.Failure<Reserva, DomainError>(
-                ReservaErrors.NotFound(codigoReferencia));
-        }
-
-        return Result.Success<Reserva, DomainError>(response)
-            .Tap(r => _logger.LogInformation(
-                "[SERVICE-UPDATE] Fechas de la reserva {Codigo} actualizadas correctamente.",
-                r.CodigoRefencia));
     }
 
     /// <inheritdoc cref="IReservaService.UpdateStatusAsync(string, ReservaUpdateStatusRequestDto, CancellationToken)"/>
@@ -461,11 +547,18 @@ public class ReservaService(
         var reserva = await _repository.GetReservaByCodigoReferenciaAsync(
             codigoReferencia,
             ct);
-
         if (reserva is null)
         {
             return Result.Failure<Reserva, DomainError>(
                 ReservaErrors.NotFound(codigoReferencia));
+        }
+        // Comprobar ssi se puede transicionar entre un estado y otro
+        if (!reserva.Estado.PuedeTransicionarA(request.Estado))
+        {
+            return Result.Failure<Reserva, DomainError>(
+                ReservaErrors.TransicionEstadoNoValida(
+                    reserva.Estado,
+                    request.Estado));
         }
 
         EstadoEnum? nuevoEstadoVehiculo = request.Estado switch
@@ -481,6 +574,11 @@ public class ReservaService(
 
         try
         {
+            // Bloquear el vehículo mientras se actualiza el estado.
+            await _vehiculoRepository.BloquearVehiculoAsync(
+                reserva.VehiculoId,
+                ct);
+
             var response = await _repository.UpdateStatusAsync(
                 codigoReferencia,
                 request,
@@ -496,6 +594,20 @@ public class ReservaService(
 
             if (nuevoEstadoVehiculo.HasValue)
             {
+                if (nuevoEstadoVehiculo == EstadoEnum.Disponible)
+                {
+                    var existenReservasActivas =
+                        await _repository.ExistsReservasActivasAsync(
+                            reserva.VehiculoId,
+                            reserva.Id,
+                            ct);
+
+                    if (existenReservasActivas)
+                    {
+                        nuevoEstadoVehiculo = EstadoEnum.Reservado;
+                    }
+                }
+
                 await _vehiculoRepository.UpdateEstadoAsync(
                     reserva.VehiculoId,
                     nuevoEstadoVehiculo.Value,
@@ -510,17 +622,18 @@ public class ReservaService(
                     "[SERVICE-UPDATE] Estado de la reserva {Codigo} actualizado correctamente.",
                     r.CodigoRefencia));
         }
-        catch (Exception)
+        catch (Exception ex)
         {
-            await _unitOfWork.RollbackTransactionAsync(ct);
-
             _logger.LogError(
+                ex,
                 "[SERVICE-UPDATE] Error al actualizar el estado de la reserva {Codigo}.",
                 codigoReferencia);
 
+            await _unitOfWork.RollbackTransactionAsync(ct);
             throw;
         }
     }
+
 
     /// <inheritdoc cref="IReservaService.UpdateVehicleAsync(string, ReservaUpdateVehicleRequestDto, CancellationToken)"/>
     public async Task<Result<Reserva, DomainError>> UpdateVehicleAsync(
@@ -542,35 +655,66 @@ public class ReservaService(
                 ReservaErrors.NotFound(codigoReferencia));
         }
 
-        var disponibilidad = await _disponibilidadService.EstaDisponibleAsync(
-            request.VehiculoId,
-            reserva.FechaRecogida,
-            reserva.FechaDevolucion,
-            reserva.Id,
-            ct);
+        await _unitOfWork.BeginTransactionAsync(ct);
 
-        if (disponibilidad.IsFailure)
+        try
         {
-            return Result.Failure<Reserva, DomainError>(
-                disponibilidad.Error);
+            // Bloquear el nuevo vehículo.
+            await _vehiculoRepository.BloquearVehiculoAsync(
+                request.VehiculoId,
+                ct);
+
+            // Comprobar nuevamente su disponibilidad.
+            var disponibilidad = await _disponibilidadService.EstaDisponibleAsync(
+                request.VehiculoId,
+                reserva.FechaRecogida,
+                reserva.FechaDevolucion,
+                reserva.Id,
+                ct);
+
+            if (disponibilidad.IsFailure)
+            {
+                await _unitOfWork.RollbackTransactionAsync(ct);
+
+                return Result.Failure<Reserva, DomainError>(
+                    disponibilidad.Error);
+            }
+
+            // Actualizar el vehículo de la reserva.
+            var response = await _repository.UpdateVehicleAsync(
+                codigoReferencia,
+                request,
+                ct);
+
+            if (response is null)
+            {
+                await _unitOfWork.RollbackTransactionAsync(ct);
+
+                return Result.Failure<Reserva, DomainError>(
+                    ReservaErrors.NotFound(codigoReferencia));
+            }
+
+            await _unitOfWork.SaveChangesAsync();
+            await _unitOfWork.CommitTransactionAsync();
+
+            return Result.Success<Reserva, DomainError>(response)
+                .Tap(r => _logger.LogInformation(
+                    "[SERVICE-UPDATE] Vehículo de la reserva {Codigo} actualizado correctamente.",
+                    r.CodigoRefencia));
         }
-
-        var response = await _repository.UpdateVehicleAsync(
-            codigoReferencia,
-            request,
-            ct);
-
-        if (response is null)
+        catch (Exception ex)
         {
-            return Result.Failure<Reserva, DomainError>(
-                ReservaErrors.NotFound(codigoReferencia));
-        }
+            _logger.LogError(
+                ex,
+                "[SERVICE-UPDATE] Error al actualizar el vehículo de la reserva {Codigo}.",
+                codigoReferencia);
 
-        return Result.Success<Reserva, DomainError>(response)
-            .Tap(r => _logger.LogInformation(
-                "[SERVICE-UPDATE] Vehículo de la reserva {Codigo} actualizado correctamente.",
-                r.CodigoRefencia));
+            await _unitOfWork.RollbackTransactionAsync(ct);
+
+            throw;
+        }
     }
+
 
     // =========================================================
     // EXISTS

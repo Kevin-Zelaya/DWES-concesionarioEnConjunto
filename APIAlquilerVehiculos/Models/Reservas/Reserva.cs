@@ -54,5 +54,5 @@ public enum Estado
     Finalizada,
     Caducada,
     Cancelada,
-    NoPresendato
+    NoPresentado
 }

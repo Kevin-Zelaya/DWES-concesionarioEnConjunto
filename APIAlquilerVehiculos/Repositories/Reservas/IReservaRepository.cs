@@ -1,3 +1,4 @@
+using APIAlquilerVehiculos.Models;
 using APIAlquilerVehiculos.Models.Reservas;
 
 
@@ -133,4 +134,13 @@ public interface IReservaRepository
         DateTime fechaDevolucion,
         long? reservaIdExcluir = null,
         CancellationToken ct = default);
-    }
+
+    public Task<Oficina?> GetOficinaById(long id, CancellationToken ct = default);
+
+
+    Task<bool> ExistsReservasActivasAsync(
+    string vehiculoId,
+    long reservaIdExcluir,
+    CancellationToken ct = default);
+    
+}

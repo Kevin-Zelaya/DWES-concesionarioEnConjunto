@@ -109,6 +109,46 @@ namespace APIAlquilerVehiculos.Migrations
                     b.ToTable("Oficinas");
                 });
 
+            modelBuilder.Entity("APIAlquilerVehiculos.Models.Parte", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<string>("Descripcion")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
+
+                    b.Property<string>("Estado")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
+
+                    b.Property<DateTime>("FechaApertura")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime?>("FechaCierre")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<long>("QuienLoTramitaId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("VehiculoId")
+                        .IsRequired()
+                        .HasColumnType("character varying(11)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("QuienLoTramitaId");
+
+                    b.HasIndex("VehiculoId");
+
+                    b.ToTable("partes", (string)null);
+                });
+
             modelBuilder.Entity("APIAlquilerVehiculos.Models.Reservas.Reserva", b =>
                 {
                     b.Property<long>("Id")
@@ -860,6 +900,25 @@ namespace APIAlquilerVehiculos.Migrations
                         .IsRequired();
 
                     b.Navigation("Responsable");
+                });
+
+            modelBuilder.Entity("APIAlquilerVehiculos.Models.Parte", b =>
+                {
+                    b.HasOne("APIAlquilerVehiculos.Models.Usuarios.Trabajador", "QuienLoTramita")
+                        .WithMany()
+                        .HasForeignKey("QuienLoTramitaId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("APIAlquilerVehiculos.Models.Vehiculo", "Vehiculo")
+                        .WithMany()
+                        .HasForeignKey("VehiculoId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("QuienLoTramita");
+
+                    b.Navigation("Vehiculo");
                 });
 
             modelBuilder.Entity("APIAlquilerVehiculos.Models.Reservas.Reserva", b =>

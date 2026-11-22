@@ -5,12 +5,12 @@ info:
 
 http:
   method: GET
-  url: http://{{host}}:{{port}}/api/reservas/1
+  url: http://{{host}}:{{port}}/api/reservas/2
   body:
     type: json
     data: |-
       {
-        "clienteId": 1,
+        "clienteId": 2,
         "empleadoId": 1,
         "categoria": "Descapotable",
         "vehiculoId": "8YIOgl77F6m",

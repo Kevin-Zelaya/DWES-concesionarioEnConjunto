@@ -14,6 +14,7 @@ public static class ServiceConfig
         services.AddScoped<ILineaReservaFactory, LineaReservaFactory>();
         services.AddScoped<ICache, RedisCache>();
         services.AddScoped<ITrabajadorService, TrabajadorService>();
+        services.AddScoped<IDisponibilidadService, DisponibilidadService>();
         return services;
     }
 }
