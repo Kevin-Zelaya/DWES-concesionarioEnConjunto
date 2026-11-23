@@ -1,6 +1,7 @@
 using APIAlquilerVehiculos.Services;
 using APIAlquilerVehiculos.Services.Auth;
 using APIAlquilerVehiculos.Services.Clientes;
+using APIAlquilerVehiculos.Services.Taller;
 using APIAlquilerVehiculos.Services.Trabajadores;
 using Serilog;
 
@@ -20,6 +21,7 @@ public static class ServiceConfig
         services.AddScoped<IClienteService, ClienteService>();
         services.AddScoped<ITrabajadorService, TrabajadorService>();
         services.AddScoped<IDisponibilidadService, DisponibilidadService>();
+        services.AddScoped<IParteService, ParteService>();
         return services;
     }
 }

@@ -1,0 +1,9 @@
+info:
+  name: Taller
+  type: folder
+  seq: 4
+
+request:
+  auth:
+    type: bearer
+    token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI0IiwiZW1haWwiOiJtZWNhbmljb0BhbHF1aWxlci5jb20iLCJqdGkiOiI5OGVlN2Q5Ni00MjYxLTQxNWMtYmI1MC1iMWRjNDQxNzFiYTgiLCJpYXQiOjE3OTU0NTA5NTgsInJvbGUiOiJNZWNhbmljbyIsInRpcG9fdHJhYmFqbyI6Ik1lY2FuaWNvIiwibmJmIjoxNzk1NDUwOTU4LCJleHAiOjE3OTU0NTgxNTgsImlzcyI6IkFscXVpbGVyVmVoaWN1bG9zQXBpIiwiYXVkIjoiQWxxdWlsZXJWZWhpY3Vsb3NDbGllbnQifQ.GcuZLUUsbGCwhAJhHqk3wtrzzErwIuBA0xQ59vAa5ME

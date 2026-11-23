@@ -265,3 +265,107 @@ System.OperationCanceledException: The operation was canceled.
 2026-11-23 12:53:02.672 [INF] Todos los vehículos seed ya existen.
 2026-11-23 12:53:02.802 [WRN] The WebRootPath was not found: C:\Users\Marcos\Documents\Proyectos\Back-end\C#\PracticaAlquler_de_choches\APIAlquilerVehiculos\wwwroot. Static files may be unavailable.
 2026-11-23 12:53:17.441 [INF] Buscando cliente 2
+2026-11-23 14:14:19.867 [INF] Iniciando aplicación...
+2026-11-23 14:14:20.872 [INF] Configurando servicios...
+2026-11-23 14:14:20.882 [INF] Configurando servicios...
+2026-11-23 14:14:21.401 [INF] Configurando la conexión a Redis...
+2026-11-23 14:14:29.788 [INF] Conexión a Redis configurada correctamente.
+2026-11-23 14:14:33.831 [WRN] Entity 'Trabajador' has a global query filter defined and is the required end of a relationship with the entity 'Oficina'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-23 14:14:33.842 [WRN] Entity 'Trabajador' has a global query filter defined and is the required end of a relationship with the entity 'Parte'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-23 14:14:40.662 [INF] Se han creado 17 marcas seed.
+2026-11-23 14:14:40.759 [INF] Se han creado 4 pólizas seed.
+2026-11-23 14:14:41.047 [INF] Se han creado 9 vehículos seed.
+2026-11-23 14:14:41.455 [WRN] The WebRootPath was not found: C:\Users\aitor\Desktop\Proyectos2DAW-DWES\DWES-concesionarioEnConjunto\APIAlquilerVehiculos\wwwroot. Static files may be unavailable.
+2026-11-23 14:16:06.185 [INF] Iniciando aplicación...
+2026-11-23 14:16:06.417 [INF] Configurando servicios...
+2026-11-23 14:16:06.423 [INF] Configurando servicios...
+2026-11-23 14:16:06.486 [INF] Configurando la conexión a Redis...
+2026-11-23 14:16:14.951 [INF] Conexión a Redis configurada correctamente.
+2026-11-23 14:16:17.896 [WRN] Entity 'Trabajador' has a global query filter defined and is the required end of a relationship with the entity 'Oficina'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-23 14:16:17.919 [WRN] Entity 'Trabajador' has a global query filter defined and is the required end of a relationship with the entity 'Parte'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-23 14:16:23.430 [INF] Todas las marcas seed ya existen.
+2026-11-23 14:16:23.467 [INF] Todas las pólizas seed ya existen.
+2026-11-23 14:16:23.607 [INF] Todos los vehículos seed ya existen.
+2026-11-23 14:16:23.937 [WRN] The WebRootPath was not found: C:\Users\aitor\Desktop\Proyectos2DAW-DWES\DWES-concesionarioEnConjunto\APIAlquilerVehiculos\wwwroot. Static files may be unavailable.
+2026-11-23 15:05:17.136 [INF] Iniciando aplicación...
+2026-11-23 15:05:17.359 [INF] Configurando servicios...
+2026-11-23 15:05:17.373 [INF] Configurando servicios...
+2026-11-23 15:05:17.511 [INF] Configurando la conexión a Redis...
+2026-11-23 15:05:26.003 [INF] Conexión a Redis configurada correctamente.
+2026-11-23 15:05:28.149 [WRN] Entity 'Trabajador' has a global query filter defined and is the required end of a relationship with the entity 'Oficina'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-23 15:05:28.164 [WRN] Entity 'Trabajador' has a global query filter defined and is the required end of a relationship with the entity 'Parte'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-23 15:05:31.958 [INF] Todas las marcas seed ya existen.
+2026-11-23 15:05:31.989 [INF] Todas las pólizas seed ya existen.
+2026-11-23 15:05:32.075 [INF] Todos los vehículos seed ya existen.
+2026-11-23 15:05:32.595 [WRN] The WebRootPath was not found: C:\Users\aitor\Desktop\Proyectos2DAW-DWES\DWES-concesionarioEnConjunto\APIAlquilerVehiculos\wwwroot. Static files may be unavailable.
+2026-11-23 15:57:58.382 [INF] Usuario 3 ha iniciado sesion
+2026-11-23 16:02:46.873 [INF] Usuario 1 ha iniciado sesion
+2026-11-23 16:04:01.372 [INF] Usuario 4 ha iniciado sesion
+2026-11-23 16:05:30.094 [ERR] Excepción no manejada. ErrorId: 33cd1d16
+System.InvalidOperationException: Unable to resolve service for type 'APIAlquilerVehiculos.Services.Taller.IParteService' while attempting to activate 'APIAlquilerVehiculos.Controllers.TallerController'.
+   at Microsoft.Extensions.DependencyInjection.ActivatorUtilities.ThrowHelperUnableToResolveService(Type type, Type requiredBy)
+   at lambda_method420(Closure, IServiceProvider, Object[])
+   at Microsoft.AspNetCore.Mvc.Controllers.ControllerFactoryProvider.<>c__DisplayClass6_0.<CreateControllerFactory>g__CreateController|0(ControllerContext controllerContext)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.InvokeInnerFilterAsync()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Logged|17_1(ResourceInvoker invoker)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Logged|17_1(ResourceInvoker invoker)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at GlobalExceptionHandler.InvokeAsync(HttpContext context) in C:\Users\aitor\Desktop\Proyectos2DAW-DWES\DWES-concesionarioEnConjunto\APIAlquilerVehiculos\MiddleWares\GlobalExceptionHandler.cs:line 13
+2026-11-23 16:10:06.045 [ERR] Excepción no manejada. ErrorId: ced85ff8
+System.InvalidOperationException: Unable to resolve service for type 'APIAlquilerVehiculos.Services.Taller.IParteService' while attempting to activate 'APIAlquilerVehiculos.Controllers.TallerController'.
+   at Microsoft.Extensions.DependencyInjection.ActivatorUtilities.ThrowHelperUnableToResolveService(Type type, Type requiredBy)
+   at lambda_method420(Closure, IServiceProvider, Object[])
+   at Microsoft.AspNetCore.Mvc.Controllers.ControllerFactoryProvider.<>c__DisplayClass6_0.<CreateControllerFactory>g__CreateController|0(ControllerContext controllerContext)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.InvokeInnerFilterAsync()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Logged|17_1(ResourceInvoker invoker)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Logged|17_1(ResourceInvoker invoker)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at GlobalExceptionHandler.InvokeAsync(HttpContext context) in C:\Users\aitor\Desktop\Proyectos2DAW-DWES\DWES-concesionarioEnConjunto\APIAlquilerVehiculos\MiddleWares\GlobalExceptionHandler.cs:line 13
+2026-11-23 16:14:02.684 [INF] Iniciando aplicación...
+2026-11-23 16:14:02.896 [INF] Configurando servicios...
+2026-11-23 16:14:02.904 [INF] Configurando servicios...
+2026-11-23 16:14:02.967 [INF] Configurando la conexión a Redis...
+2026-11-23 16:14:11.329 [INF] Conexión a Redis configurada correctamente.
+2026-11-23 16:14:12.579 [WRN] Entity 'Trabajador' has a global query filter defined and is the required end of a relationship with the entity 'Oficina'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-23 16:14:12.586 [WRN] Entity 'Trabajador' has a global query filter defined and is the required end of a relationship with the entity 'Parte'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-23 16:14:14.670 [INF] Todas las marcas seed ya existen.
+2026-11-23 16:14:14.683 [INF] Todas las pólizas seed ya existen.
+2026-11-23 16:14:14.736 [INF] Todos los vehículos seed ya existen.
+2026-11-23 16:14:14.929 [WRN] The WebRootPath was not found: C:\Users\aitor\Desktop\Proyectos2DAW-DWES\DWES-concesionarioEnConjunto\APIAlquilerVehiculos\wwwroot. Static files may be unavailable.
+2026-11-23 16:14:26.254 [INF] Usuario 4 ha iniciado sesion
+2026-11-23 17:08:02.503 [INF] Usuario 4 ha iniciado sesion
+2026-11-23 17:21:13.671 [INF] Iniciando aplicación...
+2026-11-23 17:21:13.798 [INF] Configurando servicios...
+2026-11-23 17:21:13.801 [INF] Configurando servicios...
+2026-11-23 17:21:13.830 [INF] Configurando la conexión a Redis...
+2026-11-23 17:21:22.161 [INF] Conexión a Redis configurada correctamente.
+2026-11-23 17:21:23.369 [WRN] Entity 'Trabajador' has a global query filter defined and is the required end of a relationship with the entity 'Oficina'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-23 17:21:23.378 [WRN] Entity 'Trabajador' has a global query filter defined and is the required end of a relationship with the entity 'Parte'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-23 17:21:25.424 [INF] Todas las marcas seed ya existen.
+2026-11-23 17:21:25.435 [INF] Todas las pólizas seed ya existen.
+2026-11-23 17:21:25.478 [INF] Todos los vehículos seed ya existen.
+2026-11-23 17:21:25.638 [WRN] The WebRootPath was not found: C:\Users\aitor\Desktop\Proyectos2DAW-DWES\DWES-concesionarioEnConjunto\APIAlquilerVehiculos\wwwroot. Static files may be unavailable.
+2026-11-23 17:22:04.915 [INF] Iniciando aplicación...
+2026-11-23 17:22:05.215 [INF] Configurando servicios...
+2026-11-23 17:22:05.232 [INF] Configurando servicios...
+2026-11-23 17:22:05.270 [INF] Configurando la conexión a Redis...
+2026-11-23 17:22:13.559 [INF] Conexión a Redis configurada correctamente.
+2026-11-23 17:22:15.270 [WRN] Entity 'Trabajador' has a global query filter defined and is the required end of a relationship with the entity 'Oficina'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-23 17:22:15.282 [WRN] Entity 'Trabajador' has a global query filter defined and is the required end of a relationship with the entity 'Parte'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-23 17:22:18.049 [INF] Todas las marcas seed ya existen.
+2026-11-23 17:22:18.068 [INF] Todas las pólizas seed ya existen.
+2026-11-23 17:22:18.155 [INF] Todos los vehículos seed ya existen.
+2026-11-23 17:22:18.374 [WRN] The WebRootPath was not found: C:\Users\aitor\Desktop\Proyectos2DAW-DWES\DWES-concesionarioEnConjunto\APIAlquilerVehiculos\wwwroot. Static files may be unavailable.
+2026-11-23 17:22:38.580 [INF] Usuario 4 ha iniciado sesion
