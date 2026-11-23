@@ -8,6 +8,7 @@ using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.Extensions.Options;
 using Serilog;
+using APIAlquilerVehiculos.Configuration;
 using APIAlquilerVehiculos.Repositories.Marcas;
 using APIAlquilerVehiculos.Services.Marcas;
 
@@ -54,7 +55,8 @@ builder.Services
     .AddServices()
     .AddRepositories()
     .AddAuthenticationConfing(builder.Configuration)
-    .AddRedisConnection(builder.Configuration);
+    .AddRedisConnection(builder.Configuration)
+    .AddCassandraConnection(builder.Configuration);
 
 builder.Services.AddValidatorsFromAssemblyContaining<Program>();
 builder.Services.AddFluentValidationAutoValidation();
