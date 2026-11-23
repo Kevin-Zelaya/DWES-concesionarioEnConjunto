@@ -1,5 +1,4 @@
-﻿using System;
-using APIAlquilerVehiculos.Models.Enums;
+﻿using APIAlquilerVehiculos.Models.Enums;
 
 namespace APIAlquilerVehiculos.Dtos.Vehiculo;
 
@@ -24,7 +23,7 @@ public class VehiculoResponseDto
 
     public string Color { get; set; } = string.Empty;
 
-    public string Combustible { get; set; } = string.Empty;
+    public CombustibleEnum Combustible { get; set; }
 
     public double Maletero { get; set; }
 
@@ -36,7 +35,7 @@ public class VehiculoResponseDto
 
     public EstadoEnum Estado { get; set; }
 
-    public double PrecioPorDia { get; set; }
+    public decimal PrecioPorDia { get; set; }
 
     public DateTime UltimaRevision { get; set; }
 

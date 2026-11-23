@@ -28,7 +28,7 @@ public class VehiculoRepository : IVehiculosRepository
     /// <inheritdoc cref="GetAllAsync"/>
     public async Task<List<Vehiculo>> GetAllAsync()
     {
-        return await _context.Vehiculos.Where(v=> v.Activo == true ).ToListAsync();
+        return await _context.Vehiculos.Where(v=> v.Activo == true ).AsNoTracking().ToListAsync();
     }
     
     /// <inheritdoc cref="GetPaginatedVehiculosAsync"/>
@@ -125,6 +125,7 @@ public class VehiculoRepository : IVehiculosRepository
         objt.UpdatedAt = DateTime.UtcNow;
         objt.DeletedAt = DateTime.UtcNow;
         objt.Activo = false;
+        objt.Estado = EstadoEnum.Retirado;
         
         await _context.SaveChangesAsync();
 

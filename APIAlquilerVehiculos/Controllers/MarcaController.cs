@@ -8,7 +8,7 @@ namespace APIAlquilerVehiculos.Controllers;
 /// <summary>
 /// Controlador encargado de gestionar las operaciones relacionadas con las marcas.
 /// </summary>
-[Route("api/[controller]")]
+[Route("api/marcas")]
 [ApiController]
 public class MarcaController(IMarcaService service) : ControllerBase
 {

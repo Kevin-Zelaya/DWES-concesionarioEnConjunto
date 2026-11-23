@@ -1902,10 +1902,22 @@ public class AuthServiceTest
             NormalizedEmail = email.ToUpperInvariant(),
             NormalizedUserName = email.ToUpperInvariant(),
             EmailConfirmed = true,
-            CreatedAt = DateTime.UtcNow
+            CreatedAt = DateTime.UtcNow,
+            Cliente = new Cliente
+            {
+                Nombre = "Juan",
+                Apellidos = "Pérez",
+                FechaNacimiento = new DateTime(1990, 1, 1, 0, 0, 0, DateTimeKind.Utc),
+                CreatedAt = DateTime.UtcNow,
+                IsActivo = true
+            }
         };
         _dbContext.Users.Add(usuario);
         await _dbContext.SaveChangesAsync();
+
+        _userManagerMock
+            .Setup(u => u.GetRolesAsync(It.Is<Usuario>(u => u.Id == usuario.Id)))
+            .ReturnsAsync(new List<string> { Roles.Cliente });
 
         _signInManagerMock
             .Setup(s => s.CheckPasswordSignInAsync(It.Is<Usuario>(u => u.Id == usuario.Id), "Password123!", true))
@@ -2395,7 +2407,7 @@ public async Task Login_TrabajadorInactivo_DevuelveInactiveAccountYNoVerificaPas
 [Test]
 public async Task Login_UsuarioSinClienteNiTrabajador_ContinuaElLogin()
 {
-    // Arrange: usuario sin ficha de Cliente ni de Trabajador
+    // Arrange: usuario sin ficha de Cliente ni de Trabajador (p. ej. Administrador)
     var email = $"sin-ficha-{Guid.NewGuid()}@correo.com";
     var usuario = new Usuario
     {
@@ -2415,7 +2427,7 @@ public async Task Login_UsuarioSinClienteNiTrabajador_ContinuaElLogin()
 
     _userManagerMock
         .Setup(u => u.GetRolesAsync(It.Is<Usuario>(u => u.Id == usuario.Id)))
-        .ReturnsAsync(new List<string> { Roles.Cliente });
+        .ReturnsAsync(new List<string> { Roles.Administrador });
 
     var request = new LoginDto(email, "Password123!");
 
@@ -2587,8 +2599,8 @@ public async Task Login_ClienteActivoYTrabajadorActivo_ContinuaElLogin()
         await _dbContext.SaveChangesAsync();
 
         _userManagerMock
-            .Setup(u => u.FindByEmailAsync(email))
-            .ReturnsAsync(usuario);
+            .Setup(u => u.GetRolesAsync(It.Is<Usuario>(u => u.Id == usuario.Id)))
+            .ReturnsAsync(new List<string> { Roles.Cliente, Roles.Mecanico });
 
         var request = new LoginDto(email, "Password123!");
 
@@ -2602,7 +2614,6 @@ public async Task Login_ClienteActivoYTrabajadorActivo_ContinuaElLogin()
             s => s.CheckPasswordSignInAsync(It.IsAny<Usuario>(), It.IsAny<string>(), It.IsAny<bool>()),
             Times.Never);
     }
-
     [Test]
     public async Task Login_ClienteYTrabajadorInactivos_DevuelveInactiveAccountYNoVerificaPassword()
     {
@@ -3036,22 +3047,31 @@ public async Task Login_ClienteActivoYTrabajadorActivo_ContinuaElLogin()
     // +++++++++++++++++++++++++++++++++++++++ ROLES Y CLAIMS DEL TOKEN EN LOGIN ++++++++++++++++++++++++++++++++++
 
     [Test]
-public async Task Login_UsuarioConRolCliente_GeneraTokenConRolCliente()
-{
-    // Arrange
-    var email = $"rol-cliente-{Guid.NewGuid()}@correo.com";
-    var usuario = await GuardarUsuarioLoginAsync(email);
-    ConfigurarLoginExitoso(usuario, new List<string> { Roles.Cliente });
+    public async Task Login_UsuarioConRolCliente_GeneraTokenConRolCliente()
+    {
+        // Arrange
+        var email = $"rol-cliente-{Guid.NewGuid()}@correo.com";
+        var usuario = await GuardarUsuarioLoginAsync(email);
+        usuario.Cliente = new Cliente
+        {
+            Nombre = "Juan",
+            Apellidos = "Pérez",
+            FechaNacimiento = new DateTime(1990, 1, 1, 0, 0, 0, DateTimeKind.Utc),
+            CreatedAt = DateTime.UtcNow,
+            IsActivo = true
+        };
+        await _dbContext.SaveChangesAsync();
+        ConfigurarLoginExitoso(usuario, new List<string> { Roles.Cliente });
 
-    // Act
-    var result = await _service.LoginAsync(new LoginDto(email, "Password123!"));
+        // Act
+        var result = await _service.LoginAsync(new LoginDto(email, "Password123!"));
 
-    // Assert
-    Assert.That(result.IsSuccess, Is.True);
-    Assert.That(result.Value.Usuario.Rol, Is.EqualTo(Roles.Cliente));
-    var claims = LeerClaimsJwt(result.Value.Token);
-    Assert.That(ObtenerRolPrincipalJwt(claims), Is.EqualTo(Roles.Cliente));
-}
+        // Assert
+        Assert.That(result.IsSuccess, Is.True);
+        Assert.That(result.Value.Usuario.Rol, Is.EqualTo(Roles.Cliente));
+        var claims = LeerClaimsJwt(result.Value.Token);
+        Assert.That(ObtenerRolPrincipalJwt(claims), Is.EqualTo(Roles.Cliente));
+    }
 
 [Test]
 public async Task Login_UsuarioConRolAdministrador_GeneraTokenConRolAdministrador()
@@ -3077,6 +3097,16 @@ public async Task Login_UsuarioConRolMecanico_GeneraTokenConRolMecanico()
     // Arrange
     var email = $"rol-mecanico-{Guid.NewGuid()}@correo.com";
     var usuario = await GuardarUsuarioLoginAsync(email);
+    usuario.Trabajador = new Trabajador
+    {
+        Nombre = "Pedro",
+        Apellidos = "López",
+        Dni = $"{Guid.NewGuid().ToString("N")[..8]}Z",
+        TipoTrabajador = TipoTrabajador.Mecanico,
+        CreatedAt = DateTime.UtcNow,
+        IsActivo = true
+    };
+    await _dbContext.SaveChangesAsync();
     ConfigurarLoginExitoso(usuario, new List<string> { Roles.Mecanico });
 
     // Act
@@ -3095,6 +3125,16 @@ public async Task Login_UsuarioConRolOperario_GeneraTokenConRolOperario()
     // Arrange
     var email = $"rol-operario-{Guid.NewGuid()}@correo.com";
     var usuario = await GuardarUsuarioLoginAsync(email);
+    usuario.Trabajador = new Trabajador
+    {
+        Nombre = "Pedro",
+        Apellidos = "López",
+        Dni = $"{Guid.NewGuid().ToString("N")[..8]}Z",
+        TipoTrabajador = TipoTrabajador.Operaciones,
+        CreatedAt = DateTime.UtcNow,
+        IsActivo = true
+    };
+    await _dbContext.SaveChangesAsync();
     ConfigurarLoginExitoso(usuario, new List<string> { Roles.Operario });
 
     // Act
@@ -3131,6 +3171,16 @@ public async Task Login_UsuarioConVariosRoles_RolPrincipalEsElPrimeroDevuelto()
     // Arrange
     var email = $"varios-roles-{Guid.NewGuid()}@correo.com";
     var usuario = await GuardarUsuarioLoginAsync(email);
+    usuario.Trabajador = new Trabajador
+    {
+        Nombre = "Pedro",
+        Apellidos = "López",
+        Dni = $"{Guid.NewGuid().ToString("N")[..8]}Z",
+        TipoTrabajador = TipoTrabajador.Operaciones,
+        CreatedAt = DateTime.UtcNow,
+        IsActivo = true
+    };
+    await _dbContext.SaveChangesAsync();
     ConfigurarLoginExitoso(usuario, new List<string> { Roles.Operario, Roles.Administrador });
 
     // Act
@@ -3149,6 +3199,16 @@ public async Task Login_UsuarioConRolMecanico_IncluyeClaimTipoTrabajoMecanico()
     // Arrange
     var email = $"claim-mecanico-{Guid.NewGuid()}@correo.com";
     var usuario = await GuardarUsuarioLoginAsync(email);
+    usuario.Trabajador = new Trabajador
+    {
+        Nombre = "Pedro",
+        Apellidos = "López",
+        Dni = $"{Guid.NewGuid().ToString("N")[..8]}Z",
+        TipoTrabajador = TipoTrabajador.Mecanico,
+        CreatedAt = DateTime.UtcNow,
+        IsActivo = true
+    };
+    await _dbContext.SaveChangesAsync();
     ConfigurarLoginExitoso(usuario, new List<string> { Roles.Mecanico });
 
     // Act
@@ -3167,6 +3227,16 @@ public async Task Login_UsuarioConRolOperario_IncluyeClaimTipoTrabajoOperario()
     // Arrange
     var email = $"claim-operario-{Guid.NewGuid()}@correo.com";
     var usuario = await GuardarUsuarioLoginAsync(email);
+    usuario.Trabajador = new Trabajador
+    {
+        Nombre = "Pedro",
+        Apellidos = "López",
+        Dni = $"{Guid.NewGuid().ToString("N")[..8]}Z",
+        TipoTrabajador = TipoTrabajador.Operaciones,
+        CreatedAt = DateTime.UtcNow,
+        IsActivo = true
+    };
+    await _dbContext.SaveChangesAsync();
     ConfigurarLoginExitoso(usuario, new List<string> { Roles.Operario });
 
     // Act
@@ -3185,6 +3255,15 @@ public async Task Login_UsuarioConRolCliente_NoIncluyeClaimTipoTrabajo()
     // Arrange
     var email = $"sin-claim-cliente-{Guid.NewGuid()}@correo.com";
     var usuario = await GuardarUsuarioLoginAsync(email);
+    usuario.Cliente = new Cliente
+    {
+        Nombre = "Juan",
+        Apellidos = "Pérez",
+        FechaNacimiento = new DateTime(1990, 1, 1, 0, 0, 0, DateTimeKind.Utc),
+        CreatedAt = DateTime.UtcNow,
+        IsActivo = true
+    };
+    await _dbContext.SaveChangesAsync();
     ConfigurarLoginExitoso(usuario, new List<string> { Roles.Cliente });
 
     // Act
@@ -3222,6 +3301,15 @@ public async Task Login_LoginCorrecto_GeneraTokenNoVacio()
     ConfigurarJwtMock();
     var email = $"jwt-novacio-{Guid.NewGuid()}@correo.com";
     var usuario = await GuardarUsuarioLoginAsync(email);
+    usuario.Cliente = new Cliente
+    {
+        Nombre = "Juan",
+        Apellidos = "Pérez",
+        FechaNacimiento = new DateTime(1990, 1, 1, 0, 0, 0, DateTimeKind.Utc),
+        CreatedAt = DateTime.UtcNow,
+        IsActivo = true
+    };
+    await _dbContext.SaveChangesAsync();
     ConfigurarLoginExitoso(usuario, new List<string> { Roles.Cliente });
 
     // Act
@@ -3239,6 +3327,15 @@ public async Task Login_LoginCorrecto_TokenSePuedeLeerComoJwt()
     ConfigurarJwtMock();
     var email = $"jwt-legible-{Guid.NewGuid()}@correo.com";
     var usuario = await GuardarUsuarioLoginAsync(email);
+    usuario.Cliente = new Cliente
+    {
+        Nombre = "Juan",
+        Apellidos = "Pérez",
+        FechaNacimiento = new DateTime(1990, 1, 1, 0, 0, 0, DateTimeKind.Utc),
+        CreatedAt = DateTime.UtcNow,
+        IsActivo = true
+    };
+    await _dbContext.SaveChangesAsync();
     ConfigurarLoginExitoso(usuario, new List<string> { Roles.Cliente });
 
     // Act
@@ -3259,6 +3356,15 @@ public async Task Login_TokenCorrecto_IncluyeIdentificadorUsuarioEnSub()
     ConfigurarJwtMock();
     var email = $"jwt-sub-{Guid.NewGuid()}@correo.com";
     var usuario = await GuardarUsuarioLoginAsync(email);
+    usuario.Cliente = new Cliente
+    {
+        Nombre = "Juan",
+        Apellidos = "Pérez",
+        FechaNacimiento = new DateTime(1990, 1, 1, 0, 0, 0, DateTimeKind.Utc),
+        CreatedAt = DateTime.UtcNow,
+        IsActivo = true
+    };
+    await _dbContext.SaveChangesAsync();
     ConfigurarLoginExitoso(usuario, new List<string> { Roles.Cliente });
 
     // Act
@@ -3281,6 +3387,15 @@ public async Task Login_TokenCorrecto_IncluyeEmail()
     ConfigurarJwtMock();
     var email = $"jwt-email-{Guid.NewGuid()}@correo.com";
     var usuario = await GuardarUsuarioLoginAsync(email);
+    usuario.Cliente = new Cliente
+    {
+        Nombre = "Juan",
+        Apellidos = "Pérez",
+        FechaNacimiento = new DateTime(1990, 1, 1, 0, 0, 0, DateTimeKind.Utc),
+        CreatedAt = DateTime.UtcNow,
+        IsActivo = true
+    };
+    await _dbContext.SaveChangesAsync();
     ConfigurarLoginExitoso(usuario, new List<string> { Roles.Cliente });
 
     // Act
@@ -3303,6 +3418,15 @@ public async Task Login_TokenCorrecto_IncluyeJti()
     ConfigurarJwtMock();
     var email = $"jwt-jti-{Guid.NewGuid()}@correo.com";
     var usuario = await GuardarUsuarioLoginAsync(email);
+    usuario.Cliente = new Cliente
+    {
+        Nombre = "Juan",
+        Apellidos = "Pérez",
+        FechaNacimiento = new DateTime(1990, 1, 1, 0, 0, 0, DateTimeKind.Utc),
+        CreatedAt = DateTime.UtcNow,
+        IsActivo = true
+    };
+    await _dbContext.SaveChangesAsync();
     ConfigurarLoginExitoso(usuario, new List<string> { Roles.Cliente });
 
     // Act
@@ -3324,6 +3448,15 @@ public async Task Login_TokenCorrecto_IncluyeIat()
     ConfigurarJwtMock();
     var email = $"jwt-iat-{Guid.NewGuid()}@correo.com";
     var usuario = await GuardarUsuarioLoginAsync(email);
+    usuario.Cliente = new Cliente
+    {
+        Nombre = "Juan",
+        Apellidos = "Pérez",
+        FechaNacimiento = new DateTime(1990, 1, 1, 0, 0, 0, DateTimeKind.Utc),
+        CreatedAt = DateTime.UtcNow,
+        IsActivo = true
+    };
+    await _dbContext.SaveChangesAsync();
     ConfigurarLoginExitoso(usuario, new List<string> { Roles.Cliente });
 
     // Act
@@ -3363,6 +3496,16 @@ public async Task Login_TokenCorrecto_IncluyeTipoTrabajoParaMecanico()
     ConfigurarJwtMock();
     var email = $"jwt-mecanico-{Guid.NewGuid()}@correo.com";
     var usuario = await GuardarUsuarioLoginAsync(email);
+    usuario.Trabajador = new Trabajador
+    {
+        Nombre = "Pedro",
+        Apellidos = "López",
+        Dni = $"{Guid.NewGuid().ToString("N")[..8]}Z",
+        TipoTrabajador = TipoTrabajador.Mecanico,
+        CreatedAt = DateTime.UtcNow,
+        IsActivo = true
+    };
+    await _dbContext.SaveChangesAsync();
     ConfigurarLoginExitoso(usuario, new List<string> { Roles.Mecanico });
 
     // Act
@@ -3382,6 +3525,16 @@ public async Task Login_TokenCorrecto_IncluyeTipoTrabajoParaOperario()
     ConfigurarJwtMock();
     var email = $"jwt-operario-{Guid.NewGuid()}@correo.com";
     var usuario = await GuardarUsuarioLoginAsync(email);
+    usuario.Trabajador = new Trabajador
+    {
+        Nombre = "Pedro",
+        Apellidos = "López",
+        Dni = $"{Guid.NewGuid().ToString("N")[..8]}Z",
+        TipoTrabajador = TipoTrabajador.Operaciones,
+        CreatedAt = DateTime.UtcNow,
+        IsActivo = true
+    };
+    await _dbContext.SaveChangesAsync();
     ConfigurarLoginExitoso(usuario, new List<string> { Roles.Operario });
 
     // Act
@@ -3401,6 +3554,15 @@ public async Task Login_TokenCorrecto_NoIncluyeTipoTrabajoParaClienteNormal()
     ConfigurarJwtMock();
     var email = $"jwt-cliente-notipo-{Guid.NewGuid()}@correo.com";
     var usuario = await GuardarUsuarioLoginAsync(email);
+    usuario.Cliente = new Cliente
+    {
+        Nombre = "Juan",
+        Apellidos = "Pérez",
+        FechaNacimiento = new DateTime(1990, 1, 1, 0, 0, 0, DateTimeKind.Utc),
+        CreatedAt = DateTime.UtcNow,
+        IsActivo = true
+    };
+    await _dbContext.SaveChangesAsync();
     ConfigurarLoginExitoso(usuario, new List<string> { Roles.Cliente });
 
     // Act
@@ -3419,6 +3581,15 @@ public async Task Login_TokenCorrecto_TieneIssuerConfigurado()
     ConfigurarJwtMock(issuer: "MiIssuerConfigurado");
     var email = $"jwt-issuer-{Guid.NewGuid()}@correo.com";
     var usuario = await GuardarUsuarioLoginAsync(email);
+    usuario.Cliente = new Cliente
+    {
+        Nombre = "Juan",
+        Apellidos = "Pérez",
+        FechaNacimiento = new DateTime(1990, 1, 1, 0, 0, 0, DateTimeKind.Utc),
+        CreatedAt = DateTime.UtcNow,
+        IsActivo = true
+    };
+    await _dbContext.SaveChangesAsync();
     ConfigurarLoginExitoso(usuario, new List<string> { Roles.Cliente });
 
     // Act
@@ -3437,6 +3608,15 @@ public async Task Login_TokenCorrecto_TieneAudienceConfigurado()
     ConfigurarJwtMock(audience: "MiAudienceConfigurado");
     var email = $"jwt-audience-{Guid.NewGuid()}@correo.com";
     var usuario = await GuardarUsuarioLoginAsync(email);
+    usuario.Cliente = new Cliente
+    {
+        Nombre = "Juan",
+        Apellidos = "Pérez",
+        FechaNacimiento = new DateTime(1990, 1, 1, 0, 0, 0, DateTimeKind.Utc),
+        CreatedAt = DateTime.UtcNow,
+        IsActivo = true
+    };
+    await _dbContext.SaveChangesAsync();
     ConfigurarLoginExitoso(usuario, new List<string> { Roles.Cliente });
 
     // Act
@@ -3455,6 +3635,15 @@ public async Task Login_TokenCorrecto_TieneAlgoritmoFirmaHmacSha256()
     ConfigurarJwtMock();
     var email = $"jwt-alg-{Guid.NewGuid()}@correo.com";
     var usuario = await GuardarUsuarioLoginAsync(email);
+    usuario.Cliente = new Cliente
+    {
+        Nombre = "Juan",
+        Apellidos = "Pérez",
+        FechaNacimiento = new DateTime(1990, 1, 1, 0, 0, 0, DateTimeKind.Utc),
+        CreatedAt = DateTime.UtcNow,
+        IsActivo = true
+    };
+    await _dbContext.SaveChangesAsync();
     ConfigurarLoginExitoso(usuario, new List<string> { Roles.Cliente });
 
     // Act
@@ -3475,6 +3664,15 @@ public async Task Login_TokenCorrecto_SePuedeValidarConClaveConfigurada()
     ConfigurarJwtMock();
     var email = $"jwt-valida-{Guid.NewGuid()}@correo.com";
     var usuario = await GuardarUsuarioLoginAsync(email);
+    usuario.Cliente = new Cliente
+    {
+        Nombre = "Juan",
+        Apellidos = "Pérez",
+        FechaNacimiento = new DateTime(1990, 1, 1, 0, 0, 0, DateTimeKind.Utc),
+        CreatedAt = DateTime.UtcNow,
+        IsActivo = true
+    };
+    await _dbContext.SaveChangesAsync();
     ConfigurarLoginExitoso(usuario, new List<string> { Roles.Cliente });
 
     // Act
@@ -3493,6 +3691,15 @@ public async Task Login_TokenCorrecto_NoSePuedeValidarConClaveDistinta()
     ConfigurarJwtMock();
     var email = $"jwt-invalida-{Guid.NewGuid()}@correo.com";
     var usuario = await GuardarUsuarioLoginAsync(email);
+    usuario.Cliente = new Cliente
+    {
+        Nombre = "Juan",
+        Apellidos = "Pérez",
+        FechaNacimiento = new DateTime(1990, 1, 1, 0, 0, 0, DateTimeKind.Utc),
+        CreatedAt = DateTime.UtcNow,
+        IsActivo = true
+    };
+    await _dbContext.SaveChangesAsync();
     ConfigurarLoginExitoso(usuario, new List<string> { Roles.Cliente });
 
     // Act
@@ -3512,6 +3719,15 @@ public async Task Login_TokenCorrecto_TieneFechaExpiracion()
     ConfigurarJwtMock();
     var email = $"jwt-exp-{Guid.NewGuid()}@correo.com";
     var usuario = await GuardarUsuarioLoginAsync(email);
+    usuario.Cliente = new Cliente
+    {
+        Nombre = "Juan",
+        Apellidos = "Pérez",
+        FechaNacimiento = new DateTime(1990, 1, 1, 0, 0, 0, DateTimeKind.Utc),
+        CreatedAt = DateTime.UtcNow,
+        IsActivo = true
+    };
+    await _dbContext.SaveChangesAsync();
     ConfigurarLoginExitoso(usuario, new List<string> { Roles.Cliente });
 
     // Act
@@ -3531,10 +3747,20 @@ public async Task Login_TokenCorrecto_ExpiraAproximadamente15MinutosDespues()
     ConfigurarJwtMock();
     var email = $"jwt-15min-{Guid.NewGuid()}@correo.com";
     var usuario = await GuardarUsuarioLoginAsync(email);
+    usuario.Cliente = new Cliente
+    {
+        Nombre = "Juan",
+        Apellidos = "Pérez",
+        FechaNacimiento = new DateTime(1990, 1, 1, 0, 0, 0, DateTimeKind.Utc),
+        CreatedAt = DateTime.UtcNow,
+        IsActivo = true
+    };
+    await _dbContext.SaveChangesAsync();
     ConfigurarLoginExitoso(usuario, new List<string> { Roles.Cliente });
 
-    var expiracionEsperadaMin = DateTime.UtcNow.AddMinutes(15).AddSeconds(-15);
-    var expiracionEsperadaMax = DateTime.UtcNow.AddMinutes(15).AddSeconds(15);
+    // En LoginAsync tienes AddMinutes(120)
+    var expiracionEsperadaMin = DateTime.UtcNow.AddMinutes(120).AddSeconds(-15);
+    var expiracionEsperadaMax = DateTime.UtcNow.AddMinutes(120).AddSeconds(15);
 
     // Act
     var result = await _service.LoginAsync(new LoginDto(email, "Password123!"));
@@ -3552,6 +3778,15 @@ public async Task Login_DosLoginsConsecutivos_GeneranValoresJtiDiferentes()
     ConfigurarJwtMock();
     var email = $"jwt-jti-diff-{Guid.NewGuid()}@correo.com";
     var usuario = await GuardarUsuarioLoginAsync(email);
+    usuario.Cliente = new Cliente
+    {
+        Nombre = "Juan",
+        Apellidos = "Pérez",
+        FechaNacimiento = new DateTime(1990, 1, 1, 0, 0, 0, DateTimeKind.Utc),
+        CreatedAt = DateTime.UtcNow,
+        IsActivo = true
+    };
+    await _dbContext.SaveChangesAsync();
     ConfigurarLoginExitoso(usuario, new List<string> { Roles.Cliente });
 
     // Act
@@ -3579,6 +3814,15 @@ public async Task Login_LoginCorrecto_DevuelveMismaFechaExpiracionQueContieneElJ
     ConfigurarJwtMock();
     var email = $"jwt-exp-match-{Guid.NewGuid()}@correo.com";
     var usuario = await GuardarUsuarioLoginAsync(email);
+    usuario.Cliente = new Cliente
+    {
+        Nombre = "Juan",
+        Apellidos = "Pérez",
+        FechaNacimiento = new DateTime(1990, 1, 1, 0, 0, 0, DateTimeKind.Utc),
+        CreatedAt = DateTime.UtcNow,
+        IsActivo = true
+    };
+    await _dbContext.SaveChangesAsync();
     ConfigurarLoginExitoso(usuario, new List<string> { Roles.Cliente });
 
     // Act
@@ -3599,6 +3843,15 @@ public void Login_JwtSecretNoConfigurado_LanzaInvalidOperationException()
     // Arrange
     var email = $"jwt-sin-secret-{Guid.NewGuid()}@correo.com";
     var usuario = GuardarUsuarioLoginAsync(email).GetAwaiter().GetResult();
+    usuario.Cliente = new Cliente
+    {
+        Nombre = "Juan",
+        Apellidos = "Pérez",
+        FechaNacimiento = new DateTime(1990, 1, 1, 0, 0, 0, DateTimeKind.Utc),
+        CreatedAt = DateTime.UtcNow,
+        IsActivo = true
+    };
+    _dbContext.SaveChanges();
     ConfigurarLoginExitoso(usuario, new List<string> { Roles.Cliente });
 
     _configurationMock.Setup(c => c["Jwt:Secret"]).Returns((string?)null);
@@ -3622,6 +3875,15 @@ public async Task Login_JwtIssuerNoConfigurado_CompruebaComportamientoToken()
 
     var email = $"jwt-sin-issuer-{Guid.NewGuid()}@correo.com";
     var usuario = await GuardarUsuarioLoginAsync(email);
+    usuario.Cliente = new Cliente
+    {
+        Nombre = "Juan",
+        Apellidos = "Pérez",
+        FechaNacimiento = new DateTime(1990, 1, 1, 0, 0, 0, DateTimeKind.Utc),
+        CreatedAt = DateTime.UtcNow,
+        IsActivo = true
+    };
+    await _dbContext.SaveChangesAsync();
     ConfigurarLoginExitoso(usuario, new List<string> { Roles.Cliente });
 
     // Act
@@ -3642,6 +3904,15 @@ public async Task Login_JwtAudienceNoConfigurado_CompruebaComportamientoToken()
 
     var email = $"jwt-sin-audience-{Guid.NewGuid()}@correo.com";
     var usuario = await GuardarUsuarioLoginAsync(email);
+    usuario.Cliente = new Cliente
+    {
+        Nombre = "Juan",
+        Apellidos = "Pérez",
+        FechaNacimiento = new DateTime(1990, 1, 1, 0, 0, 0, DateTimeKind.Utc),
+        CreatedAt = DateTime.UtcNow,
+        IsActivo = true
+    };
+    await _dbContext.SaveChangesAsync();
     ConfigurarLoginExitoso(usuario, new List<string> { Roles.Cliente });
 
     // Act
@@ -3662,6 +3933,15 @@ public void Login_ClaveDemasiadoCorta_FallaCreacionToken()
 
     var email = $"jwt-clave-corta-{Guid.NewGuid()}@correo.com";
     var usuario = GuardarUsuarioLoginAsync(email).GetAwaiter().GetResult();
+    usuario.Cliente = new Cliente
+    {
+        Nombre = "Juan",
+        Apellidos = "Pérez",
+        FechaNacimiento = new DateTime(1990, 1, 1, 0, 0, 0, DateTimeKind.Utc),
+        CreatedAt = DateTime.UtcNow,
+        IsActivo = true
+    };
+    _dbContext.SaveChanges();
     ConfigurarLoginExitoso(usuario, new List<string> { Roles.Cliente });
 
     var request = new LoginDto(email, "Password123!");
@@ -3678,6 +3958,15 @@ public async Task Login_ClaveValida_FirmaTokenCorrectamente()
 
     var email = $"jwt-clave-valida-{Guid.NewGuid()}@correo.com";
     var usuario = await GuardarUsuarioLoginAsync(email);
+    usuario.Cliente = new Cliente
+    {
+        Nombre = "Juan",
+        Apellidos = "Pérez",
+        FechaNacimiento = new DateTime(1990, 1, 1, 0, 0, 0, DateTimeKind.Utc),
+        CreatedAt = DateTime.UtcNow,
+        IsActivo = true
+    };
+    await _dbContext.SaveChangesAsync();
     ConfigurarLoginExitoso(usuario, new List<string> { Roles.Cliente });
 
     // Act
@@ -3693,16 +3982,25 @@ public async Task Login_ClaveValida_FirmaTokenCorrectamente()
         ValidarFirmaJwt(result.Value.Token, JwtClaveTest, JwtIssuerTest, JwtAudienceTest),
         Is.True);
 }
-    
-    // +++++++++++++++++++++++++++++++++++++++ DTO DEVUELTO POR EL LOGIN ++++++++++++++++++++++++++++++++++
 
-    [Test]
+// +++++++++++++++++++++++++++++++++++++++ DTO DEVUELTO POR EL LOGIN ++++++++++++++++++++++++++++++++++
+
+[Test]
 public async Task Login_LoginCorrecto_DevuelveResultIsSuccessTrue()
 {
     // Arrange
     ConfigurarJwtMock();
     var email = $"dto-success-{Guid.NewGuid()}@correo.com";
     var usuario = await GuardarUsuarioDtoAsync(email);
+    usuario.Cliente = new Cliente
+    {
+        Nombre = "Juan",
+        Apellidos = "Pérez",
+        FechaNacimiento = new DateTime(1990, 1, 1, 0, 0, 0, DateTimeKind.Utc),
+        CreatedAt = DateTime.UtcNow,
+        IsActivo = true
+    };
+    await _dbContext.SaveChangesAsync();
     ConfigurarMocksDto(usuario, new List<string> { Roles.Cliente });
 
     // Act
@@ -3719,6 +4017,15 @@ public async Task Login_LoginCorrecto_DevuelveElIdDelUsuario()
     ConfigurarJwtMock();
     var email = $"dto-id-{Guid.NewGuid()}@correo.com";
     var usuario = await GuardarUsuarioDtoAsync(email);
+    usuario.Cliente = new Cliente
+    {
+        Nombre = "Juan",
+        Apellidos = "Pérez",
+        FechaNacimiento = new DateTime(1990, 1, 1, 0, 0, 0, DateTimeKind.Utc),
+        CreatedAt = DateTime.UtcNow,
+        IsActivo = true
+    };
+    await _dbContext.SaveChangesAsync();
     ConfigurarMocksDto(usuario, new List<string> { Roles.Cliente });
 
     // Act
@@ -3736,6 +4043,15 @@ public async Task Login_LoginCorrecto_DevuelveElEmail()
     ConfigurarJwtMock();
     var email = $"dto-email-{Guid.NewGuid()}@correo.com";
     var usuario = await GuardarUsuarioDtoAsync(email);
+    usuario.Cliente = new Cliente
+    {
+        Nombre = "Juan",
+        Apellidos = "Pérez",
+        FechaNacimiento = new DateTime(1990, 1, 1, 0, 0, 0, DateTimeKind.Utc),
+        CreatedAt = DateTime.UtcNow,
+        IsActivo = true
+    };
+    await _dbContext.SaveChangesAsync();
     ConfigurarMocksDto(usuario, new List<string> { Roles.Cliente });
 
     // Act
@@ -3753,6 +4069,15 @@ public async Task Login_LoginCorrecto_DevuelveElTelefono()
     ConfigurarJwtMock();
     var email = $"dto-tel-{Guid.NewGuid()}@correo.com";
     var usuario = await GuardarUsuarioDtoAsync(email, phoneNumber: "699887766");
+    usuario.Cliente = new Cliente
+    {
+        Nombre = "Juan",
+        Apellidos = "Pérez",
+        FechaNacimiento = new DateTime(1990, 1, 1, 0, 0, 0, DateTimeKind.Utc),
+        CreatedAt = DateTime.UtcNow,
+        IsActivo = true
+    };
+    await _dbContext.SaveChangesAsync();
     ConfigurarMocksDto(usuario, new List<string> { Roles.Cliente });
 
     // Act
@@ -3770,6 +4095,16 @@ public async Task Login_LoginCorrecto_DevuelveElRolPrincipal()
     ConfigurarJwtMock();
     var email = $"dto-rol-{Guid.NewGuid()}@correo.com";
     var usuario = await GuardarUsuarioDtoAsync(email);
+    usuario.Trabajador = new Trabajador
+    {
+        Nombre = "Pedro",
+        Apellidos = "López",
+        Dni = $"{Guid.NewGuid().ToString("N")[..8]}Z",
+        TipoTrabajador = TipoTrabajador.Mecanico,
+        CreatedAt = DateTime.UtcNow,
+        IsActivo = true
+    };
+    await _dbContext.SaveChangesAsync();
     ConfigurarMocksDto(usuario, new List<string> { Roles.Administrador, Roles.Operario });
 
     // Act
@@ -3869,6 +4204,15 @@ public async Task Login_LoginCorrecto_DevuelveCreatedAt()
     var email = $"dto-createdat-{Guid.NewGuid()}@correo.com";
     var fechaCreacion = new DateTime(2026, 11, 1, 12, 30, 0, DateTimeKind.Utc);
     var usuario = await GuardarUsuarioDtoAsync(email, createdAt: fechaCreacion);
+    usuario.Cliente = new Cliente
+    {
+        Nombre = "Juan",
+        Apellidos = "Pérez",
+        FechaNacimiento = new DateTime(1990, 1, 1, 0, 0, 0, DateTimeKind.Utc),
+        CreatedAt = DateTime.UtcNow,
+        IsActivo = true
+    };
+    await _dbContext.SaveChangesAsync();
     ConfigurarMocksDto(usuario, new List<string> { Roles.Cliente });
 
     // Act
@@ -3886,6 +4230,15 @@ public async Task Login_LoginCorrecto_DevuelveElToken()
     ConfigurarJwtMock();
     var email = $"dto-token-{Guid.NewGuid()}@correo.com";
     var usuario = await GuardarUsuarioDtoAsync(email);
+    usuario.Cliente = new Cliente
+    {
+        Nombre = "Juan",
+        Apellidos = "Pérez",
+        FechaNacimiento = new DateTime(1990, 1, 1, 0, 0, 0, DateTimeKind.Utc),
+        CreatedAt = DateTime.UtcNow,
+        IsActivo = true
+    };
+    await _dbContext.SaveChangesAsync();
     ConfigurarMocksDto(usuario, new List<string> { Roles.Cliente });
 
     // Act
@@ -3903,6 +4256,15 @@ public async Task Login_LoginCorrecto_DevuelveLaExpiracionDelToken()
     ConfigurarJwtMock();
     var email = $"dto-expiracion-{Guid.NewGuid()}@correo.com";
     var usuario = await GuardarUsuarioDtoAsync(email);
+    usuario.Cliente = new Cliente
+    {
+        Nombre = "Juan",
+        Apellidos = "Pérez",
+        FechaNacimiento = new DateTime(1990, 1, 1, 0, 0, 0, DateTimeKind.Utc),
+        CreatedAt = DateTime.UtcNow,
+        IsActivo = true
+    };
+    await _dbContext.SaveChangesAsync();
     ConfigurarMocksDto(usuario, new List<string> { Roles.Cliente });
 
     // Act

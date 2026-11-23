@@ -52,7 +52,6 @@ public static class ReservasMappers
             reserva.Estado,
             reserva.Lineas.Select(l => l.ToDto()).ToList(),
             reserva.PrecioTotal,
-            reserva.PagoId,
             reserva.Notas
         );
     }

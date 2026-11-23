@@ -412,36 +412,6 @@ public class ReservaService(
                 "[SERVICE-UPDATE] Notas de la reserva {Codigo} actualizadas correctamente.",
                 r.CodigoRefencia));
     }
-
-    /// <inheritdoc cref="IReservaService.UpdatePagoAsync(string, ReservaUpdatePagoRequestDto, CancellationToken)"/>
-    public async Task<Result<Reserva, DomainError>> UpdatePagoAsync(
-        string codigoReferencia,
-        ReservaUpdatePagoRequestDto request,
-        CancellationToken ct = default)
-    {
-        _logger.LogDebug(
-            "[SERVICE-UPDATE] Actualizando pago de la reserva {Codigo}.",
-            codigoReferencia);
-
-        var response = await _repository.UpdatePagoAsync(
-            codigoReferencia,
-            request,
-            ct);
-
-        if (response is null)
-        {
-            return Result.Failure<Reserva, DomainError>(
-                ReservaErrors.NotFound(codigoReferencia))
-                .Tap(_ => _logger.LogWarning(
-                    "[SERVICE-UPDATE] No se encontró la reserva {Codigo}.",
-                    codigoReferencia));
-        }
-
-        return Result.Success<Reserva, DomainError>(response)
-            .Tap(r => _logger.LogInformation(
-                "[SERVICE-UPDATE] Pago de la reserva {Codigo} actualizado correctamente.",
-                r.CodigoRefencia));
-    }
     
     public async Task<Result<Reserva, DomainError>> UpdateFechasAsync(
         string codigoReferencia,
