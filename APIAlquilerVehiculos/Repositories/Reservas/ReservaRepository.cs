@@ -79,9 +79,9 @@ public class ReservaRepository(
 
         if (id > 0) // si se le asigna un id se aplica un filtrado por id
             if (isEmployee) // true por defecto lo que asigna al filtrado el id del empleado
-                query.Where(r => r.TrabajadorId == id);
+                query = query.Where(r => r.TrabajadorId == id);
             else
-                query.Where(r => r.ClienteId == id);
+                query = query.Where(r => r.ClienteId == id);
 
         // Obtener el total de registros antes de aplicar paginación
         int count = await query.CountAsync(ct);
@@ -212,5 +212,61 @@ public class ReservaRepository(
     {
         return await _context.Reservas
             .AnyAsync(r => r.Id == id, ct);
+    }
+
+    /// <summary>
+    /// Comprueba si un vehículo tiene alguna reserva que se solape
+    /// con el rango de fechas indicado.
+    /// </summary>
+    public async Task<bool> ExistsReservaSolapadaAsync(
+        string vehiculoId,
+        DateTime fechaRecogida,
+        DateTime fechaDevolucion,
+        long? reservaIdExcluir = null,
+        CancellationToken ct = default)
+    {
+        return await _context.Reservas
+            .AsNoTracking()
+            .AnyAsync(r =>
+                r.VehiculoId == vehiculoId &&
+                (
+                    r.Estado == Estado.Pendiente ||
+                    r.Estado == Estado.Confirmada ||
+                    r.Estado == Estado.EnCurso
+                ) &&
+                (reservaIdExcluir == null || r.Id != reservaIdExcluir) &&
+                r.FechaRecogida < fechaDevolucion &&
+                r.FechaDevolucion > fechaRecogida,
+                ct);
+    }
+
+    /// =======================
+    /// AUXILIAR
+    /// =======================
+    public async Task<Oficina?> GetOficinaById(
+        long id,
+        CancellationToken ct = default)
+    {
+        return await _context.Oficinas
+            .AsNoTracking()
+            .FirstOrDefaultAsync(o => o.Id == id);
+    }
+
+    public async Task<bool> ExistsReservasActivasAsync(
+        string vehiculoId,
+        long reservaIdExcluir,
+        CancellationToken ct = default)
+    {
+        return await _context.Reservas
+            .AsNoTracking()
+            .AnyAsync(r =>
+                r.VehiculoId == vehiculoId &&
+                r.Id != reservaIdExcluir &&
+                (
+                    r.Estado == Estado.Pendiente ||
+                    r.Estado == Estado.Confirmada ||
+                    r.Estado == Estado.EnCurso
+                ),
+                ct);
     }
 }

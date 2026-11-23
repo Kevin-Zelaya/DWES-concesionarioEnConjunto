@@ -32,8 +32,11 @@ public static class VehiculoYRelacionadosConfig
 
             // Características
             entity.Property(v => v.Color).IsRequired();
-
-            entity.Property(v => v.Combustible).IsRequired();
+            // se guarda como string no como número
+            entity.Property(v => v.Combustible)
+                .HasConversion<string>()
+                .HasMaxLength(50)
+                .IsRequired();
 
             entity.Property(v => v.Maletero).IsRequired();
 
@@ -58,10 +61,6 @@ public static class VehiculoYRelacionadosConfig
             // Fecha de revisión
             entity.Property(v => v.UltimaRevision).IsRequired();
 
-            // Relaciones
-            entity.HasOne<Marca>()
-                .WithMany()
-                .HasForeignKey(v => v.Marca_id).OnDelete(DeleteBehavior.Restrict); // no se elimina en cascada
         });
 
         // ==========================================

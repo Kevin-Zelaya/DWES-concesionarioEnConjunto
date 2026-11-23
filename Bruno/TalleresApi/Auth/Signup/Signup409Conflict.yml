@@ -1,0 +1,28 @@
+info:
+  name: Signup409Conflict
+  type: http
+  seq: 3
+
+http:
+  method: POST
+  url: "{{baseUrl}}/api/auth/signup"
+  body:
+    type: json
+    data: |-
+      {
+        "email": "mecanico@alquiler.com",
+        "telefono": "684014085",
+        "contraseña": "Contra123@",
+        "nombre": "Nicolás",
+        "apellidos": "Ortega Fernández",
+        "fecha_nacimiento": "2005-10-22",
+        "dni": "12345432K"
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false

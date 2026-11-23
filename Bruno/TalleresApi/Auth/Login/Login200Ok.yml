@@ -1,0 +1,23 @@
+info:
+  name: Login200Ok
+  type: http
+  seq: 1
+
+http:
+  method: POST
+  url: http://{{host}}:{{port}}/api/auth/login
+  body:
+    type: json
+    data: |-
+      {
+        "email": "operario@alquiler.com",
+        "contraseña": "Oper1234@"
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false

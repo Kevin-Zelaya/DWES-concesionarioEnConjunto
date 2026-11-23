@@ -33,7 +33,6 @@ public class EmailService : IEmailService
                 EmailErrors.SendFailed($"La dirección de correo '{toEmail}' no es válida.")
             );
         }
-
         try
         {
             var message = new MimeMessage();

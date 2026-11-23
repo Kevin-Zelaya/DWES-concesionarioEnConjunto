@@ -109,6 +109,10 @@ public static class AutenticacionConfig
             .AddPolicy("RequireClienteRole", new AuthorizationPolicyBuilder(JwtBearerDefaults.AuthenticationScheme)
                 .RequireRole(Roles.Cliente)
                 .Build())
+            // Acciones del Cliente y del Administrador (Gestionar clientes)
+            .AddPolicy("RequireClienteYAdminRole", new AuthorizationPolicyBuilder(JwtBearerDefaults.AuthenticationScheme)
+                .RequireRole(Roles.Administrador, Roles.Cliente)
+                .Build())
             // Para la mayoria de enspoints que se requiera al Tabajador sea del tipo que sea.
             .AddPolicy("RequireTrabajadorRole", new AuthorizationPolicyBuilder(JwtBearerDefaults.AuthenticationScheme)
                 .RequireRole(Roles.Mecanico, Roles.Operario)

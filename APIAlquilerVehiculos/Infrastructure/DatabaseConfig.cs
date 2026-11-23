@@ -14,6 +14,7 @@ public static class DatabaseConfig
             .Get<DbConnectionsConfig>();
         services.AddDbContext<AppDbContext>(options =>
         options.UseNpgsql(dbConfig!.Postgre.ConnectionStrings.DefaultConnection));
+        services.AddScoped<IUnitOfWork, UnitOfWork>();
         return services;
     }
 }

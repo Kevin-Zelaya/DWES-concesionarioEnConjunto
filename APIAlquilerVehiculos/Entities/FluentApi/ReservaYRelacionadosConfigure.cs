@@ -21,7 +21,7 @@ public class ReservaYRelacionadosConfigure
 
             entity.HasIndex(r => r.CodigoRefencia)
                 .IsUnique();
-
+            entity.Property(v => v.CodigoRefencia).HasValueGenerator<CodigoReferenciaGenerator>().ValueGeneratedOnAdd().HasMaxLength(6);
             // Relación con vehículo
             entity.HasOne(r => r.Vehiculo)
                 .WithMany()
@@ -58,10 +58,12 @@ public class ReservaYRelacionadosConfigure
                 .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
             entity.Property(r => r.FechaRecogida)
-                .IsRequired();
+                .IsRequired()
+                .HasColumnType("timestamp without time zone");
 
             entity.Property(r => r.FechaDevolucion)
-                .IsRequired();
+                .IsRequired()
+                .HasColumnType("timestamp without time zone");
 
             // Estado de la reserva
             entity.Property(r => r.Estado)
@@ -81,8 +83,9 @@ public class ReservaYRelacionadosConfigure
 
             // Relación con líneas de reserva
             entity.HasMany(r => r.Lineas)
-                .WithOne()
+                .WithOne(l => l.Reserva)
                 .HasForeignKey(l => l.ReservaId)
+                .IsRequired()
                 .OnDelete(DeleteBehavior.Cascade);
             // control de concurrencia
             entity.Property(r => r.RowVersion)
@@ -99,10 +102,6 @@ public class ReservaYRelacionadosConfigure
 
             entity.Property(l => l.Id)
                 .ValueGeneratedOnAdd();
-
-            // Relación con Reserva
-            entity.Property(l => l.ReservaId)
-                .IsRequired();
 
             // Tipo: Póliza o Extra
             entity.Property(l => l.Tipo)
@@ -157,6 +156,9 @@ public class ReservaYRelacionadosConfigure
             entity.Property(e => e.Precio)
                 .IsRequired()
                 .HasPrecision(10, 2);
+            entity.Property(l => l.TipoPrecio)
+                .IsRequired()
+                .HasConversion<string>();
 
             entity.Property(e => e.Activa)
                 .IsRequired()
@@ -166,6 +168,7 @@ public class ReservaYRelacionadosConfigure
 
             entity.HasIndex(e => e.Nombre);
         });
+
         modelbuilder.Entity<Poliza>(entity =>
         {
             entity.HasKey(e => e.Id);
