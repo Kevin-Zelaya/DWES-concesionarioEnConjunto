@@ -56,15 +56,6 @@ public interface IReservaRepository
     Task<Reserva?> UpdateNotaAsync(string CodigoReferencia, ReservaUpdateNotaRequestDto request, CancellationToken ct = default);
 
     /// <summary>
-    /// Actualiza la información del pago de una reserva.
-    /// </summary>
-    /// <param name="CodigoReferencia">Código de referencia de la reserva.</param>
-    /// <param name="request">Datos con la nueva información del pago.</param>
-    /// <param name="ct">Token para cancelar la operación.</param>
-    /// <returns>Reserva actualizada o null si no existe.</returns>
-    Task<Reserva?> UpdatePagoAsync(string CodigoReferencia, ReservaUpdatePagoRequestDto request, CancellationToken ct = default);
-
-    /// <summary>
     /// Actualiza el estado de una reserva.
     /// </summary>
     /// <param name="CodigoReferencia">Código de referencia de la reserva.</param>

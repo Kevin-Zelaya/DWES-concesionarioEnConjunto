@@ -20,6 +20,9 @@ public static class ServiceConfig
         services.AddScoped<IClienteService, ClienteService>();
         services.AddScoped<ITrabajadorService, TrabajadorService>();
         services.AddScoped<IDisponibilidadService, DisponibilidadService>();
+        services.AddScoped<IPasarelaPago, PasarelaPagoSimulada>();
+        services.AddScoped<IPagoService, PagoService>();
+        services.AddScoped<ICifradorTarjeta, CifradorTarjeta>();
         return services;
     }
 }
