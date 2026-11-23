@@ -3,7 +3,6 @@ using APIAlquilerVehiculos.Infrastructure.AutenticationJWTAutorization;
 using APIAlquilerVehiculos.Seed;
 using APIAlquilerVehiculos.Services;
 using APIAlquilerVehiculos.Services.Auth;
-using APIAlquilerVehiculos.Validators.Auth;
 using FluentValidation;
 using Microsoft.Extensions.Options;
 using Serilog;
@@ -42,7 +41,7 @@ builder.Services.AddControllers(options =>
         options.JsonSerializerOptions.Converters.Add(
             new JsonStringEnumConverter()
         );
-    });;
+    });
 
 // ======= Infraestructura ==========
 builder.Services

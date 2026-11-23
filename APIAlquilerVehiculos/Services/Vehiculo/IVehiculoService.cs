@@ -1,5 +1,6 @@
 ﻿using APIAlquilerVehiculos.Dtos.Vehiculo;
 using APIAlquilerVehiculos.Errors.Common;
+using APIAlquilerVehiculos.Models.Enums;
 using APIAlquilerVehiculos.Services.Commons;
 using CSharpFunctionalExtensions;
 
@@ -27,4 +28,12 @@ public interface IVehiculoService : IService<VehiculoCreateDto, VehiculoUpdateDt
     public Task<Result<(List<VehiculoResponseDto> items, int count, int totalPages, bool HasPreviousPage, bool HasNextPage), DomainError>>
         GetPaginatedVehiculosAsync
         (int pageNumber, int pageSize, CancellationToken ct = default);
+    
+    /// <summary>
+    /// cambia el estado del vehiculo al deseado
+    /// </summary>
+    /// <param name="id"></param>
+    /// <param name="estadoEnum"></param>
+    /// <returns></returns>
+    public Task<Result<VehiculoResponseDto, DomainError>> UpdateEstado(string id, EstadoEnum estadoEnum, CancellationToken ct = default);
 }

@@ -115,7 +115,7 @@ public class VehiculoService : IVehiculoService
             return UnitResult.Failure<DomainError>(ConflictError.Business($"No se puede eliminar un vehiculo que no este en estado Disponible"));
         // no eliminar en caso de que existan partes aviertos
         var marcaExist = await _parteRepository.TieneParteAbiertoAsync(id);
-        if (marcaExist == true)
+        if (marcaExist)
             return UnitResult.Failure<DomainError>(NotFoundError.Messagee($"No se puede eliminar"));
 
         // no eliminar en caso de que existan partes activos de este vehiculo
@@ -164,13 +164,33 @@ public class VehiculoService : IVehiculoService
             return Result.Failure<VehiculoResponseDto, DomainError>(NotFoundError.FromResource("vehiculo", $"{id}"));
         
         // no se puede pasar a disponible con partes abiertos o reservas abiertas
-        if (estadoEnum == EstadoEnum.Disponible && await _parteRepository.TieneParteAbiertoAsync(id))
-        {
-            
-        }
+        if (estadoEnum == EstadoEnum.Disponible && await _parteRepository.TieneParteAbiertoAsync(id) && exist.Estado == EstadoEnum.Reservado)
+            return new DomainError(
+                "No se puede pasar a disponible un vehiculo con reservas o partes activos",
+                HttpStatusCode.BadRequest);
         // no se puede pasar a reservado con partes abiertos
+        if (estadoEnum == EstadoEnum.Reservado && await _parteRepository.TieneParteAbiertoAsync(id))
+            return new DomainError(
+                "No se puede pasar a reservado un vehiculo con partes activos",
+                HttpStatusCode.BadRequest);
         // no se puede pasar a en alquiler si teiene partes abiertas
+        if (estadoEnum == EstadoEnum.EnAlquiler && await _parteRepository.TieneParteAbiertoAsync(id))
+            return new DomainError(
+                "No se puede pasar a EnAlquiler un vehiculo con partes activos",
+                HttpStatusCode.BadRequest);
         // no puede pasar a Mantenimiento con reservas aviertas
+        if (estadoEnum == EstadoEnum.EnMantenimiento && exist.Estado == EstadoEnum.Reservado )
+            return new DomainError(
+                "No se puede pasar a Mantenimiento un vehiculo con reservas activas",
+                HttpStatusCode.BadRequest);
         // no puede pasar a retirado con reservas y partes aviertos
+        if (estadoEnum == EstadoEnum.Retirado && await _parteRepository.TieneParteAbiertoAsync(id) && exist.Estado == EstadoEnum.Reservado)
+            return new DomainError(
+                "No se puede pasar a retirado un vehiculo con reservas o partes activos",
+                HttpStatusCode.BadRequest);
+
+        var hev = await _vehiculosRepository.UpdateEstado(id, estadoEnum);
+        
+        return Result.Success<VehiculoResponseDto, DomainError>(VehiculoMapper.ToResponseDto(hev));
     }
 }

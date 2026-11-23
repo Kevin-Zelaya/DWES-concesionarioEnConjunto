@@ -1,7 +1,5 @@
 ﻿using APIAlquilerVehiculos.Dtos.Vehiculo;
-using APIAlquilerVehiculos.Errors.Common;
 using APIAlquilerVehiculos.Models.Enums;
-using CSharpFunctionalExtensions;
 using FluentValidation;
 
 namespace APIAlquilerVehiculos.Validators.Vehiculo;
@@ -22,10 +20,9 @@ public class VehiculoValidatorUpdate : AbstractValidator<VehiculoCreateDto>
 
         RuleFor(x => x).Must(RelacionCategoriaAcris)
             .WithMessage("El codigo acris y la categoria deven estar correlacionados");
-        
+
         RuleFor(x => x.Categoria)
-            .NotEmpty()
-            .Must(x => x is CategoriaEnum);
+            .NotEmpty();
         
         RuleFor(x => x.Color).NotEmpty()
             .WithMessage("El campo color no debe ser nulo");

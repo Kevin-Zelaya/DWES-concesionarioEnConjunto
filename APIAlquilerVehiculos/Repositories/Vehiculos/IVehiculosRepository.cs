@@ -2,6 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using APIAlquilerVehiculos.Models;
+using APIAlquilerVehiculos.Models.Enums;
 
 namespace APIAlquilerVehiculos.Repositories.Vehiculos;
 
@@ -28,4 +29,13 @@ public interface IVehiculosRepository: ICrudRepository<Vehiculo,string>
     public Task<(List<Vehiculo> items, int count, int totalPages, bool HasPreviousPage, bool HasNextPage)>
         GetPaginatedVehiculosAsync
         (int pageNumber, int pageSize, CancellationToken ct = default);
+
+    
+    /// <summary>
+    /// cambia el estado del vehiculo al deseado
+    /// </summary>
+    /// <param name="id"></param>
+    /// <param name="estadoEnum"></param>
+    /// <returns></returns>
+    public Task<Vehiculo?> UpdateEstado(string id, EstadoEnum estadoEnum);
 }

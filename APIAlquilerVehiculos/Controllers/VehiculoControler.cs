@@ -1,11 +1,12 @@
 ﻿using APIAlquilerVehiculos.Dtos.Vehiculo;
+using APIAlquilerVehiculos.Models.Enums;
 using APIAlquilerVehiculos.Services.Vehiculo;
 using Microsoft.AspNetCore.Mvc;
 
 namespace APIAlquilerVehiculos.Controllers;
 
 [ApiController]
-[Route("api/[Vehiculos]")]
+[Route("api/vehiculos")]
 public class VehiculosController(IVehiculoService service) : ControllerBase
 {
     /// <summary>
@@ -87,6 +88,26 @@ public class VehiculosController(IVehiculoService service) : ControllerBase
         CancellationToken ct)
     {
         var result = await service.UpdateAsync(id, dto, ct);
+
+        return result.IsSuccess
+            ? Ok(result.Value)
+            : StatusCode((int)result.Error.StatusCode, result.Error);
+    }
+    
+    /// <summary>
+    /// Actualiza un el estado de un vehículo
+    /// </summary>
+    [HttpPut("{id}/{estado}")]
+    [ProducesResponseType(typeof(VehiculoResponseDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status409Conflict)]
+    public async Task<IActionResult> Update(
+        string id,
+        EstadoEnum estado,
+        [FromBody] VehiculoUpdateDto dto,
+        CancellationToken ct)
+    {
+        var result = await service.UpdateEstado(id, estado, ct);
 
         return result.IsSuccess
             ? Ok(result.Value)
