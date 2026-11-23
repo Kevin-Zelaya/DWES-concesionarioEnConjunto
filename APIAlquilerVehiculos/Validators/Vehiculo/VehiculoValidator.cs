@@ -63,7 +63,7 @@ public class VehiculoValidator : AbstractValidator<VehiculoCreateDto>
 
     private static bool RelacionCategoriaAcris(VehiculoCreateDto obj)
     {
-        var acris = obj.Acriss.Substring(2,1);
+        var acris = obj.Acriss.Substring(2,1).ToUpper();
         var categoria = obj.Categoria;
 
         bool correct = acris switch
@@ -82,22 +82,14 @@ public class VehiculoValidator : AbstractValidator<VehiculoCreateDto>
             "G" => categoria==CategoriaEnum.Sub,
             "J" => categoria==CategoriaEnum.Todoterreno,
             "E" => categoria==CategoriaEnum.Coupe,
-            "M" => categoria==CategoriaEnum.Monovolumen,
+            "S" => categoria==CategoriaEnum.Deportivo,
+            "X" => categoria==CategoriaEnum.Especial,
+            "Z" => categoria==CategoriaEnum.Especial,
+            "R" => categoria==CategoriaEnum.Especial,
+            "P" => categoria==CategoriaEnum.PickUpp,
+            "Q" => categoria==CategoriaEnum.PickUpp,
             _ => false
         };
-        /*
-         * Deportivo
-         * S deportivo,
-         *
-         * Especial
-         * X especial,
-         * Z oferta especial,
-         * R recreativo,
-         *
-         * PickUp
-         * P pickup de cabina simple,
-         * Q pickup de doble cabina,
-         */
         return correct;
     }
 }

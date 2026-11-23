@@ -1,17 +1,19 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using APIAlquilerVehiculos.Errors.Common;
+using CSharpFunctionalExtensions;
 
 namespace APIAlquilerVehiculos.Services.Commons;
 
 public interface IService<TCreate,TUpdate,TResponse,TId>
 {
-    Task<IEnumerable<TResponse>> GetAllAsync();
+    Task<Result<List<TResponse>,DomainError>> GetAllAsync(CancellationToken ct = default);
 
-    Task<TResponse?> GetByIdAsync(TId id);
+    Task<Result<TResponse,DomainError>> GetByIdAsync(TId id,CancellationToken ct = default);
 
-    Task<TResponse> CreateAsync(TCreate dto);
+    Task<Result<TResponse,DomainError>> CreateAsync(TCreate dto,CancellationToken ct = default);
 
-    Task<TResponse?> UpdateAsync(TId id, TUpdate dto);
+    Task<Result<TResponse,DomainError>> UpdateAsync(TId id, TUpdate dto,CancellationToken ct = default);
 
-    Task<bool> DeleteAsync(TId id);
+    Task<UnitResult<DomainError>> DeleteAsync(TId id,CancellationToken ct = default);
 }

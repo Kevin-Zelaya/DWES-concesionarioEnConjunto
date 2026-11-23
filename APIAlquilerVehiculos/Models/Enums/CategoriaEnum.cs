@@ -14,5 +14,8 @@ public enum CategoriaEnum
     Monovolumen,
     Furgoneta,
     Todoterreno,
-    Familiar
+    Familiar,
+    Deportivo,
+    PickUpp,
+    Especial
 }
