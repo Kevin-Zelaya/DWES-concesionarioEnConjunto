@@ -1,6 +1,7 @@
 ﻿using APIAlquilerVehiculos.Dtos.Vehiculo;
 using APIAlquilerVehiculos.Models.Enums;
 using APIAlquilerVehiculos.Services.Vehiculo;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace APIAlquilerVehiculos.Controllers;
