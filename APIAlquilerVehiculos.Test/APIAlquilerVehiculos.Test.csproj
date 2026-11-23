@@ -33,4 +33,8 @@
       <ProjectReference Include="..\APIAlquilerVehiculos\APIAlquilerVehiculos.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Services.Test\Trabajadores\" />
+    </ItemGroup>
+
 </Project>
