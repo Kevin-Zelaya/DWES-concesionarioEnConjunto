@@ -1,9 +1,7 @@
-﻿using System;
-using APIAlquilerVehiculos.Models.Enums;
+﻿using APIAlquilerVehiculos.Models.Enums;
+using System.ComponentModel.DataAnnotations;
 
 namespace APIAlquilerVehiculos.Dtos.Vehiculo;
-
-using System.ComponentModel.DataAnnotations;
 
 /// <summary>
 /// Objeto de tranferencia de creacion de vehiculos
@@ -32,7 +30,7 @@ public class VehiculoCreateDto
     public string Color { get; set; } = string.Empty;
 
     [Required]
-    public string Combustible { get; set; } = string.Empty;
+    public CombustibleEnum Combustible { get; set; }
 
     [Range(0, double.MaxValue)]
     public double Maletero { get; set; }

@@ -28,11 +28,11 @@ public class LineaReserva
    public TipoPrecio TipoPrecio {get; set;}
    public decimal Subtotal {get; set;}
    // Evita el delegar este calculo al servicio
-   public void CalcularSubtotal(int dias)
+   public void CalcularSubtotal()
     {
         Subtotal = TipoPrecio switch
         {
-            TipoPrecio.Diario => PrecioUnitario * Cantidad * dias,
+            TipoPrecio.Diario => PrecioUnitario * Cantidad,
             TipoPrecio.Unico => PrecioUnitario * Cantidad,
             _ => 0m
         };

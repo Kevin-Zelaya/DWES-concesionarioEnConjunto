@@ -125,21 +125,7 @@ public class ReservaRepository(
         var toReturn = await UpdateAsync(response, request.RowVersion, ct);
         return toReturn;
     }
-    /// <inheritdoc cref="IReservaRepository.UpdatePagoAsync(string, ReservaUpdatePagoRequestDto, CancellationToken)"/>
-    public async Task<Reserva?> UpdatePagoAsync(
-        string CodigoReferencia,
-        ReservaUpdatePagoRequestDto request,
-        CancellationToken ct = default)
-    {
-        var response = await _context.Reservas.FirstOrDefaultAsync(r => r.CodigoRefencia == CodigoReferencia);
-        if (response is null) return null;
-        response.PagoId = request.PagoId;
-        var toReturn = await UpdateAsync(response, request.RowVersion, ct);
-        await _context.Entry(toReturn)
-                .Reference(r => r.Pago)
-            .LoadAsync(ct);
-        return toReturn;
-    }
+
     /// <inheritdoc cref="IReservaRepository.UpdateFechasAsync(string, ReservaUpdateFechaRequestDto, CancellationToken)"/>
     public async Task<Reserva?> UpdateFechasAsync(
         string CodigoReferencia,

@@ -24,8 +24,8 @@ public class CreateReservaRequestDtoValidator : AbstractValidator<ReservaCreateR
         RuleFor(x => x.FechaDevolucion)
             .NotEmpty()
             .Must((reserva, fechaDevolucion) =>
-                fechaDevolucion - reserva.FechaRecogida == TimeSpan.FromHours(24))
-            .WithMessage("La fecha de devolución debe ser exactamente 24 horas posterior a la fecha de recogida.");
+                fechaDevolucion >= reserva.FechaRecogida.AddHours(24))
+            .WithMessage("La fecha de devolución debe ser al menos 24 horas posterior a la fecha de recogida.");
 
         RuleFor(x => x.Lineas)
             .NotNull()
@@ -46,8 +46,8 @@ public class ReservaUpdateFechaRequestDtoValidator : AbstractValidator<ReservaUp
         RuleFor(x => x.FechaDevolucion)
             .NotEmpty()
             .Must((reserva, fechaDevolucion) =>
-                fechaDevolucion - reserva.FechaRecogida == TimeSpan.FromHours(24))
-            .WithMessage("La fecha de devolución debe ser exactamente 24 horas posterior a la fecha de recogida.");
+                fechaDevolucion >= reserva.FechaRecogida.AddHours(24))
+            .WithMessage("La fecha de devolución debe ser al menos 24 horas posterior a la fecha de recogida.");
 
         RuleFor(x => x.RowVersion)
             .NotEmpty()

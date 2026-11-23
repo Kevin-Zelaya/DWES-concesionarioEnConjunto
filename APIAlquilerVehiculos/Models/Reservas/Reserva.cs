@@ -24,8 +24,7 @@ public class Reserva
     public Estado Estado {get; set;}
     public List<LineaReserva> Lineas {get; set;} = [];
     public decimal PrecioTotal { get; set; }
-    public long? PagoId {get; set;}
-    public Pago? Pago {get; set;}
+    public ICollection<Pago> Pagos { get; set; } = [];
     public string? Notas {get; set;}
     // control de concurrencia
     public uint RowVersion {get; set;}
@@ -38,10 +37,9 @@ public class Reserva
         DateTime FechaDevolución
     )
     {
-        return (FechaRecogida.Date - FechaDevolución.Date).Days;
+        return (FechaDevolución.Date - FechaRecogida.Date).Days;
     }
 }
-
 /// <summary>
 /// Posibles estados de una reserva
 /// enum de posibilidades.
