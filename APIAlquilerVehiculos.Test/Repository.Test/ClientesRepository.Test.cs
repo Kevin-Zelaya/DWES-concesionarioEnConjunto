@@ -602,6 +602,7 @@ public class ClientesRepositoryTest
         var vehiculo = new Vehiculo
         {
             Id = "deUKZ4KCd9J",
+            MarcaId = 1,
             Modelo = "Corolla",
             Matricula = "1234ABC"
         };
