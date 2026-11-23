@@ -314,3 +314,50 @@ System.OperationCanceledException: The operation was canceled.
 2026-11-23 13:34:28.079 [WRN] The WebRootPath was not found: C:\Users\Marcos\Documents\Proyectos\Back-end\C#\PracticaAlquler_de_choches\APIAlquilerVehiculos\wwwroot. Static files may be unavailable.
 2026-11-23 13:34:33.485 [WRN] Intento de login de cuenta desactivada 6
 2026-11-23 13:35:49.063 [INF] Buscando cliente 2
+2026-11-23 20:58:33.372 [INF] Iniciando aplicación...
+2026-11-23 20:58:33.762 [INF] Configurando servicios...
+2026-11-23 20:58:33.764 [INF] Configurando servicios...
+2026-11-23 20:58:34.039 [INF] Configurando la conexión a Redis...
+2026-11-23 20:58:42.217 [INF] Conexión a Redis configurada correctamente.
+2026-11-23 20:58:42.406 [INF] Configurando la conexión a Cassandra...
+2026-11-23 20:58:42.582 [INF] Conexión a Cassandra configurada correctamente.
+2026-11-23 20:58:43.533 [WRN] Entity 'Trabajador' has a global query filter defined and is the required end of a relationship with the entity 'Oficina'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-23 20:58:43.535 [WRN] Entity 'Trabajador' has a global query filter defined and is the required end of a relationship with the entity 'Parte'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-23 20:58:47.748 [ERR] An error occurred using the connection to database 'conceciorio_db' on server 'tcp://localhost:5432'.
+2026-11-23 21:01:31.038 [INF] Iniciando aplicación...
+2026-11-23 21:01:31.078 [INF] Configurando servicios...
+2026-11-23 21:01:31.079 [INF] Configurando servicios...
+2026-11-23 21:01:31.091 [INF] Configurando la conexión a Redis...
+2026-11-23 21:01:31.175 [INF] Conexión a Redis configurada correctamente.
+2026-11-23 21:01:31.177 [INF] Configurando la conexión a Cassandra...
+2026-11-23 21:01:31.299 [INF] Conexión a Cassandra configurada correctamente.
+2026-11-23 21:01:31.841 [WRN] Entity 'Trabajador' has a global query filter defined and is the required end of a relationship with the entity 'Oficina'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-23 21:01:31.850 [WRN] Entity 'Trabajador' has a global query filter defined and is the required end of a relationship with the entity 'Parte'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-23 21:01:32.085 [ERR] An error occurred using the connection to database 'conceciorio_db' on server 'tcp://localhost:5432'.
+2026-11-23 21:01:33.715 [INF] Rol creado en Identity: Cliente
+2026-11-23 21:01:33.722 [INF] Rol creado en Identity: Operario
+2026-11-23 21:01:33.727 [INF] Rol creado en Identity: Mecanico
+2026-11-23 21:01:33.735 [INF] Rol creado en Identity: Responsable
+2026-11-23 21:01:33.744 [INF] Rol creado en Identity: Administrador
+2026-11-23 21:01:33.970 [INF] Usuario seed creado: admin@alquiler.com con roles [Administrador]
+2026-11-23 21:01:34.027 [INF] Usuario seed creado: responsable@alquiler.com con roles [Operario, Responsable]
+2026-11-23 21:01:34.126 [INF] Usuario seed creado: operario@alquiler.com con roles [Operario]
+2026-11-23 21:01:34.194 [INF] Usuario seed creado: mecanico@alquiler.com con roles [Mecanico]
+2026-11-23 21:01:34.255 [INF] Usuario seed creado: cliente@alquiler.com con roles [Cliente]
+2026-11-23 21:01:34.360 [INF] Se han creado 17 marcas seed.
+2026-11-23 21:01:34.382 [INF] Se han creado 4 pólizas seed.
+2026-11-23 21:01:34.457 [INF] Se han creado 9 vehículos seed.
+2026-11-23 21:01:34.584 [WRN] The WebRootPath was not found: C:\Users\sergi\Desktop\Asignaturas-Daw\Entorno-Servicio\DWES-concesionarioEnConjunto\APIAlquilerVehiculos\wwwroot. Static files may be unavailable.
+2026-11-23 21:05:24.937 [INF] Iniciando aplicación...
+2026-11-23 21:05:24.985 [INF] Configurando servicios...
+2026-11-23 21:05:24.987 [INF] Configurando servicios...
+2026-11-23 21:05:25.001 [INF] Configurando la conexión a Redis...
+2026-11-23 21:05:25.085 [INF] Conexión a Redis configurada correctamente.
+2026-11-23 21:05:25.087 [INF] Configurando la conexión a Cassandra...
+2026-11-23 21:05:25.365 [INF] Conexión a Cassandra configurada correctamente.
+2026-11-23 21:05:25.880 [WRN] Entity 'Trabajador' has a global query filter defined and is the required end of a relationship with the entity 'Oficina'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-23 21:05:25.883 [WRN] Entity 'Trabajador' has a global query filter defined and is the required end of a relationship with the entity 'Parte'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-23 21:05:26.751 [INF] Todas las marcas seed ya existen.
+2026-11-23 21:05:26.755 [INF] Todas las pólizas seed ya existen.
+2026-11-23 21:05:26.775 [INF] Todos los vehículos seed ya existen.
+2026-11-23 21:05:26.850 [WRN] The WebRootPath was not found: C:\Users\sergi\Desktop\Asignaturas-Daw\Entorno-Servicio\DWES-concesionarioEnConjunto\APIAlquilerVehiculos\wwwroot. Static files may be unavailable.
