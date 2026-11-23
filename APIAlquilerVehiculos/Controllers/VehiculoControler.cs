@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace APIAlquilerVehiculos.Controllers;
 
 [ApiController]
-[Route("api/[Vehiculos]")]
+[Route("api/vehiculos")]
 public class VehiculosController(IVehiculoService service) : ControllerBase
 {
     /// <summary>
