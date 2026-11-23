@@ -10,8 +10,7 @@ public interface IClienteRepository
     /// </summary>
     /// <param name="dto">Filtros y paginación añadida</param>
     /// <param name="cancellationToken">Token para cancelar la operación asíncrona</param>
-    /// <returns>Devuelve una lista de clientes</returns>>Token para cancelar la operación asíncrona</param>
-    /// <returns></returns>
+    /// <returns>Devuelve una lista de clientes</returns>
     Task<(List<Cliente> Items, int TotalCount)> FindAllPagedAsync(ClienteFilterDto dto, CancellationToken cancellationToken = default);
     
     /// <summary>
@@ -40,6 +39,16 @@ public interface IClienteRepository
     /// <returns></returns>
     Task<Cliente?> UpdateAsync(long id, Cliente updatedCliente, CancellationToken cancellationToken = default);
 
+    /// <summary>
+    /// Actualizar estado del cliente de baja a activo
+    /// Acceso único por el Administrador
+    /// </summary>
+    /// <param name="cliente">cliente actual</param>
+    /// <param name="cancellationToken">Token para cancelar la operación asíncrona</param>
+    /// <returns>Devuelve el cliente renovado</returns>
+    Task<Cliente?> UpdatePartialAsync(Cliente cliente, CancellationToken cancellationToken = default);
+
+    
     /// <summary>
     /// Dar de baja logica un cliente
     /// Y este no debe poder aparecer en niguna otra acción, ni debe poder chocar valores con otros usuarios

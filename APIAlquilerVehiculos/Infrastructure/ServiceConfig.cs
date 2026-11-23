@@ -1,6 +1,7 @@
 using APIAlquilerVehiculos.Services;
 using APIAlquilerVehiculos.Services.Auth;
 using APIAlquilerVehiculos.Services.Clientes;
+using APIAlquilerVehiculos.Services.Pagos;
 using APIAlquilerVehiculos.Services.Trabajadores;
 using Serilog;
 

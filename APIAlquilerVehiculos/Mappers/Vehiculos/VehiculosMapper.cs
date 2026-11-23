@@ -12,7 +12,7 @@ public static class VehiculoMapper
         {
             Id = vehiculo.Id,
             Matricula = vehiculo.Matricula,
-            MarcaId = vehiculo.Marca_id,
+            MarcaId = vehiculo. Marca_id,
             Modelo = vehiculo.Modelo,
             Acriss = vehiculo.Acriss,
             Categoria = vehiculo.categoria,

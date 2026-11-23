@@ -108,6 +108,35 @@ public class ClienteController(IClienteService service) : ControllerBase
 
         return Ok(resultado.Value);
     }
+    
+    /// <summary>
+    /// Actualiza los datos de un cliente existente.
+    /// </summary>
+    [HttpPatch("{id:long}/reactivar")]
+    [Authorize(Policy = "RequireAdminRole")]
+    [SwaggerOperation(
+        Summary = "Actualización del estado de un cliente",
+        Description = "Devuelve el cliente renovado junto a su usuario",
+        OperationId = "UpdateAsync",
+        Tags = new[] { "Clientes" }
+    )]
+    //[SwaggerRequestExample(typeof(UpdateClienteDto), typeof(UpdateClienteExample))] 
+    [SwaggerResponse(200, "Cliente reactivado correctamente", typeof(ClienteDto))]
+    [SwaggerResponse(400, "Identificador o datos de la operación no válidos")]
+    [SwaggerResponse(401, "No autenticado")]
+    [SwaggerResponse(403, "Permisos insuficientes")]
+    [SwaggerResponse(404, "Cliente no encontrado")]
+    [SwaggerResponse(409, "El cliente ya se encuentra activo")]
+    [SwaggerResponse(500, "Error interno del servidor")]
+    public async Task<ActionResult<ClienteDto>> UpdateStateAsync(
+        [FromRoute, SwaggerParameter("Identificador del cliente", Required = true)] long id, 
+        CancellationToken cancellationToken)
+    {
+        var resultado = await _service.UpdatePartialAsync(id, cancellationToken); 
+
+        return resultado.IsSuccess ?
+            Ok(resultado.Value) : StatusCode((int)resultado.Error.StatusCode, resultado.Error);
+    }
 
     /// <summary>
     /// Da de baja lógicamente a un cliente.

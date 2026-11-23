@@ -111,6 +111,24 @@ public class ClienteRepository(AppDbContext db) : IClienteRepository
     }
     
     /// <summary>
+    /// Actualizar estado del cliente de baja a activo
+    /// Acceso único por el Administrador
+    /// </summary>
+    /// <param name="cliente">cliente actual</param>
+    /// <param name="cancellationToken">Token para cancelar la operación asíncrona</param>
+    /// <returns>Devuelve el cliente renovado</returns>
+    public async Task<Cliente?> UpdatePartialAsync(Cliente cliente, CancellationToken cancellationToken = default)
+    {
+        cliente.IsActivo = true;
+        cliente.DeletedAt = null;
+        cliente.UpdatedAt = DateTime.UtcNow;
+        
+        await db.SaveChangesAsync(cancellationToken);
+        
+        return cliente;
+    }
+    
+    /// <summary>
     /// Dar de baja logica un cliente
     /// Y este no debe poder aparecer en niguna otra acción, ni debe poder chocar valores con otros usuarios
     /// </summary>

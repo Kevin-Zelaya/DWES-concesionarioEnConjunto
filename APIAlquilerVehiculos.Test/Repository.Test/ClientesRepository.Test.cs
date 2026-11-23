@@ -479,6 +479,52 @@ public class ClientesRepositoryTest
     }
 
     #endregion
+    
+    #region UpdatePartialAsync
+
+    [Test]
+    public async Task UpdatePartialAsync_Devuelve_Cliente_Reactivado_Cuando_Cliente_Estaba_Inactivo()
+    {
+        // Arrange
+        var clienteInactivo = await _db.Clientes
+            .IgnoreQueryFilters()
+            .FirstAsync(c => c.Id == 3);
+
+        // Act
+        var result = await _repository.UpdatePartialAsync(clienteInactivo);
+
+        // Assert
+        result.Should().NotBeNull();
+        result!.Id.Should().Be(3);
+        result.IsActivo.Should().BeTrue();
+        result.DeletedAt.Should().BeNull();
+        result.UpdatedAt.Should().NotBeNull();
+
+        _db.ChangeTracker.Clear();
+        var clienteEnBd = await _db.Clientes.FirstOrDefaultAsync(c => c.Id == 3);
+        clienteEnBd.Should().NotBeNull();
+        clienteEnBd!.IsActivo.Should().BeTrue();
+        clienteEnBd.DeletedAt.Should().BeNull();
+    }
+
+    [Test]
+    public async Task UpdatePartialAsync_Devuelve_Cliente_Actualizado_Cuando_Cliente_Ya_Estaba_Activo()
+    {
+        // Arrange
+        var clienteActivo = await _db.Clientes.FirstAsync(c => c.Id == 1);
+
+        // Act
+        var result = await _repository.UpdatePartialAsync(clienteActivo);
+
+        // Assert
+        result.Should().NotBeNull();
+        result!.Id.Should().Be(1);
+        result.IsActivo.Should().BeTrue();
+        result.DeletedAt.Should().BeNull();
+        result.UpdatedAt.Should().NotBeNull();
+    }
+
+    #endregion
 
     #region DeleteAsync
 

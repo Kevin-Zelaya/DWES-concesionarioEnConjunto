@@ -195,6 +195,48 @@ public class ClienteService(IClienteRepository repository, IValidator<UpdateClie
     }
     
     /// <summary>
+    /// Actualiza tanto los datos de cliente y por tanto de su usuario
+    /// Solo admin
+    /// </summary>
+    /// <param name="id">Identificador del cliente a actualizar</param>
+    /// <param name="cancellationToken">Token para cancelar la operación asíncrona</param>
+    /// <returns>Devuelve los datos del cliente ta actualizados</returns>
+    public async Task<Result<ClienteDto, DomainError>> UpdatePartialAsync(long id, CancellationToken cancellationToken)
+    {
+        var clienteActual = await repository.FindByIdAsync(id, cancellationToken);
+        if (id <= 0 || clienteActual is null)
+        {
+            logger.LogWarning("No se encontro el Cliente {id}", id); 
+            return Result.Failure<ClienteDto, DomainError>(ClienteErrors.NotFound(id));
+        }
+        
+        // se comprueba que está activo
+        if (clienteActual.IsActivo)
+        {
+            return Result.Failure<ClienteDto, DomainError>(ClienteErrors.YaActivo(id));
+        } 
+
+        //Actualizamos Cliente y comprobamos que no sea null, si lo es salta error
+        var cliente = await repository.UpdatePartialAsync(clienteActual, cancellationToken);
+      
+        if (cliente is null)
+        {
+            logger.LogWarning("No se actualizo el cliente {id}", id); 
+            return Result.Failure<ClienteDto, DomainError>(ClienteErrors.NotFound(id));
+        }
+        
+        await cache.RemoveAsync(CacheKey(id));
+
+        //Transformamos a ResponseDTO
+        var clienteResponse = ClienteMapper.ToResponseDto(cliente);
+        logger.LogInformation("Cliente {id} con estado renovado correctamente", id);
+
+        //Devolvemos
+        return Result.Success<ClienteDto, DomainError>(clienteResponse);
+    }
+    
+    
+    /// <summary>
     /// Da de baja a un cliente en específico
     /// </summary>
     /// <param name="principal">Contexto de la seguridad para buscar el usuario que inició sesión</param>

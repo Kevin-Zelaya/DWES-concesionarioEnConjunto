@@ -38,6 +38,14 @@ public interface IClienteService
     Task<Result<ClienteDto, DomainError>> UpdateAsync(ClaimsPrincipal principal, long id, UpdateClienteDto updatedCliente, CancellationToken cancellationToken);
 
     /// <summary>
+    /// Actualiza el estado del cliente, renovandolo
+    /// </summary>
+    /// <param name="id">Identificador del cliente a renovar</param>
+    /// <param name="cancellationToken">Token para cancelar la operación asíncrona</param>
+    /// <returns>Devuelve los datos del cliente ta actualizados</returns>
+    Task<Result<ClienteDto, DomainError>> UpdatePartialAsync(long id, CancellationToken cancellationToken);
+    
+    /// <summary>
     /// Da de baja a un cliente en específico
     /// </summary>
     /// <param name="id">Identificador del cliente a dar de baja</param>
