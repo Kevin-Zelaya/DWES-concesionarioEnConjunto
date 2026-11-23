@@ -365,7 +365,6 @@ public class VehiculosRepository_Test
         {
             Id = id,
             Matricula = matricula,
-            Marca = "prueba",
             Modelo = "GOLF",
             Acriss = "ECMR",
             categoria = CategoriaEnum.Sedan,

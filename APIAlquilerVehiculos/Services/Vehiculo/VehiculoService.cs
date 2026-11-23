@@ -131,7 +131,7 @@ public class VehiculoService : IVehiculoService
         if (exist.Estado != EstadoEnum.Disponible )
             return UnitResult.Failure<DomainError>(ConflictError.Business($"No se puede eliminar un vehiculo que no este en estado Disponible"));
         // no eliminar en caso de que existan reservas de este vehiculo
-        var marcaExist = await _marcaRepository.GetByIdAsync(exist.Marca_id);
+        var marcaExist = await _marcaRepository.GetByIdAsync(exist.MarcaId);
         if (marcaExist != null)
             return UnitResult.Failure<DomainError>(NotFoundError.Messagee($"No se puede eliminar"));
 

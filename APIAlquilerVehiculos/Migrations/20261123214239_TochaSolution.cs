@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace APIAlquilerVehiculos.Migrations
 {
     /// <inheritdoc />
-    public partial class AddPagos : Migration
+    public partial class TochaSolution : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -14,14 +14,6 @@ namespace APIAlquilerVehiculos.Migrations
             migrationBuilder.DropForeignKey(
                 name: "FK_Reservas_Pago_PagoId",
                 table: "Reservas");
-
-            migrationBuilder.DropForeignKey(
-                name: "FK_Vehiculos_Marcas_Marca_id",
-                table: "Vehiculos");
-
-            migrationBuilder.DropIndex(
-                name: "IX_Vehiculos_Marca_id",
-                table: "Vehiculos");
 
             migrationBuilder.DropIndex(
                 name: "IX_Reservas_PagoId",
@@ -32,7 +24,7 @@ namespace APIAlquilerVehiculos.Migrations
                 table: "Pago");
 
             migrationBuilder.DropColumn(
-                name: "Marca_id",
+                name: "Marca",
                 table: "Vehiculos");
 
             migrationBuilder.DropColumn(
@@ -47,12 +39,12 @@ namespace APIAlquilerVehiculos.Migrations
                 name: "Pago",
                 newName: "Pagos");
 
-            migrationBuilder.AddColumn<string>(
-                name: "Marca",
+            migrationBuilder.AddColumn<long>(
+                name: "MarcaId",
                 table: "Vehiculos",
-                type: "text",
+                type: "bigint",
                 nullable: false,
-                defaultValue: "");
+                defaultValue: 0L);
 
             migrationBuilder.AlterColumn<string>(
                 name: "TarjetaCifrada",
@@ -110,6 +102,11 @@ namespace APIAlquilerVehiculos.Migrations
                 column: "Id");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Vehiculos_MarcaId",
+                table: "Vehiculos",
+                column: "MarcaId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Pagos_ReferenciaPasarela",
                 table: "Pagos",
                 column: "ReferenciaPasarela",
@@ -127,6 +124,14 @@ namespace APIAlquilerVehiculos.Migrations
                 principalTable: "Reservas",
                 principalColumn: "Id",
                 onDelete: ReferentialAction.Restrict);
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_Vehiculos_Marcas_MarcaId",
+                table: "Vehiculos",
+                column: "MarcaId",
+                principalTable: "Marcas",
+                principalColumn: "Id",
+                onDelete: ReferentialAction.Restrict);
         }
 
         /// <inheritdoc />
@@ -135,6 +140,14 @@ namespace APIAlquilerVehiculos.Migrations
             migrationBuilder.DropForeignKey(
                 name: "FK_Pagos_Reservas_ReservaId",
                 table: "Pagos");
+
+            migrationBuilder.DropForeignKey(
+                name: "FK_Vehiculos_Marcas_MarcaId",
+                table: "Vehiculos");
+
+            migrationBuilder.DropIndex(
+                name: "IX_Vehiculos_MarcaId",
+                table: "Vehiculos");
 
             migrationBuilder.DropPrimaryKey(
                 name: "PK_Pagos",
@@ -149,7 +162,7 @@ namespace APIAlquilerVehiculos.Migrations
                 table: "Pagos");
 
             migrationBuilder.DropColumn(
-                name: "Marca",
+                name: "MarcaId",
                 table: "Vehiculos");
 
             migrationBuilder.DropColumn(
@@ -172,12 +185,12 @@ namespace APIAlquilerVehiculos.Migrations
                 name: "Pagos",
                 newName: "Pago");
 
-            migrationBuilder.AddColumn<long>(
-                name: "Marca_id",
+            migrationBuilder.AddColumn<string>(
+                name: "Marca",
                 table: "Vehiculos",
-                type: "bigint",
+                type: "text",
                 nullable: false,
-                defaultValue: 0L);
+                defaultValue: "");
 
             migrationBuilder.AddColumn<long>(
                 name: "PagoId",
@@ -216,11 +229,6 @@ namespace APIAlquilerVehiculos.Migrations
                 column: "Id");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Vehiculos_Marca_id",
-                table: "Vehiculos",
-                column: "Marca_id");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Reservas_PagoId",
                 table: "Reservas",
                 column: "PagoId",
@@ -231,14 +239,6 @@ namespace APIAlquilerVehiculos.Migrations
                 table: "Reservas",
                 column: "PagoId",
                 principalTable: "Pago",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Restrict);
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_Vehiculos_Marcas_Marca_id",
-                table: "Vehiculos",
-                column: "Marca_id",
-                principalTable: "Marcas",
                 principalColumn: "Id",
                 onDelete: ReferentialAction.Restrict);
         }

@@ -12,7 +12,7 @@ public static class VehiculoMapper
         {
             Id = vehiculo.Id,
             Matricula = vehiculo.Matricula,
-            MarcaId = vehiculo. Marca_id,
+            MarcaId = vehiculo.MarcaId,
             Modelo = vehiculo.Modelo,
             Acriss = vehiculo.Acriss,
             Categoria = vehiculo.categoria,
@@ -37,7 +37,7 @@ public static class VehiculoMapper
         return new Vehiculo
         {
             Matricula = dto.Matricula,
-            Marca_id = dto.MarcaId,
+            MarcaId = dto.MarcaId,
             Modelo = dto.Modelo,
             Acriss = dto.Acriss,
             categoria = dto.Categoria,
@@ -60,7 +60,7 @@ public static class VehiculoMapper
         return  new Vehiculo()
         {
             Matricula = dto.Matricula,
-            Marca_id = dto.MarcaId,
+            MarcaId = dto.MarcaId,
             Modelo = dto.Modelo,
             Acriss = dto.Acriss,
             categoria = dto.Categoria,

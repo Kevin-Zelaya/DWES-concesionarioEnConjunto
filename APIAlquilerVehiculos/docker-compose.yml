@@ -32,6 +32,20 @@ services:
       timeout: 5s
       retries: 5
 
+  cassandra:
+    image: cassandra:5.0
+    container_name: cassandra_db
+    restart: unless-stopped
+    ports:
+      - "9042:9042"
+    environment:
+      CASSANDRA_CLUSTER_NAME: AlquilerVehiculosCluster
+      CASSANDRA_DC: datacenter1
+      CASSANDRA_RACK: rack1
+    volumes:
+      - cassandra_data:/var/lib/cassandra
+
 volumes:
   postgres_data:
   redis_data:
+  cassandra_data:
