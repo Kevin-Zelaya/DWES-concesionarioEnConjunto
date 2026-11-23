@@ -1,38 +1,33 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.Net;
-using APIAlquilerVehiculos.DTOs.Marcas;
+﻿using System.Net;
 using APIAlquilerVehiculos.Dtos.Vehiculo;
 using APIAlquilerVehiculos.Errors.Common;
 using APIAlquilerVehiculos.Mappers.Vehiculos;
 using APIAlquilerVehiculos.Models.Enums;
-using APIAlquilerVehiculos.Repositories.Marcas;
+using APIAlquilerVehiculos.Repositories.Taller;
 using APIAlquilerVehiculos.Repositories.Vehiculos;
 using CSharpFunctionalExtensions;
-using FluentValidation;
 
 namespace APIAlquilerVehiculos.Services.Vehiculo;
 
 public class VehiculoService : IVehiculoService
 {
-    private ICache _cache;
-    private IVehiculosRepository _vehiculosRepository;
-    private IValidator<VehiculoCreateDto> _validatorCreate;
-    // cambiar por reservas y añadir partes
-    private IMarcaRepository _marcaRepository;
+    private readonly ICache _cache;
+    private readonly IVehiculosRepository _vehiculosRepository;
+    // cambiar por reservas
+    private readonly IParteRepository _parteRepository;
     
-    public VehiculoService(ICache cache, IVehiculosRepository vehiculosRepository, IValidator<VehiculoCreateDto> validatorCreate, IMarcaRepository marcaRepository)
+    public VehiculoService(ICache cache, IVehiculosRepository vehiculosRepository, IParteRepository parteRepository)
     {
         _cache = cache;
         _vehiculosRepository = vehiculosRepository;
-        _validatorCreate = validatorCreate;
-        // cambiar por reservas y añadir partes
-        _marcaRepository = marcaRepository;
+        // cambiar por reservas
+        _parteRepository = parteRepository;
     }
     
     /// <inheritdoc cref="GetAllAsync"/>
     public async Task<Result<List<VehiculoResponseDto>, DomainError>> GetAllAsync(CancellationToken ct = default)
     {
-        //Buscamos en el reositorio los datos
+        //Buscamos en el repository los datos
         var all = await _vehiculosRepository.GetAllAsync();
         //Los pasamos a dtos de respuesta 
         var all3 = all.Select(v => VehiculoMapper.ToResponseDto(v)).ToList();
@@ -67,7 +62,7 @@ public class VehiculoService : IVehiculoService
         
         // Devolvemos un erro en caso de no encontrarlo y el vehículo en caso de encontrarlo 
         return rest == null
-            ? Result.Failure<VehiculoResponseDto, DomainError>(NotFoundError.Messagee($"No existe un vehiculo con la mtricula{matricula}"))
+            ? Result.Failure<VehiculoResponseDto, DomainError>(NotFoundError.Messagee($"No existe un vehiculo con la matricula{matricula}"))
             : Result.Success<VehiculoResponseDto, DomainError>(VehiculoMapper.ToResponseDto(rest));
     }
 
@@ -86,7 +81,7 @@ public class VehiculoService : IVehiculoService
     /// <inheritdoc cref="UpdateAsync"/>
     public async Task<Result<VehiculoResponseDto, DomainError>> UpdateAsync(string id, VehiculoUpdateDto dto, CancellationToken ct = default)
     {
-        //conflicto por matrricula repetida
+        //conflicto por matriculate repetida
         var existMatricula = await _vehiculosRepository.GetByMatriculaAsync(dto.Matricula); 
         if (existMatricula != null)
             return Result.Failure<VehiculoResponseDto, DomainError>(NotFoundError.Messagee($"Ya existe un vehiculo con la matricula {dto.Matricula}"));
@@ -96,20 +91,8 @@ public class VehiculoService : IVehiculoService
         if (exist == null)
             return Result.Failure<VehiculoResponseDto, DomainError>(NotFoundError.FromResource("vehiculo", $"{id}"));
         
-        // si se cambia el estado a retirado se cambia el activo a false
-        if (dto.Estado == EstadoEnum.Retirado)
-            dto.Activo = false;
-        
-        // no se puede poner el coche como disponible si tiene partes activos o esta siendo alquilado
-        
-        // no se puede modificar el estado a retirado con partes abiertos o una reserva vigente 
-        
-        // no se puede cambiar el estado a en manteniemineto si tiene reservas activas
-        
-        // no se puede poner en alquiler si toiene partes sin resolver o ya esta siendo alquilado
-        
-        // no se puede reservar si esta con partes abiertos
-        
+        //no se podr cambiar el estado en un update se devera usar update estado
+        dto.Estado = exist.Estado;
         var vehiculo = VehiculoMapper.ToVehiculo(dto);
         vehiculo.Id = id;
 
@@ -130,9 +113,9 @@ public class VehiculoService : IVehiculoService
         // no eliminar en caso de que no este en estado disponible
         if (exist.Estado != EstadoEnum.Disponible )
             return UnitResult.Failure<DomainError>(ConflictError.Business($"No se puede eliminar un vehiculo que no este en estado Disponible"));
-        // no eliminar en caso de que existan reservas de este vehiculo
-        var marcaExist = await _marcaRepository.GetByIdAsync(exist.Marca_id);
-        if (marcaExist != null)
+        // no eliminar en caso de que existan partes aviertos
+        var marcaExist = await _parteRepository.TieneParteAbiertoAsync(id);
+        if (marcaExist == true)
             return UnitResult.Failure<DomainError>(NotFoundError.Messagee($"No se puede eliminar"));
 
         // no eliminar en caso de que existan partes activos de este vehiculo
@@ -171,5 +154,23 @@ public class VehiculoService : IVehiculoService
             bool HasPreviousPage, bool HasNextPage), DomainError>(
             (vehiculosDto, resultado.count, resultado.totalPages,
                 resultado.HasPreviousPage, resultado.HasNextPage));
+    }
+    
+    public async Task<Result<VehiculoResponseDto, DomainError>> UpdateEstado(string id, EstadoEnum estadoEnum, CancellationToken ct = default)
+    {
+        //conflicto por la falta de existencia del objeto a actualizar
+        var exist = await _vehiculosRepository.GetByIdAsync(id);
+        if (exist == null)
+            return Result.Failure<VehiculoResponseDto, DomainError>(NotFoundError.FromResource("vehiculo", $"{id}"));
+        
+        // no se puede pasar a disponible con partes abiertos o reservas abiertas
+        if (estadoEnum == EstadoEnum.Disponible && await _parteRepository.TieneParteAbiertoAsync(id))
+        {
+            
+        }
+        // no se puede pasar a reservado con partes abiertos
+        // no se puede pasar a en alquiler si teiene partes abiertas
+        // no puede pasar a Mantenimiento con reservas aviertas
+        // no puede pasar a retirado con reservas y partes aviertos
     }
 }
