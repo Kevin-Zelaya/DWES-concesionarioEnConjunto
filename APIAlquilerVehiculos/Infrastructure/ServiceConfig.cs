@@ -3,6 +3,7 @@ using APIAlquilerVehiculos.Services.Auth;
 using APIAlquilerVehiculos.Services.Clientes;
 using APIAlquilerVehiculos.Services.Trabajadores;
 using Serilog;
+using APIAlquilerVehiculos.Services.Pagos;
 
 public static class ServiceConfig
 {

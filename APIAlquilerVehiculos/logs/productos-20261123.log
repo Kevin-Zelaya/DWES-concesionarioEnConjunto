@@ -554,3 +554,416 @@ System.OperationCanceledException: The operation was canceled.
 2026-11-23 13:34:28.079 [WRN] The WebRootPath was not found: C:\Users\Marcos\Documents\Proyectos\Back-end\C#\PracticaAlquler_de_choches\APIAlquilerVehiculos\wwwroot. Static files may be unavailable.
 2026-11-23 13:34:33.485 [WRN] Intento de login de cuenta desactivada 6
 2026-11-23 13:35:49.063 [INF] Buscando cliente 2
+2026-11-23 20:58:33.372 [INF] Iniciando aplicación...
+2026-11-23 20:58:33.762 [INF] Configurando servicios...
+2026-11-23 20:58:33.764 [INF] Configurando servicios...
+2026-11-23 20:58:34.039 [INF] Configurando la conexión a Redis...
+2026-11-23 20:58:42.217 [INF] Conexión a Redis configurada correctamente.
+2026-11-23 20:58:42.406 [INF] Configurando la conexión a Cassandra...
+2026-11-23 20:58:42.582 [INF] Conexión a Cassandra configurada correctamente.
+2026-11-23 20:58:43.533 [WRN] Entity 'Trabajador' has a global query filter defined and is the required end of a relationship with the entity 'Oficina'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-23 20:58:43.535 [WRN] Entity 'Trabajador' has a global query filter defined and is the required end of a relationship with the entity 'Parte'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-23 20:58:47.748 [ERR] An error occurred using the connection to database 'conceciorio_db' on server 'tcp://localhost:5432'.
+2026-11-23 21:01:31.038 [INF] Iniciando aplicación...
+2026-11-23 21:01:31.078 [INF] Configurando servicios...
+2026-11-23 21:01:31.079 [INF] Configurando servicios...
+2026-11-23 21:01:31.091 [INF] Configurando la conexión a Redis...
+2026-11-23 21:01:31.175 [INF] Conexión a Redis configurada correctamente.
+2026-11-23 21:01:31.177 [INF] Configurando la conexión a Cassandra...
+2026-11-23 21:01:31.299 [INF] Conexión a Cassandra configurada correctamente.
+2026-11-23 21:01:31.841 [WRN] Entity 'Trabajador' has a global query filter defined and is the required end of a relationship with the entity 'Oficina'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-23 21:01:31.850 [WRN] Entity 'Trabajador' has a global query filter defined and is the required end of a relationship with the entity 'Parte'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-23 21:01:32.085 [ERR] An error occurred using the connection to database 'conceciorio_db' on server 'tcp://localhost:5432'.
+2026-11-23 21:01:33.715 [INF] Rol creado en Identity: Cliente
+2026-11-23 21:01:33.722 [INF] Rol creado en Identity: Operario
+2026-11-23 21:01:33.727 [INF] Rol creado en Identity: Mecanico
+2026-11-23 21:01:33.735 [INF] Rol creado en Identity: Responsable
+2026-11-23 21:01:33.744 [INF] Rol creado en Identity: Administrador
+2026-11-23 21:01:33.970 [INF] Usuario seed creado: admin@alquiler.com con roles [Administrador]
+2026-11-23 21:01:34.027 [INF] Usuario seed creado: responsable@alquiler.com con roles [Operario, Responsable]
+2026-11-23 21:01:34.126 [INF] Usuario seed creado: operario@alquiler.com con roles [Operario]
+2026-11-23 21:01:34.194 [INF] Usuario seed creado: mecanico@alquiler.com con roles [Mecanico]
+2026-11-23 21:01:34.255 [INF] Usuario seed creado: cliente@alquiler.com con roles [Cliente]
+2026-11-23 21:01:34.360 [INF] Se han creado 17 marcas seed.
+2026-11-23 21:01:34.382 [INF] Se han creado 4 pólizas seed.
+2026-11-23 21:01:34.457 [INF] Se han creado 9 vehículos seed.
+2026-11-23 21:01:34.584 [WRN] The WebRootPath was not found: C:\Users\sergi\Desktop\Asignaturas-Daw\Entorno-Servicio\DWES-concesionarioEnConjunto\APIAlquilerVehiculos\wwwroot. Static files may be unavailable.
+2026-11-23 21:05:24.937 [INF] Iniciando aplicación...
+2026-11-23 21:05:24.985 [INF] Configurando servicios...
+2026-11-23 21:05:24.987 [INF] Configurando servicios...
+2026-11-23 21:05:25.001 [INF] Configurando la conexión a Redis...
+2026-11-23 21:05:25.085 [INF] Conexión a Redis configurada correctamente.
+2026-11-23 21:05:25.087 [INF] Configurando la conexión a Cassandra...
+2026-11-23 21:05:25.365 [INF] Conexión a Cassandra configurada correctamente.
+2026-11-23 21:05:25.880 [WRN] Entity 'Trabajador' has a global query filter defined and is the required end of a relationship with the entity 'Oficina'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-23 21:05:25.883 [WRN] Entity 'Trabajador' has a global query filter defined and is the required end of a relationship with the entity 'Parte'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-23 21:05:26.751 [INF] Todas las marcas seed ya existen.
+2026-11-23 21:05:26.755 [INF] Todas las pólizas seed ya existen.
+2026-11-23 21:05:26.775 [INF] Todos los vehículos seed ya existen.
+2026-11-23 21:05:26.850 [WRN] The WebRootPath was not found: C:\Users\sergi\Desktop\Asignaturas-Daw\Entorno-Servicio\DWES-concesionarioEnConjunto\APIAlquilerVehiculos\wwwroot. Static files may be unavailable.
+2026-11-23 21:46:09.851 [INF] Iniciando aplicación...
+2026-11-23 21:46:09.892 [INF] Configurando servicios...
+2026-11-23 21:46:09.893 [INF] Configurando servicios...
+2026-11-23 21:46:09.905 [INF] Configurando la conexión a Redis...
+2026-11-23 21:46:09.990 [INF] Conexión a Redis configurada correctamente.
+2026-11-23 21:46:10.526 [WRN] Entity 'Trabajador' has a global query filter defined and is the required end of a relationship with the entity 'Oficina'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-23 21:46:10.530 [WRN] Entity 'Trabajador' has a global query filter defined and is the required end of a relationship with the entity 'Parte'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-23 21:46:10.934 [WRN] Entity 'Trabajador' has a global query filter defined and is the required end of a relationship with the entity 'Oficina'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-23 21:46:10.936 [WRN] Entity 'Trabajador' has a global query filter defined and is the required end of a relationship with the entity 'Parte'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-23 21:47:38.317 [INF] Iniciando aplicación...
+2026-11-23 21:47:38.356 [INF] Configurando servicios...
+2026-11-23 21:47:38.357 [INF] Configurando servicios...
+2026-11-23 21:47:38.368 [INF] Configurando la conexión a Redis...
+2026-11-23 21:47:38.455 [INF] Conexión a Redis configurada correctamente.
+2026-11-23 21:47:38.958 [WRN] Entity 'Trabajador' has a global query filter defined and is the required end of a relationship with the entity 'Oficina'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-23 21:47:38.960 [WRN] Entity 'Trabajador' has a global query filter defined and is the required end of a relationship with the entity 'Parte'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-23 21:47:39.363 [WRN] Entity 'Trabajador' has a global query filter defined and is the required end of a relationship with the entity 'Oficina'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-23 21:47:39.364 [WRN] Entity 'Trabajador' has a global query filter defined and is the required end of a relationship with the entity 'Parte'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-23 21:50:59.724 [INF] Iniciando aplicación...
+2026-11-23 21:50:59.761 [INF] Configurando servicios...
+2026-11-23 21:50:59.762 [INF] Configurando servicios...
+2026-11-23 21:50:59.774 [INF] Configurando la conexión a Redis...
+2026-11-23 21:50:59.862 [INF] Conexión a Redis configurada correctamente.
+2026-11-23 21:51:00.370 [WRN] Entity 'Trabajador' has a global query filter defined and is the required end of a relationship with the entity 'Oficina'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-23 21:51:00.372 [WRN] Entity 'Trabajador' has a global query filter defined and is the required end of a relationship with the entity 'Parte'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-23 21:52:20.791 [INF] Iniciando aplicación...
+2026-11-23 21:52:20.832 [INF] Configurando servicios...
+2026-11-23 21:52:20.832 [INF] Configurando servicios...
+2026-11-23 21:52:20.843 [INF] Configurando la conexión a Redis...
+2026-11-23 21:52:20.926 [INF] Conexión a Redis configurada correctamente.
+2026-11-23 21:52:21.420 [WRN] Entity 'Trabajador' has a global query filter defined and is the required end of a relationship with the entity 'Oficina'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-23 21:52:21.423 [WRN] Entity 'Trabajador' has a global query filter defined and is the required end of a relationship with the entity 'Parte'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-23 21:52:21.908 [ERR] Failed executing DbCommand (3ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+ALTER TABLE "Vehiculos" DROP CONSTRAINT "FK_Vehiculos_Marcas_Marca_id";
+2026-11-23 21:59:51.920 [INF] Iniciando aplicación...
+2026-11-23 21:59:51.959 [INF] Configurando servicios...
+2026-11-23 21:59:51.960 [INF] Configurando servicios...
+2026-11-23 21:59:51.972 [INF] Configurando la conexión a Redis...
+2026-11-23 21:59:52.056 [INF] Conexión a Redis configurada correctamente.
+2026-11-23 21:59:52.555 [WRN] Entity 'Trabajador' has a global query filter defined and is the required end of a relationship with the entity 'Oficina'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-23 21:59:52.558 [WRN] Entity 'Trabajador' has a global query filter defined and is the required end of a relationship with the entity 'Parte'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-23 21:59:52.558 [WRN] Entity 'Marca' has a global query filter defined and is the required end of a relationship with the entity 'Vehiculo'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-23 22:00:09.862 [INF] Iniciando aplicación...
+2026-11-23 22:00:09.898 [INF] Configurando servicios...
+2026-11-23 22:00:09.898 [INF] Configurando servicios...
+2026-11-23 22:00:09.908 [INF] Configurando la conexión a Redis...
+2026-11-23 22:00:09.996 [INF] Conexión a Redis configurada correctamente.
+2026-11-23 22:00:10.513 [WRN] Entity 'Trabajador' has a global query filter defined and is the required end of a relationship with the entity 'Oficina'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-23 22:00:10.516 [WRN] Entity 'Trabajador' has a global query filter defined and is the required end of a relationship with the entity 'Parte'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-23 22:00:10.517 [WRN] Entity 'Marca' has a global query filter defined and is the required end of a relationship with the entity 'Vehiculo'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-23 22:00:10.971 [ERR] Failed executing DbCommand (2ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+ALTER TABLE "Vehiculos" DROP CONSTRAINT "FK_Vehiculos_Marcas_Marca_id";
+2026-11-23 22:02:20.740 [INF] Iniciando aplicación...
+2026-11-23 22:02:20.787 [INF] Configurando servicios...
+2026-11-23 22:02:20.788 [INF] Configurando servicios...
+2026-11-23 22:02:20.800 [INF] Configurando la conexión a Redis...
+2026-11-23 22:02:29.007 [INF] Conexión a Redis configurada correctamente.
+2026-11-23 22:02:29.555 [WRN] Entity 'Trabajador' has a global query filter defined and is the required end of a relationship with the entity 'Oficina'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-23 22:02:29.558 [WRN] Entity 'Trabajador' has a global query filter defined and is the required end of a relationship with the entity 'Parte'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-23 22:02:33.809 [ERR] An error occurred using the connection to database 'conceciorio_db' on server 'tcp://localhost:5432'.
+2026-11-23 22:03:28.526 [INF] Iniciando aplicación...
+2026-11-23 22:03:28.579 [INF] Configurando servicios...
+2026-11-23 22:03:28.580 [INF] Configurando servicios...
+2026-11-23 22:03:28.592 [INF] Configurando la conexión a Redis...
+2026-11-23 22:03:28.683 [INF] Conexión a Redis configurada correctamente.
+2026-11-23 22:03:29.216 [WRN] Entity 'Trabajador' has a global query filter defined and is the required end of a relationship with the entity 'Oficina'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-23 22:03:29.219 [WRN] Entity 'Trabajador' has a global query filter defined and is the required end of a relationship with the entity 'Parte'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-23 22:03:29.501 [ERR] Failed executing DbCommand (18ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT "MigrationId", "ProductVersion"
+FROM "__EFMigrationsHistory"
+ORDER BY "MigrationId";
+2026-11-23 22:03:29.669 [WRN] Entity 'Trabajador' has a global query filter defined and is the required end of a relationship with the entity 'Oficina'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-23 22:03:29.670 [WRN] Entity 'Trabajador' has a global query filter defined and is the required end of a relationship with the entity 'Parte'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-23 22:04:33.918 [INF] Iniciando aplicación...
+2026-11-23 22:04:33.956 [INF] Configurando servicios...
+2026-11-23 22:04:33.956 [INF] Configurando servicios...
+2026-11-23 22:04:33.968 [INF] Configurando la conexión a Redis...
+2026-11-23 22:04:34.064 [INF] Conexión a Redis configurada correctamente.
+2026-11-23 22:04:34.595 [WRN] Entity 'Trabajador' has a global query filter defined and is the required end of a relationship with the entity 'Oficina'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-23 22:04:34.598 [WRN] Entity 'Trabajador' has a global query filter defined and is the required end of a relationship with the entity 'Parte'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-23 22:04:34.890 [ERR] Failed executing DbCommand (14ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT "MigrationId", "ProductVersion"
+FROM "__EFMigrationsHistory"
+ORDER BY "MigrationId";
+2026-11-23 22:05:14.487 [INF] Iniciando aplicación...
+2026-11-23 22:05:14.525 [INF] Configurando servicios...
+2026-11-23 22:05:14.525 [INF] Configurando servicios...
+2026-11-23 22:05:14.536 [INF] Configurando la conexión a Redis...
+2026-11-23 22:05:14.623 [INF] Conexión a Redis configurada correctamente.
+2026-11-23 22:05:15.134 [WRN] Entity 'Trabajador' has a global query filter defined and is the required end of a relationship with the entity 'Oficina'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-23 22:05:15.137 [WRN] Entity 'Trabajador' has a global query filter defined and is the required end of a relationship with the entity 'Parte'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-23 22:05:15.827 [ERR] Failed executing DbCommand (14ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT "MigrationId", "ProductVersion"
+FROM "__EFMigrationsHistory"
+ORDER BY "MigrationId";
+2026-11-23 22:05:32.721 [INF] Iniciando aplicación...
+2026-11-23 22:05:32.762 [INF] Configurando servicios...
+2026-11-23 22:05:32.763 [INF] Configurando servicios...
+2026-11-23 22:05:32.779 [INF] Configurando la conexión a Redis...
+2026-11-23 22:05:32.864 [INF] Conexión a Redis configurada correctamente.
+2026-11-23 22:05:33.433 [WRN] Entity 'Trabajador' has a global query filter defined and is the required end of a relationship with the entity 'Oficina'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-23 22:05:33.437 [WRN] Entity 'Trabajador' has a global query filter defined and is the required end of a relationship with the entity 'Parte'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-23 22:05:33.709 [ERR] Failed executing DbCommand (15ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT "MigrationId", "ProductVersion"
+FROM "__EFMigrationsHistory"
+ORDER BY "MigrationId";
+2026-11-23 22:05:34.277 [ERR] Failed executing DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+ALTER TABLE "Vehiculos" DROP CONSTRAINT "FK_Vehiculos_Marcas_Marca_id";
+2026-11-23 22:07:12.318 [INF] Iniciando aplicación...
+2026-11-23 22:07:12.356 [INF] Configurando servicios...
+2026-11-23 22:07:12.357 [INF] Configurando servicios...
+2026-11-23 22:07:12.369 [INF] Configurando la conexión a Redis...
+2026-11-23 22:07:12.452 [INF] Conexión a Redis configurada correctamente.
+2026-11-23 22:07:12.986 [WRN] Entity 'Trabajador' has a global query filter defined and is the required end of a relationship with the entity 'Oficina'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-23 22:07:12.989 [WRN] Entity 'Trabajador' has a global query filter defined and is the required end of a relationship with the entity 'Parte'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-23 22:07:27.889 [INF] Iniciando aplicación...
+2026-11-23 22:07:27.947 [INF] Configurando servicios...
+2026-11-23 22:07:27.948 [INF] Configurando servicios...
+2026-11-23 22:07:27.964 [INF] Configurando la conexión a Redis...
+2026-11-23 22:07:28.052 [INF] Conexión a Redis configurada correctamente.
+2026-11-23 22:07:28.557 [WRN] Entity 'Trabajador' has a global query filter defined and is the required end of a relationship with the entity 'Oficina'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-23 22:07:28.560 [WRN] Entity 'Trabajador' has a global query filter defined and is the required end of a relationship with the entity 'Parte'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-23 22:07:29.052 [ERR] Failed executing DbCommand (7ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+ALTER TABLE "Vehiculos" DROP CONSTRAINT "FK_Vehiculos_Marcas_Marca_id";
+2026-11-23 22:07:47.050 [INF] Iniciando aplicación...
+2026-11-23 22:07:47.099 [INF] Configurando servicios...
+2026-11-23 22:07:47.100 [INF] Configurando servicios...
+2026-11-23 22:07:47.113 [INF] Configurando la conexión a Redis...
+2026-11-23 22:07:47.205 [INF] Conexión a Redis configurada correctamente.
+2026-11-23 22:07:47.751 [WRN] Entity 'Trabajador' has a global query filter defined and is the required end of a relationship with the entity 'Oficina'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-23 22:07:47.753 [WRN] Entity 'Trabajador' has a global query filter defined and is the required end of a relationship with the entity 'Parte'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-23 22:07:48.247 [ERR] Failed executing DbCommand (2ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+ALTER TABLE "Vehiculos" DROP CONSTRAINT "FK_Vehiculos_Marcas_Marca_id";
+2026-11-23 22:08:06.609 [INF] Iniciando aplicación...
+2026-11-23 22:08:06.645 [INF] Configurando servicios...
+2026-11-23 22:08:06.646 [INF] Configurando servicios...
+2026-11-23 22:08:06.655 [INF] Configurando la conexión a Redis...
+2026-11-23 22:08:06.743 [INF] Conexión a Redis configurada correctamente.
+2026-11-23 22:08:07.253 [WRN] Entity 'Trabajador' has a global query filter defined and is the required end of a relationship with the entity 'Oficina'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-23 22:08:07.256 [WRN] Entity 'Trabajador' has a global query filter defined and is the required end of a relationship with the entity 'Parte'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-23 22:09:45.376 [INF] Iniciando aplicación...
+2026-11-23 22:09:45.425 [INF] Configurando servicios...
+2026-11-23 22:09:45.426 [INF] Configurando servicios...
+2026-11-23 22:09:45.448 [INF] Configurando la conexión a Redis...
+2026-11-23 22:09:45.543 [INF] Conexión a Redis configurada correctamente.
+2026-11-23 22:09:46.086 [WRN] Entity 'Trabajador' has a global query filter defined and is the required end of a relationship with the entity 'Oficina'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-23 22:09:46.088 [WRN] Entity 'Trabajador' has a global query filter defined and is the required end of a relationship with the entity 'Parte'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-23 22:11:31.881 [INF] Iniciando aplicación...
+2026-11-23 22:11:31.920 [INF] Configurando servicios...
+2026-11-23 22:11:31.921 [INF] Configurando servicios...
+2026-11-23 22:11:31.934 [INF] Configurando la conexión a Redis...
+2026-11-23 22:11:32.017 [INF] Conexión a Redis configurada correctamente.
+2026-11-23 22:11:32.515 [WRN] Entity 'Trabajador' has a global query filter defined and is the required end of a relationship with the entity 'Oficina'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-23 22:11:32.518 [WRN] Entity 'Trabajador' has a global query filter defined and is the required end of a relationship with the entity 'Parte'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-23 22:11:32.992 [ERR] Failed executing DbCommand (2ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+ALTER TABLE "Vehiculos" DROP CONSTRAINT "FK_Vehiculos_Marcas_Marca_id";
+2026-11-23 22:11:49.667 [INF] Iniciando aplicación...
+2026-11-23 22:11:49.710 [INF] Configurando servicios...
+2026-11-23 22:11:49.711 [INF] Configurando servicios...
+2026-11-23 22:11:49.724 [INF] Configurando la conexión a Redis...
+2026-11-23 22:11:49.821 [INF] Conexión a Redis configurada correctamente.
+2026-11-23 22:11:50.366 [WRN] Entity 'Trabajador' has a global query filter defined and is the required end of a relationship with the entity 'Oficina'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-23 22:11:50.369 [WRN] Entity 'Trabajador' has a global query filter defined and is the required end of a relationship with the entity 'Parte'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-23 22:18:46.231 [INF] Iniciando aplicación...
+2026-11-23 22:18:46.292 [INF] Configurando servicios...
+2026-11-23 22:18:46.293 [INF] Configurando servicios...
+2026-11-23 22:18:46.321 [INF] Configurando la conexión a Redis...
+2026-11-23 22:18:46.416 [INF] Conexión a Redis configurada correctamente.
+2026-11-23 22:18:47.002 [WRN] Entity 'Trabajador' has a global query filter defined and is the required end of a relationship with the entity 'Oficina'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-23 22:18:47.005 [WRN] Entity 'Trabajador' has a global query filter defined and is the required end of a relationship with the entity 'Parte'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-23 22:18:47.006 [WRN] Entity 'Marca' has a global query filter defined and is the required end of a relationship with the entity 'Vehiculo'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-23 22:41:21.596 [INF] Iniciando aplicación...
+2026-11-23 22:41:21.631 [INF] Configurando servicios...
+2026-11-23 22:41:21.632 [INF] Configurando servicios...
+2026-11-23 22:41:21.644 [INF] Configurando la conexión a Redis...
+2026-11-23 22:41:21.733 [INF] Conexión a Redis configurada correctamente.
+2026-11-23 22:41:22.266 [WRN] Entity 'Trabajador' has a global query filter defined and is the required end of a relationship with the entity 'Oficina'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-23 22:41:22.269 [WRN] Entity 'Trabajador' has a global query filter defined and is the required end of a relationship with the entity 'Parte'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-23 22:41:22.269 [WRN] Entity 'Marca' has a global query filter defined and is the required end of a relationship with the entity 'Vehiculo'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-23 22:41:29.692 [INF] Iniciando aplicación...
+2026-11-23 22:41:29.748 [INF] Configurando servicios...
+2026-11-23 22:41:29.749 [INF] Configurando servicios...
+2026-11-23 22:41:29.765 [INF] Configurando la conexión a Redis...
+2026-11-23 22:41:29.858 [INF] Conexión a Redis configurada correctamente.
+2026-11-23 22:41:30.399 [WRN] Entity 'Trabajador' has a global query filter defined and is the required end of a relationship with the entity 'Oficina'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-23 22:41:30.403 [WRN] Entity 'Trabajador' has a global query filter defined and is the required end of a relationship with the entity 'Parte'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-23 22:41:30.403 [WRN] Entity 'Marca' has a global query filter defined and is the required end of a relationship with the entity 'Vehiculo'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-23 22:42:38.317 [INF] Iniciando aplicación...
+2026-11-23 22:42:38.354 [INF] Configurando servicios...
+2026-11-23 22:42:38.356 [INF] Configurando servicios...
+2026-11-23 22:42:38.367 [INF] Configurando la conexión a Redis...
+2026-11-23 22:42:38.453 [INF] Conexión a Redis configurada correctamente.
+2026-11-23 22:42:38.965 [WRN] Entity 'Trabajador' has a global query filter defined and is the required end of a relationship with the entity 'Oficina'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-23 22:42:38.968 [WRN] Entity 'Trabajador' has a global query filter defined and is the required end of a relationship with the entity 'Parte'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-23 22:42:38.968 [WRN] Entity 'Marca' has a global query filter defined and is the required end of a relationship with the entity 'Vehiculo'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-23 22:43:28.370 [INF] Iniciando aplicación...
+2026-11-23 22:43:28.413 [INF] Configurando servicios...
+2026-11-23 22:43:28.414 [INF] Configurando servicios...
+2026-11-23 22:43:28.426 [INF] Configurando la conexión a Redis...
+2026-11-23 22:43:28.514 [INF] Conexión a Redis configurada correctamente.
+2026-11-23 22:43:29.106 [WRN] Entity 'Trabajador' has a global query filter defined and is the required end of a relationship with the entity 'Oficina'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-23 22:43:29.109 [WRN] Entity 'Trabajador' has a global query filter defined and is the required end of a relationship with the entity 'Parte'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-23 22:43:29.110 [WRN] Entity 'Marca' has a global query filter defined and is the required end of a relationship with the entity 'Vehiculo'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-23 22:43:29.406 [ERR] Failed executing DbCommand (15ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT "MigrationId", "ProductVersion"
+FROM "__EFMigrationsHistory"
+ORDER BY "MigrationId";
+2026-11-23 22:43:30.423 [INF] Rol creado en Identity: Cliente
+2026-11-23 22:43:30.429 [INF] Rol creado en Identity: Operario
+2026-11-23 22:43:30.435 [INF] Rol creado en Identity: Mecanico
+2026-11-23 22:43:30.441 [INF] Rol creado en Identity: Responsable
+2026-11-23 22:43:30.449 [INF] Rol creado en Identity: Administrador
+2026-11-23 22:43:30.642 [INF] Usuario seed creado: admin@alquiler.com con roles [Administrador]
+2026-11-23 22:43:30.705 [INF] Usuario seed creado: responsable@alquiler.com con roles [Operario, Responsable]
+2026-11-23 22:43:30.799 [INF] Usuario seed creado: operario@alquiler.com con roles [Operario]
+2026-11-23 22:43:30.865 [INF] Usuario seed creado: mecanico@alquiler.com con roles [Mecanico]
+2026-11-23 22:43:30.922 [INF] Usuario seed creado: cliente@alquiler.com con roles [Cliente]
+2026-11-23 22:43:31.031 [INF] Se han creado 17 marcas seed.
+2026-11-23 22:43:31.055 [INF] Se han creado 4 pólizas seed.
+2026-11-23 22:43:31.119 [ERR] Failed executing DbCommand (3ms) [Parameters=[@p0='?', @p1='?', @p2='?' (DbType = Double), @p3='?', @p4='?', @p5='?' (DbType = Int64), @p6='?' (DbType = DateTime), @p7='?' (DbType = DateTime), @p8='?' (DbType = Int64), @p9='?' (DbType = Double), @p10='?' (DbType = Int64), @p11='?', @p12='?', @p13='?' (DbType = Int32), @p14='?' (DbType = DateTime), @p15='?' (DbType = DateTime), @p16='?', @p17='?' (DbType = Decimal), @p18='?', @p19='?', @p20='?' (DbType = Double), @p21='?', @p22='?', @p23='?' (DbType = Int64), @p24='?' (DbType = DateTime), @p25='?' (DbType = DateTime), @p26='?' (DbType = Int64), @p27='?' (DbType = Double), @p28='?' (DbType = Int64), @p29='?', @p30='?', @p31='?' (DbType = Int32), @p32='?' (DbType = DateTime), @p33='?' (DbType = DateTime), @p34='?', @p35='?' (DbType = Decimal), @p36='?', @p37='?', @p38='?' (DbType = Double), @p39='?', @p40='?', @p41='?' (DbType = Int64), @p42='?' (DbType = DateTime), @p43='?' (DbType = DateTime), @p44='?' (DbType = Int64), @p45='?' (DbType = Double), @p46='?' (DbType = Int64), @p47='?', @p48='?', @p49='?' (DbType = Int32), @p50='?' (DbType = DateTime), @p51='?' (DbType = DateTime), @p52='?', @p53='?' (DbType = Decimal), @p54='?', @p55='?', @p56='?' (DbType = Double), @p57='?', @p58='?', @p59='?' (DbType = Int64), @p60='?' (DbType = DateTime), @p61='?' (DbType = DateTime), @p62='?' (DbType = Int64), @p63='?' (DbType = Double), @p64='?' (DbType = Int64), @p65='?', @p66='?', @p67='?' (DbType = Int32), @p68='?' (DbType = DateTime), @p69='?' (DbType = DateTime), @p70='?', @p71='?' (DbType = Decimal), @p72='?', @p73='?', @p74='?' (DbType = Double), @p75='?', @p76='?', @p77='?' (DbType = Int64), @p78='?' (DbType = DateTime), @p79='?' (DbType = DateTime), @p80='?' (DbType = Int64), @p81='?' (DbType = Double), @p82='?' (DbType = Int64), @p83='?', @p84='?', @p85='?' (DbType = Int32), @p86='?' (DbType = DateTime), @p87='?' (DbType = DateTime), @p88='?', @p89='?' (DbType = Decimal), @p90='?', @p91='?', @p92='?' (DbType = Double), @p93='?', @p94='?', @p95='?' (DbType = Int64), @p96='?' (DbType = DateTime), @p97='?' (DbType = DateTime), @p98='?' (DbType = Int64), @p99='?' (DbType = Double), @p100='?' (DbType = Int64), @p101='?', @p102='?', @p103='?' (DbType = Int32), @p104='?' (DbType = DateTime), @p105='?' (DbType = DateTime), @p106='?', @p107='?' (DbType = Decimal), @p108='?', @p109='?', @p110='?' (DbType = Double), @p111='?', @p112='?', @p113='?' (DbType = Int64), @p114='?' (DbType = DateTime), @p115='?' (DbType = DateTime), @p116='?' (DbType = Int64), @p117='?' (DbType = Double), @p118='?' (DbType = Int64), @p119='?', @p120='?', @p121='?' (DbType = Int32), @p122='?' (DbType = DateTime), @p123='?' (DbType = DateTime), @p124='?', @p125='?' (DbType = Decimal), @p126='?', @p127='?', @p128='?' (DbType = Double), @p129='?', @p130='?', @p131='?' (DbType = Int64), @p132='?' (DbType = DateTime), @p133='?' (DbType = DateTime), @p134='?' (DbType = Int64), @p135='?' (DbType = Double), @p136='?' (DbType = Int64), @p137='?', @p138='?', @p139='?' (DbType = Int32), @p140='?' (DbType = DateTime), @p141='?' (DbType = DateTime), @p142='?', @p143='?' (DbType = Decimal), @p144='?', @p145='?', @p146='?' (DbType = Double), @p147='?', @p148='?', @p149='?' (DbType = Int64), @p150='?' (DbType = DateTime), @p151='?' (DbType = DateTime), @p152='?' (DbType = Int64), @p153='?' (DbType = Double), @p154='?' (DbType = Int64), @p155='?', @p156='?', @p157='?' (DbType = Int32), @p158='?' (DbType = DateTime), @p159='?' (DbType = DateTime), @p160='?', @p161='?' (DbType = Decimal)], CommandType='"Text"', CommandTimeout='30']
+INSERT INTO "Vehiculos" ("Id", "Acriss", "Autonomia", "Color", "Combustible", "Concesionario_id", "CreatedAt", "DeletedAt", "Imagenes", "Maletero", "MarcaId", "Matricula", "Modelo", "NumeroPlazas", "UltimaRevision", "UpdatedAt", categoria, "precioPorDia")
+VALUES (@p0, @p1, @p2, @p3, @p4, @p5, @p6, @p7, @p8, @p9, @p10, @p11, @p12, @p13, @p14, @p15, @p16, @p17)
+RETURNING "Activo", "Estado";
+INSERT INTO "Vehiculos" ("Id", "Acriss", "Autonomia", "Color", "Combustible", "Concesionario_id", "CreatedAt", "DeletedAt", "Imagenes", "Maletero", "MarcaId", "Matricula", "Modelo", "NumeroPlazas", "UltimaRevision", "UpdatedAt", categoria, "precioPorDia")
+VALUES (@p18, @p19, @p20, @p21, @p22, @p23, @p24, @p25, @p26, @p27, @p28, @p29, @p30, @p31, @p32, @p33, @p34, @p35)
+RETURNING "Activo", "Estado";
+INSERT INTO "Vehiculos" ("Id", "Acriss", "Autonomia", "Color", "Combustible", "Concesionario_id", "CreatedAt", "DeletedAt", "Imagenes", "Maletero", "MarcaId", "Matricula", "Modelo", "NumeroPlazas", "UltimaRevision", "UpdatedAt", categoria, "precioPorDia")
+VALUES (@p36, @p37, @p38, @p39, @p40, @p41, @p42, @p43, @p44, @p45, @p46, @p47, @p48, @p49, @p50, @p51, @p52, @p53)
+RETURNING "Activo", "Estado";
+INSERT INTO "Vehiculos" ("Id", "Acriss", "Autonomia", "Color", "Combustible", "Concesionario_id", "CreatedAt", "DeletedAt", "Imagenes", "Maletero", "MarcaId", "Matricula", "Modelo", "NumeroPlazas", "UltimaRevision", "UpdatedAt", categoria, "precioPorDia")
+VALUES (@p54, @p55, @p56, @p57, @p58, @p59, @p60, @p61, @p62, @p63, @p64, @p65, @p66, @p67, @p68, @p69, @p70, @p71)
+RETURNING "Activo", "Estado";
+INSERT INTO "Vehiculos" ("Id", "Acriss", "Autonomia", "Color", "Combustible", "Concesionario_id", "CreatedAt", "DeletedAt", "Imagenes", "Maletero", "MarcaId", "Matricula", "Modelo", "NumeroPlazas", "UltimaRevision", "UpdatedAt", categoria, "precioPorDia")
+VALUES (@p72, @p73, @p74, @p75, @p76, @p77, @p78, @p79, @p80, @p81, @p82, @p83, @p84, @p85, @p86, @p87, @p88, @p89)
+RETURNING "Activo", "Estado";
+INSERT INTO "Vehiculos" ("Id", "Acriss", "Autonomia", "Color", "Combustible", "Concesionario_id", "CreatedAt", "DeletedAt", "Imagenes", "Maletero", "MarcaId", "Matricula", "Modelo", "NumeroPlazas", "UltimaRevision", "UpdatedAt", categoria, "precioPorDia")
+VALUES (@p90, @p91, @p92, @p93, @p94, @p95, @p96, @p97, @p98, @p99, @p100, @p101, @p102, @p103, @p104, @p105, @p106, @p107)
+RETURNING "Activo", "Estado";
+INSERT INTO "Vehiculos" ("Id", "Acriss", "Autonomia", "Color", "Combustible", "Concesionario_id", "CreatedAt", "DeletedAt", "Imagenes", "Maletero", "MarcaId", "Matricula", "Modelo", "NumeroPlazas", "UltimaRevision", "UpdatedAt", categoria, "precioPorDia")
+VALUES (@p108, @p109, @p110, @p111, @p112, @p113, @p114, @p115, @p116, @p117, @p118, @p119, @p120, @p121, @p122, @p123, @p124, @p125)
+RETURNING "Activo", "Estado";
+INSERT INTO "Vehiculos" ("Id", "Acriss", "Autonomia", "Color", "Combustible", "Concesionario_id", "CreatedAt", "DeletedAt", "Imagenes", "Maletero", "MarcaId", "Matricula", "Modelo", "NumeroPlazas", "UltimaRevision", "UpdatedAt", categoria, "precioPorDia")
+VALUES (@p126, @p127, @p128, @p129, @p130, @p131, @p132, @p133, @p134, @p135, @p136, @p137, @p138, @p139, @p140, @p141, @p142, @p143)
+RETURNING "Activo", "Estado";
+INSERT INTO "Vehiculos" ("Id", "Acriss", "Autonomia", "Color", "Combustible", "Concesionario_id", "CreatedAt", "DeletedAt", "Imagenes", "Maletero", "MarcaId", "Matricula", "Modelo", "NumeroPlazas", "UltimaRevision", "UpdatedAt", categoria, "precioPorDia")
+VALUES (@p144, @p145, @p146, @p147, @p148, @p149, @p150, @p151, @p152, @p153, @p154, @p155, @p156, @p157, @p158, @p159, @p160, @p161)
+RETURNING "Activo", "Estado";
+2026-11-23 22:43:31.136 [ERR] An exception occurred in the database while saving changes for context type 'APIAlquilerVehiculos.Entities.AppDbContext'.
+Microsoft.EntityFrameworkCore.DbUpdateException: An error occurred while saving the entity changes. See the inner exception for details.
+ ---> Npgsql.PostgresException (0x80004005): 23503: insert or update on table "Vehiculos" violates foreign key constraint "FK_Vehiculos_Marcas_MarcaId"
+
+DETAIL: Detail redacted as it may contain sensitive data. Specify 'Include Error Detail' in the connection string to include this information.
+   at Npgsql.Internal.NpgsqlConnector.ReadMessageLong(Boolean async, DataRowLoadingMode dataRowLoadingMode, Boolean readingNotifications, Boolean isReadingPrependedMessage)
+   at System.Runtime.CompilerServices.PoolingAsyncValueTaskMethodBuilder`1.StateMachineBox`1.System.Threading.Tasks.Sources.IValueTaskSource<TResult>.GetResult(Int16 token)
+   at Npgsql.NpgsqlDataReader.NextResult(Boolean async, Boolean isConsuming, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlDataReader.NextResult(Boolean async, Boolean isConsuming, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteReader(Boolean async, CommandBehavior behavior, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteReader(Boolean async, CommandBehavior behavior, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteDbDataReaderAsync(CommandBehavior behavior, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+  Exception data:
+    Severity: ERROR
+    SqlState: 23503
+    MessageText: insert or update on table "Vehiculos" violates foreign key constraint "FK_Vehiculos_Marcas_MarcaId"
+    Detail: Detail redacted as it may contain sensitive data. Specify 'Include Error Detail' in the connection string to include this information.
+    SchemaName: public
+    TableName: Vehiculos
+    ConstraintName: FK_Vehiculos_Marcas_MarcaId
+    File: ri_triggers.c
+    Line: 2599
+    Routine: ri_ReportViolation
+   --- End of inner exception stack trace ---
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalDatabase.SaveChangesAsync(IList`1 entries, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(IList`1 entriesToSave, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(StateManager stateManager, Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+   at Npgsql.EntityFrameworkCore.PostgreSQL.Storage.Internal.NpgsqlExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.DbContext.SaveChangesAsync(Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+Microsoft.EntityFrameworkCore.DbUpdateException: An error occurred while saving the entity changes. See the inner exception for details.
+ ---> Npgsql.PostgresException (0x80004005): 23503: insert or update on table "Vehiculos" violates foreign key constraint "FK_Vehiculos_Marcas_MarcaId"
+
+DETAIL: Detail redacted as it may contain sensitive data. Specify 'Include Error Detail' in the connection string to include this information.
+   at Npgsql.Internal.NpgsqlConnector.ReadMessageLong(Boolean async, DataRowLoadingMode dataRowLoadingMode, Boolean readingNotifications, Boolean isReadingPrependedMessage)
+   at System.Runtime.CompilerServices.PoolingAsyncValueTaskMethodBuilder`1.StateMachineBox`1.System.Threading.Tasks.Sources.IValueTaskSource<TResult>.GetResult(Int16 token)
+   at Npgsql.NpgsqlDataReader.NextResult(Boolean async, Boolean isConsuming, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlDataReader.NextResult(Boolean async, Boolean isConsuming, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteReader(Boolean async, CommandBehavior behavior, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteReader(Boolean async, CommandBehavior behavior, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteDbDataReaderAsync(CommandBehavior behavior, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+  Exception data:
+    Severity: ERROR
+    SqlState: 23503
+    MessageText: insert or update on table "Vehiculos" violates foreign key constraint "FK_Vehiculos_Marcas_MarcaId"
+    Detail: Detail redacted as it may contain sensitive data. Specify 'Include Error Detail' in the connection string to include this information.
+    SchemaName: public
+    TableName: Vehiculos
+    ConstraintName: FK_Vehiculos_Marcas_MarcaId
+    File: ri_triggers.c
+    Line: 2599
+    Routine: ri_ReportViolation
+   --- End of inner exception stack trace ---
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalDatabase.SaveChangesAsync(IList`1 entries, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(IList`1 entriesToSave, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(StateManager stateManager, Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+   at Npgsql.EntityFrameworkCore.PostgreSQL.Storage.Internal.NpgsqlExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.DbContext.SaveChangesAsync(Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+2026-11-23 22:48:08.581 [INF] Iniciando aplicación...
+2026-11-23 22:48:08.625 [INF] Configurando servicios...
+2026-11-23 22:48:08.626 [INF] Configurando servicios...
+2026-11-23 22:48:08.638 [INF] Configurando la conexión a Redis...
+2026-11-23 22:48:08.739 [INF] Conexión a Redis configurada correctamente.
+2026-11-23 22:48:09.284 [WRN] Entity 'Trabajador' has a global query filter defined and is the required end of a relationship with the entity 'Oficina'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-23 22:48:09.287 [WRN] Entity 'Trabajador' has a global query filter defined and is the required end of a relationship with the entity 'Parte'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-23 22:48:09.288 [WRN] Entity 'Marca' has a global query filter defined and is the required end of a relationship with the entity 'Vehiculo'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-23 22:48:10.165 [INF] Todas las marcas seed ya existen.
+2026-11-23 22:48:10.169 [INF] Todas las pólizas seed ya existen.
+2026-11-23 22:48:10.342 [INF] Se han creado 9 vehículos seed.
+2026-11-23 22:49:16.504 [INF] Iniciando aplicación...
+2026-11-23 22:49:16.550 [INF] Configurando servicios...
+2026-11-23 22:49:16.551 [INF] Configurando servicios...
+2026-11-23 22:49:16.563 [INF] Configurando la conexión a Redis...
+2026-11-23 22:49:16.652 [INF] Conexión a Redis configurada correctamente.
+2026-11-23 22:49:17.206 [WRN] Entity 'Trabajador' has a global query filter defined and is the required end of a relationship with the entity 'Oficina'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-23 22:49:17.210 [WRN] Entity 'Trabajador' has a global query filter defined and is the required end of a relationship with the entity 'Parte'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-23 22:49:17.211 [WRN] Entity 'Marca' has a global query filter defined and is the required end of a relationship with the entity 'Vehiculo'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-23 22:49:17.475 [ERR] Failed executing DbCommand (14ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT "MigrationId", "ProductVersion"
+FROM "__EFMigrationsHistory"
+ORDER BY "MigrationId";
+2026-11-23 22:49:18.500 [INF] Rol creado en Identity: Cliente
+2026-11-23 22:49:18.506 [INF] Rol creado en Identity: Operario
+2026-11-23 22:49:18.511 [INF] Rol creado en Identity: Mecanico
+2026-11-23 22:49:18.518 [INF] Rol creado en Identity: Responsable
+2026-11-23 22:49:18.527 [INF] Rol creado en Identity: Administrador
+2026-11-23 22:49:18.695 [INF] Usuario seed creado: admin@alquiler.com con roles [Administrador]
+2026-11-23 22:49:18.757 [INF] Usuario seed creado: responsable@alquiler.com con roles [Operario, Responsable]
+2026-11-23 22:49:18.852 [INF] Usuario seed creado: operario@alquiler.com con roles [Operario]
+2026-11-23 22:49:18.918 [INF] Usuario seed creado: mecanico@alquiler.com con roles [Mecanico]
+2026-11-23 22:49:18.976 [INF] Usuario seed creado: cliente@alquiler.com con roles [Cliente]
+2026-11-23 22:49:19.081 [INF] Se han creado 17 marcas seed.
+2026-11-23 22:49:19.100 [INF] Se han creado 4 pólizas seed.
+2026-11-23 22:49:19.178 [INF] Se han creado 9 vehículos seed.
+2026-11-23 22:51:24.468 [INF] Iniciando aplicación...
+2026-11-23 22:51:24.529 [INF] Configurando servicios...
+2026-11-23 22:51:24.555 [INF] Configurando servicios...
+2026-11-23 22:51:24.571 [INF] Configurando la conexión a Redis...
+2026-11-23 22:51:24.699 [INF] Conexión a Redis configurada correctamente.
+2026-11-23 22:51:25.368 [WRN] Entity 'Trabajador' has a global query filter defined and is the required end of a relationship with the entity 'Oficina'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-23 22:51:25.391 [WRN] Entity 'Trabajador' has a global query filter defined and is the required end of a relationship with the entity 'Parte'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-23 22:51:25.419 [WRN] Entity 'Marca' has a global query filter defined and is the required end of a relationship with the entity 'Vehiculo'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-23 22:51:26.741 [INF] Todas las marcas seed ya existen.
+2026-11-23 22:51:26.749 [INF] Todas las pólizas seed ya existen.
+2026-11-23 22:51:26.777 [INF] Todos los vehículos seed ya existen.
+2026-11-23 22:51:26.889 [WRN] The WebRootPath was not found: C:\Users\sergi\Desktop\Asignaturas-Daw\Entorno-Servicio\DWES-concesionarioEnConjunto\APIAlquilerVehiculos\wwwroot. Static files may be unavailable.

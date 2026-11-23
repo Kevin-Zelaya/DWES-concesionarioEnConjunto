@@ -411,6 +411,8 @@ public static class CatalogoSeeder
                 continue;
             }
 
+            vehiculo.MarcaId = marcaId; // ESTA ES LA LÍNEA QUE FALTABA
+
             vehiculo.Concesionario_id = concesionarioId;
             vehiculo.CreatedAt = ahora;
 

@@ -463,9 +463,8 @@ namespace APIAlquilerVehiculos.Migrations
                     b.Property<double>("Maletero")
                         .HasColumnType("double precision");
 
-                    b.Property<string>("Marca")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<long>("MarcaId")
+                        .HasColumnType("bigint");
 
                     b.Property<string>("Matricula")
                         .IsRequired()
@@ -493,6 +492,8 @@ namespace APIAlquilerVehiculos.Migrations
                         .HasColumnType("numeric");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("MarcaId");
 
                     b.HasIndex("Matricula")
                         .IsUnique();
@@ -975,6 +976,17 @@ namespace APIAlquilerVehiculos.Migrations
                         .IsRequired();
 
                     b.Navigation("Usuario");
+                });
+
+            modelBuilder.Entity("APIAlquilerVehiculos.Models.Vehiculo", b =>
+                {
+                    b.HasOne("APIAlquilerVehiculos.Models.Marca", "Marca")
+                        .WithMany()
+                        .HasForeignKey("MarcaId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Marca");
                 });
 
             modelBuilder.Entity("LineaReserva", b =>
