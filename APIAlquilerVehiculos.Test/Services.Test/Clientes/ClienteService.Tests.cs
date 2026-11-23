@@ -562,6 +562,97 @@ public class ClienteServiceTests
 
     #endregion
 
+    #region UpdatePartialAsync
+
+    [Test]
+    public async Task UpdatePartialAsync_Devuelve_NotFound_Cuando_Id_Es_Menor_O_Igual_A_Cero()
+    {
+        // Arrange
+        _repositoryMock.Setup(r => r.FindByIdAsync(0, It.IsAny<CancellationToken>())).ReturnsAsync((Cliente?)null);
+
+        // Act
+        var result = await _service.UpdatePartialAsync(0, CancellationToken.None);
+
+        // Assert
+        result.IsFailure.Should().BeTrue();
+        result.Error.Should().BeOfType<NotFoundError>();
+        _repositoryMock.Verify(r => r.UpdatePartialAsync(It.IsAny<Cliente>(), It.IsAny<CancellationToken>()), Times.Never);
+    }
+
+    [Test]
+    public async Task UpdatePartialAsync_Devuelve_NotFound_Cuando_Cliente_No_Existe()
+    {
+        // Arrange
+        _repositoryMock.Setup(r => r.FindByIdAsync(99, It.IsAny<CancellationToken>())).ReturnsAsync((Cliente?)null);
+
+        // Act
+        var result = await _service.UpdatePartialAsync(99, CancellationToken.None);
+
+        // Assert
+        result.IsFailure.Should().BeTrue();
+        result.Error.Should().BeOfType<NotFoundError>();
+        _repositoryMock.Verify(r => r.UpdatePartialAsync(It.IsAny<Cliente>(), It.IsAny<CancellationToken>()), Times.Never);
+    }
+
+    [Test]
+    public async Task UpdatePartialAsync_Devuelve_ConflictError_Cuando_Cliente_Ya_Esta_Activo()
+    {
+        // Arrange
+        var clienteActivo = CrearClienteEntidad(id: 1, idUsuario: 10, isActivo: true);
+        _repositoryMock.Setup(r => r.FindByIdAsync(1, It.IsAny<CancellationToken>())).ReturnsAsync(clienteActivo);
+
+        // Act
+        var result = await _service.UpdatePartialAsync(1, CancellationToken.None);
+
+        // Assert
+        result.IsFailure.Should().BeTrue();
+        result.Error.Should().BeOfType<ConflictError>();
+        _repositoryMock.Verify(r => r.UpdatePartialAsync(It.IsAny<Cliente>(), It.IsAny<CancellationToken>()), Times.Never);
+    }
+
+    [Test]
+    public async Task UpdatePartialAsync_Devuelve_NotFound_Cuando_Repositorio_Devuelve_Null()
+    {
+        // Arrange
+        var clienteInactivo = CrearClienteEntidad(id: 3, idUsuario: 30, isActivo: false);
+        _repositoryMock.Setup(r => r.FindByIdAsync(3, It.IsAny<CancellationToken>())).ReturnsAsync(clienteInactivo);
+        _repositoryMock.Setup(r => r.UpdatePartialAsync(clienteInactivo, It.IsAny<CancellationToken>()))
+            .ReturnsAsync((Cliente?)null);
+
+        // Act
+        var result = await _service.UpdatePartialAsync(3, CancellationToken.None);
+
+        // Assert
+        result.IsFailure.Should().BeTrue();
+        result.Error.Should().BeOfType<NotFoundError>();
+        _cacheMock.Verify(c => c.RemoveAsync(It.IsAny<string>()), Times.Never);
+    }
+
+    [Test]
+    public async Task UpdatePartialAsync_Devuelve_Cliente_Reactivado_Y_Limpia_Cache_Cuando_Todo_Es_Correcto()
+    {
+        // Arrange
+        var clienteInactivo = CrearClienteEntidad(id: 3, idUsuario: 30, isActivo: false);
+        var clienteReactivado = CrearClienteEntidad(id: 3, idUsuario: 30, isActivo: true);
+        clienteReactivado.DeletedAt = null;
+
+        _repositoryMock.Setup(r => r.FindByIdAsync(3, It.IsAny<CancellationToken>())).ReturnsAsync(clienteInactivo);
+        _repositoryMock.Setup(r => r.UpdatePartialAsync(clienteInactivo, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(clienteReactivado);
+
+        // Act
+        var result = await _service.UpdatePartialAsync(3, CancellationToken.None);
+
+        // Assert
+        result.IsSuccess.Should().BeTrue();
+        result.Value.Id.Should().Be(3);
+        result.Value.IsActivo.Should().BeTrue();
+        result.Value.DeletedAt.Should().BeNull();
+        _cacheMock.Verify(c => c.RemoveAsync("cliente:3"), Times.Once);
+    }
+
+    #endregion
+    
     #region DeleteAsync
 
     [Test]
