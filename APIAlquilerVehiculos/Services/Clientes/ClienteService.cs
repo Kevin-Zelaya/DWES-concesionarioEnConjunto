@@ -1,5 +1,7 @@
-﻿using APIAlquilerVehiculos.Dtos.Cientes;
-using APIAlquilerVehiculos.Dtos.Common;
+﻿using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using APIAlquilerVehiculos.Dtos.Cientes;
+using APIAlquilerVehiculos.Dtos;
 using APIAlquilerVehiculos.Entities;
 using APIAlquilerVehiculos.Errors;
 using APIAlquilerVehiculos.Errors.Common;
@@ -9,6 +11,7 @@ using APIAlquilerVehiculos.Repositories.Clientes;
 using CSharpFunctionalExtensions;
 using FluentValidation;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace APIAlquilerVehiculos.Services.Clientes;
@@ -49,18 +52,24 @@ public class ClienteService(IClienteRepository repository, IValidator<UpdateClie
     /// <summary>
     /// Busca un usuario específico
     /// </summary>
+    /// <param name="principal">Contexto de la seguridad para buscar el usuario que inició sesión</param>
     /// <param name="id">Identificadoir del cliente</param>
     /// <param name="cancellationToken">Token para cancelar la operación asíncrona</param>
     /// <returns>Devuleve un cliente específico</returns>
-    public async Task<Result<ClienteDto, DomainError>> GetByIdAsync(long id, CancellationToken cancellationToken)
+    public async Task<Result<ClienteDto, DomainError>> GetByIdAsync(ClaimsPrincipal principal, long id, CancellationToken cancellationToken)
     {
-        logger.LogInformation("Buscando Funko {Id}", id);
+        logger.LogInformation("Buscando cliente {Id}", id);
 
         if (id <= 0)
         {
             logger.LogError("El ID {Id} no se ha encontrado", id);
             return Result.Failure<ClienteDto, DomainError>(ClienteErrors.NotFound(id));
         }
+
+        //Compobamos que el usuario tiene los permisos adecuados si busca mas de un clinte
+        var error = await ClienteSinAutorizacionAsync(principal, id, cancellationToken, "buscar otros clientes.");
+        if (error.IsFailure)
+            return Result.Failure<ClienteDto, DomainError>(error.Error);
         
         var cached = await cache.GetTAsync<ClienteDto>(CacheKey(id));
         if (cached is not null) {
@@ -76,20 +85,32 @@ public class ClienteService(IClienteRepository repository, IValidator<UpdateClie
             return Result.Failure<ClienteDto, DomainError>(ClienteErrors.NotFound(id));
         } 
        
-        var funkoResponse =  cliente.ToResponseDto();
-        await cache.SetAsync(CacheKey(id), funkoResponse);
-        return Result.Success<ClienteDto, DomainError>(funkoResponse);
+        var response =  cliente.ToResponseDto();
+        await cache.SetAsync(CacheKey(id), response);
+        return Result.Success<ClienteDto, DomainError>(response);
     }
     
     /// <summary>
     /// Actualiza tanto los datos de cliente commo de su usuario
     /// </summary>
+    /// <param name="principal">Contexto de la seguridad para buscar el usuario que inició sesión</param>
     /// <param name="id">Identificador del cliente a actualizar</param>
     /// <param name="updatedCliente">Datos del cliente actualizados</param>
     /// <param name="cancellationToken">Token para cancelar la operación asíncrona</param>
     /// <returns>Devuelve los datos del cliente ta actualizados</returns>
-    public async Task<Result<ClienteDto, DomainError>> UpdateAsync(long id, UpdateClienteDto updatedCliente, CancellationToken cancellationToken)
+    public async Task<Result<ClienteDto, DomainError>> UpdateAsync(ClaimsPrincipal principal, long id, UpdateClienteDto updatedCliente, CancellationToken cancellationToken)
     {
+        var clienteActual = await repository.FindByIdAsync(id, cancellationToken);
+        if (id <= 0 || clienteActual is null)
+        {
+            logger.LogWarning("No se encontro el Cliente {id}", id); 
+            return Result.Failure<ClienteDto, DomainError>(ClienteErrors.NotFound(id));
+        }
+        
+        var error = await ClienteSinAutorizacionAsync(principal, id, cancellationToken, "actualizar otros clientes.");
+        if (error.IsFailure)
+            return Result.Failure<ClienteDto, DomainError>(error.Error);
+        
         var validationResult = await validatorUpdateAsync.ValidateAsync(updatedCliente, cancellationToken);
         if (!validationResult.IsValid)
         {
@@ -97,12 +118,6 @@ public class ClienteService(IClienteRepository repository, IValidator<UpdateClie
             return Result.Failure<ClienteDto, DomainError>(ClienteErrors.Validation(validationResult.ToDictionary()));
         }
         
-        var clienteActual = await repository.FindByIdAsync(id, cancellationToken);
-        if (id <= 0 || clienteActual is null)
-        {
-            logger.LogWarning("No se encontro el Funko {id}", id); 
-            return Result.Failure<ClienteDto, DomainError>(ClienteErrors.NotFound(id));
-        }
         
         // Comprobaciones de unicidad en BD (Email, DNI, NIE o Pasaporte ya existentes)
         var dniNorm = updatedCliente.Dni?.Trim().ToUpperInvariant();
@@ -110,16 +125,19 @@ public class ClienteService(IClienteRepository repository, IValidator<UpdateClie
         var pasaporteNorm = updatedCliente.Pasaporte?.Trim().ToUpperInvariant();
         
         if (await dbContext.Clientes.AnyAsync(c =>
-                (dniNorm != null && c.Dni == dniNorm) ||
-                (nieNorm != null && c.Nie == nieNorm) ||
-                (pasaporteNorm != null && c.Pasaporte == pasaporteNorm)))
+                c.Id != id && (
+                    (dniNorm != null && c.Dni == dniNorm) ||
+                    (nieNorm != null && c.Nie == nieNorm) ||
+                    (pasaporteNorm != null && c.Pasaporte == pasaporteNorm)
+                ), cancellationToken))
         {
             var docDuplicado = dniNorm ?? nieNorm ?? pasaporteNorm ?? string.Empty;
             return Result.Failure<ClienteDto, DomainError>(ClienteErrors.DuplicateDocument(docDuplicado));
         }
         
         // Comprobamos que no existe otro Email identico
-        if (await userManager.FindByEmailAsync(updatedCliente.Email) is not null)
+        var usuarioConMismoEmail = await userManager.FindByEmailAsync(updatedCliente.Email);
+        if (usuarioConMismoEmail is not null && usuarioConMismoEmail.Id != clienteActual.IdUsuario)
         {
             logger.LogInformation("Ya existe un usuario con el email añadido: {Email}", updatedCliente.Email);
             return Result.Failure<ClienteDto, DomainError>(
@@ -131,10 +149,10 @@ public class ClienteService(IClienteRepository repository, IValidator<UpdateClie
         try
         {
             //Convertimos el RequestDTO al Modelo y validamos, si es null salta error
-            var funkoModel = ClienteMapper.UpdateEntity(updatedCliente, id);
+            var clienteModel = ClienteMapper.UpdateEntity(updatedCliente, id);
 
             //Actualizamos Cliente y comprobamos que no sea null, si lo es salta error
-            var cliente = await repository.UpdateAsync(id, funkoModel, cancellationToken);
+            var cliente = await repository.UpdateAsync(id, clienteModel, cancellationToken);
             if (cliente == null)
             {
                 await transaction.RollbackAsync(cancellationToken);
@@ -162,26 +180,28 @@ public class ClienteService(IClienteRepository repository, IValidator<UpdateClie
         }
         catch (DbUpdateException ex)
         {
+            logger.LogError(ex, "Error al cargar cliente por duplicados");
             await transaction.RollbackAsync(cancellationToken);
             return Result.Failure<ClienteDto, DomainError>(ClienteErrors.DuplicateDniOrEmail());
         }
 
         catch (Exception ex)
         {
+            logger.LogError(ex, "Error al cargar cliente");
             await transaction.RollbackAsync(cancellationToken);
             return Result.Failure<ClienteDto, DomainError>(
                 ClienteErrors.ErrorServer("Error inesperado al modificar el cliente"));
         }
-
     }
-
+    
     /// <summary>
     /// Da de baja a un cliente en específico
     /// </summary>
+    /// <param name="principal">Contexto de la seguridad para buscar el usuario que inició sesión</param>
     /// <param name="id">Identificador del cliente a dar de baja</param>
     /// <param name="cancellationToken">Token para cancelar la operación asíncrona</param>
     /// <returns>No devuleve nada si ha salido todo correcto</returns>
-    public async Task<UnitResult<DomainError>> DeleteAsync(long id, CancellationToken cancellationToken)
+    public async Task<UnitResult<DomainError>> DeleteAsync(ClaimsPrincipal principal, long id, CancellationToken cancellationToken)
     {
         //Comprobamos que el Id existe, si no salta error
         var cliente = await repository.FindByIdAsync(id, cancellationToken);
@@ -190,6 +210,10 @@ public class ClienteService(IClienteRepository repository, IValidator<UpdateClie
             logger.LogWarning("Cliente {id} no encontrado", id);
             return UnitResult.Failure<DomainError>(ClienteErrors.NotFound(id));
         }
+        
+        var error = await ClienteSinAutorizacionAsync(principal, id, cancellationToken, "dar de baja otros clientes.");
+        if (error.IsFailure)
+            return UnitResult.Failure<DomainError>(error.Error);
         
         // se comprueba que está activo
         if (!cliente.IsActivo) return UnitResult.Failure<DomainError>(ClienteErrors.YaInactivo(id));
@@ -200,14 +224,14 @@ public class ClienteService(IClienteRepository repository, IValidator<UpdateClie
         
         var deleted = await repository.DeleteAsync(id, cancellationToken);
         
-        if (!deleted) return Result.Failure<bool, DomainError>(ClienteErrors.NotFound(id));
+        if (!deleted) return UnitResult.Failure<DomainError>(ClienteErrors.NotFound(id));
         
         // borra de caché
         await cache.RemoveAsync(CacheKey(id));
         
         logger.LogWarning("Cliente {id} dado de baja correctamente", id);
         
-        return Result.Success<DomainError>();
+        return UnitResult.Success<DomainError>();
     }
     
     /// <summary>
@@ -238,5 +262,32 @@ public class ClienteService(IClienteRepository repository, IValidator<UpdateClie
         user.UpdatedAt = DateTime.UtcNow;
         return await userManager.UpdateAsync(user);
     }
-    
+
+    private async Task<UnitResult<DomainError>> ClienteSinAutorizacionAsync(ClaimsPrincipal principal, long id, CancellationToken cancellationToken, string message)
+    {
+        //COMPROBAMOS QUE USUARIO ES 
+        var userIdStr = principal.FindFirstValue(ClaimTypes.NameIdentifier) 
+                        ?? principal.FindFirstValue(JwtRegisteredClaimNames.Sub);
+        if (!long.TryParse(userIdStr, out var userId))
+        {
+            return UnitResult.Failure<DomainError>(ClienteErrors.UserNotFound());
+        }
+        var user = await userManager.Users
+            .Include(u => u.Cliente)
+            .FirstOrDefaultAsync(u => u.Id == userId, cancellationToken);
+       
+        if (user is null)
+        {
+            logger.LogError("Usuario autenticado con ID {UserId} no encontrado en BD", userId);
+            return UnitResult.Failure<DomainError>(ClienteErrors.UserNotFound());
+        }
+        
+        var role = await userManager.GetRolesAsync(user);
+        
+        if (role.Contains(Roles.Cliente) && (user.Cliente is null || id != user.Cliente.Id))
+        {
+            return UnitResult.Failure<DomainError>(ClienteErrors.PermisosInsuficientes(message));
+        }
+        return UnitResult.Success<DomainError>();
+    }
 }

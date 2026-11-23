@@ -1,5 +1,6 @@
-﻿using APIAlquilerVehiculos.Dtos.Cientes;
-using APIAlquilerVehiculos.Dtos.Common;
+﻿using System.Security.Claims;
+using APIAlquilerVehiculos.Dtos.Cientes;
+using APIAlquilerVehiculos.Dtos;
 using APIAlquilerVehiculos.Errors.Common;
 using APIAlquilerVehiculos.Models.Usuarios;
 using CSharpFunctionalExtensions;
@@ -22,8 +23,9 @@ public interface IClienteService
     /// </summary>
     /// <param name="id">Identificadoir del cliente</param>
     /// <param name="cancellationToken">Token para cancelar la operación asíncrona</param>
+    /// <param name="principal">Contexto de la seguridad para buscar el usuario que inició sesión</param>
     /// <returns>Devuleve un cliente específico</returns>
-    Task<Result<ClienteDto, DomainError>> GetByIdAsync(long id, CancellationToken cancellationToken);
+    Task<Result<ClienteDto, DomainError>> GetByIdAsync(ClaimsPrincipal principal, long id, CancellationToken cancellationToken);
     
     /// <summary>
     /// Actualiza tanto los datos de cliente commo de su usuario
@@ -31,14 +33,16 @@ public interface IClienteService
     /// <param name="id">Identificador del cliente a actualizar</param>
     /// <param name="updatedCliente">Datos del cliente actualizados</param>
     /// <param name="cancellationToken">Token para cancelar la operación asíncrona</param>
+    /// <param name="principal">Contexto de la seguridad para buscar el usuario que inició sesión</param>
     /// <returns>Devuelve los datos del cliente ta actualizados</returns>
-    Task<Result<ClienteDto, DomainError>> UpdateAsync(long id, UpdateClienteDto updatedCliente, CancellationToken cancellationToken);
+    Task<Result<ClienteDto, DomainError>> UpdateAsync(ClaimsPrincipal principal, long id, UpdateClienteDto updatedCliente, CancellationToken cancellationToken);
 
     /// <summary>
     /// Da de baja a un cliente en específico
     /// </summary>
     /// <param name="id">Identificador del cliente a dar de baja</param>
     /// <param name="cancellationToken">Token para cancelar la operación asíncrona</param>
+    /// <param name="principal">Contexto de la seguridad para buscar el usuario que inició sesión</param>
     /// <returns>No devuleve nada si ha salido todo correcto</returns>
-    Task<UnitResult<DomainError>> DeleteAsync(long id, CancellationToken cancellationToken);
+    Task<UnitResult<DomainError>> DeleteAsync(ClaimsPrincipal principal, long id, CancellationToken cancellationToken);
 }

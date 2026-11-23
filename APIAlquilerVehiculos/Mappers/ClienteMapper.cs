@@ -48,7 +48,10 @@ public static class ClienteMapper
         cliente.Select(f => f.ToResponseDto()).ToList();
 
     // Documentos de identidad siempre en mayusculas y sin espacios, para que el índice único funcione bien
-    private static string NormalizarDocumento(string doc) => doc.Trim().ToUpperInvariant();
+    private static string? NormalizarDocumento(string? doc)
+    {
+        return string.IsNullOrWhiteSpace(doc) ? null : doc.Trim().ToUpperInvariant();
+    }
 
     // Npgsql (timestamptz) solo acepta DateTime con Kind = Utc
     private static DateTime ToUtc(DateTime fecha) => fecha.Kind switch

@@ -17,6 +17,12 @@ public class ClienteErrors
     // 404 Not Found
     public static NotFoundError NotFound(long id) =>
         NotFoundError.FromResource("Cliente", id.ToString());
+    
+    public static NotFoundError UserNotFound() =>
+        NotFoundError.Messagee("Usuario autenticado no encontrado");
+
+    public static ForbiddenError PermisosInsuficientes(string message) =>
+        ForbiddenError.InsufficientPermissions(message);
 
     // 409 Conflict (duplicados)
     public static ConflictError DuplicateDocument(string documento) =>
@@ -30,6 +36,9 @@ public class ClienteErrors
     
     public static ConflictError YaInactivo(long id) =>
         ConflictError.Business($"El cliente con id {id} ya está dado de baja");
+    
+    public static ConflictError YaActivo(long id) =>
+        ConflictError.Business($"El cliente con id {id} está activo");
     
     public static ConflictError TieneReservasVivas(long id) =>
         ConflictError.Business($"No se puede dar de baja al cliente {id}: tiene reservas vivas (Pendiente, Confirmada o EnCurso). Resuélvalas o reasígnelas primero");

@@ -1,3 +1,6 @@
+using APIAlquilerVehiculos.Services;
+using APIAlquilerVehiculos.Services.Auth;
+using APIAlquilerVehiculos.Services.Clientes;
 using APIAlquilerVehiculos.Services.Trabajadores;
 using Serilog;
 
@@ -13,6 +16,8 @@ public static class ServiceConfig
         services.AddScoped<ILineaReservaService, LineaReservaService>();
         services.AddScoped<ILineaReservaFactory, LineaReservaFactory>();
         services.AddScoped<ICache, RedisCache>();
+        services.AddScoped<IAuthService, AuthService>();
+        services.AddScoped<IClienteService, ClienteService>();
         services.AddScoped<ITrabajadorService, TrabajadorService>();
         services.AddScoped<IDisponibilidadService, DisponibilidadService>();
         return services;

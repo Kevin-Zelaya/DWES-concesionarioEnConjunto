@@ -38,7 +38,7 @@ public record UpdateClienteDto(
     [SwaggerSchema(Description = "Telefono del cliente a actualizar", Nullable = false)]
     string Telefono,
     
-    [property: JsonPropertyName("fecha_nacimiento")]
+    [property: JsonPropertyName("fechaNacimiento")]
     [Required(ErrorMessage = "La fecha de nacimiento es obligatoria")] 
     [SwaggerSchema(Description = "Fecha de nacimiento del cliente a actualizar", Nullable = false)]
     DateTime FechaNacimiento,
@@ -60,7 +60,7 @@ public record UpdateClienteDto(
     string? Pasaporte,
     
     // solo si presenta pasaporte:
-    [property: JsonPropertyName("num_permiso_conducir")]
+    [property: JsonPropertyName("numeroPermisoConducir")]
     [MaxLength(30, ErrorMessage = "El número de permiso no puede superar los 30 caracteres")]
     [SwaggerSchema(Description = "Número de permiso de conducir del cliente a actualizar", Nullable = true)]
     string? NumeroPermisoConducir

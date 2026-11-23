@@ -39,7 +39,7 @@ public interface IClienteRepository
     /// <param name="cancellationToken">Token para cancelar la operación asíncrona</param>
     /// <returns></returns>
     Task<Cliente?> UpdateAsync(long id, Cliente updatedCliente, CancellationToken cancellationToken = default);
-    
+
     /// <summary>
     /// Dar de baja logica un cliente
     /// Y este no debe poder aparecer en niguna otra acción, ni debe poder chocar valores con otros usuarios

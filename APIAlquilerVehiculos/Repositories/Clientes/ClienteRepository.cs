@@ -58,7 +58,7 @@ public class ClienteRepository(AppDbContext db) : IClienteRepository
     /// <returns>Devuelve los datos especificos del cliente</returns>
     public async Task<Cliente?> FindByIdAsync(long id, CancellationToken cancellationToken = default)
     {
-        var cliente = await db.Clientes.AsNoTracking().FirstOrDefaultAsync(f => f.Id == id, cancellationToken);
+        var cliente = await db.Clientes.IgnoreQueryFilters().AsNoTracking().Include(c => c.Usuario).FirstOrDefaultAsync(f => f.Id == id, cancellationToken);
         return cliente;
     }
     
@@ -108,7 +108,6 @@ public class ClienteRepository(AppDbContext db) : IClienteRepository
         await db.Entry(cliente).ReloadAsync(cancellationToken);
         
         return cliente;
-            
     }
     
     /// <summary>
@@ -123,7 +122,7 @@ public class ClienteRepository(AppDbContext db) : IClienteRepository
         var cliente = await db.Clientes.FirstOrDefaultAsync(f => f.Id == id, cancellationToken);
         if (cliente is null) return false;
 
-        cliente.IsActivo = true;
+        cliente.IsActivo = false;
         cliente.DeletedAt = DateTime.UtcNow;
         
         await db.SaveChangesAsync(cancellationToken);

@@ -1,0 +1,267 @@
+2026-11-23 01:45:13.752 [INF] Iniciando aplicación...
+2026-11-23 01:45:13.807 [INF] Configurando servicios...
+2026-11-23 01:45:13.809 [INF] Configurando servicios...
+2026-11-23 01:45:13.824 [INF] Configurando la conexión a Redis...
+2026-11-23 01:45:13.959 [INF] Conexión a Redis configurada correctamente.
+2026-11-23 01:45:14.631 [WRN] Entity 'Trabajador' has a global query filter defined and is the required end of a relationship with the entity 'Oficina'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-23 01:45:14.634 [WRN] Entity 'Trabajador' has a global query filter defined and is the required end of a relationship with the entity 'Parte'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-23 01:45:16.534 [INF] Todas las marcas seed ya existen.
+2026-11-23 01:45:16.566 [INF] Todas las pólizas seed ya existen.
+2026-11-23 01:45:16.613 [INF] Todos los vehículos seed ya existen.
+2026-11-23 01:45:16.811 [WRN] The WebRootPath was not found: C:\Users\Marcos\Documents\Proyectos\Back-end\C#\PracticaAlquler_de_choches\APIAlquilerVehiculos\wwwroot. Static files may be unavailable.
+2026-11-23 01:46:18.324 [INF] Usuario 5 ha iniciado sesion
+2026-11-23 01:47:36.306 [ERR] Excepción no manejada. ErrorId: 8c47701c
+System.InvalidOperationException: Unable to resolve service for type 'APIAlquilerVehiculos.Services.Clientes.IClienteService' while attempting to activate 'APIAlquilerVehiculos.Controllers.ClienteController'.
+   at Microsoft.Extensions.DependencyInjection.ActivatorUtilities.ThrowHelperUnableToResolveService(Type type, Type requiredBy)
+   at lambda_method482(Closure, IServiceProvider, Object[])
+   at Microsoft.AspNetCore.Mvc.Controllers.ControllerFactoryProvider.<>c__DisplayClass6_0.<CreateControllerFactory>g__CreateController|0(ControllerContext controllerContext)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.InvokeInnerFilterAsync()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at GlobalExceptionHandler.InvokeAsync(HttpContext context) in C:\Users\Marcos\Documents\Proyectos\Back-end\C#\PracticaAlquler_de_choches\APIAlquilerVehiculos\MiddleWares\GlobalExceptionHandler.cs:line 13
+2026-11-23 01:48:33.994 [ERR] Excepción no manejada. ErrorId: 7ef9b84d
+System.InvalidOperationException: Unable to resolve service for type 'APIAlquilerVehiculos.Services.Clientes.IClienteService' while attempting to activate 'APIAlquilerVehiculos.Controllers.ClienteController'.
+   at Microsoft.Extensions.DependencyInjection.ActivatorUtilities.ThrowHelperUnableToResolveService(Type type, Type requiredBy)
+   at lambda_method482(Closure, IServiceProvider, Object[])
+   at Microsoft.AspNetCore.Mvc.Controllers.ControllerFactoryProvider.<>c__DisplayClass6_0.<CreateControllerFactory>g__CreateController|0(ControllerContext controllerContext)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.InvokeInnerFilterAsync()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at GlobalExceptionHandler.InvokeAsync(HttpContext context) in C:\Users\Marcos\Documents\Proyectos\Back-end\C#\PracticaAlquler_de_choches\APIAlquilerVehiculos\MiddleWares\GlobalExceptionHandler.cs:line 13
+2026-11-23 01:55:10.158 [INF] Iniciando aplicación...
+2026-11-23 01:55:10.214 [INF] Configurando servicios...
+2026-11-23 01:55:10.217 [INF] Configurando servicios...
+2026-11-23 01:55:10.243 [INF] Configurando la conexión a Redis...
+2026-11-23 01:55:10.408 [INF] Conexión a Redis configurada correctamente.
+2026-11-23 01:55:11.132 [WRN] Entity 'Trabajador' has a global query filter defined and is the required end of a relationship with the entity 'Oficina'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-23 01:55:11.136 [WRN] Entity 'Trabajador' has a global query filter defined and is the required end of a relationship with the entity 'Parte'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-23 01:55:12.307 [INF] Todas las marcas seed ya existen.
+2026-11-23 01:55:12.322 [INF] Todas las pólizas seed ya existen.
+2026-11-23 01:55:12.356 [INF] Todos los vehículos seed ya existen.
+2026-11-23 01:55:12.503 [WRN] The WebRootPath was not found: C:\Users\Marcos\Documents\Proyectos\Back-end\C#\PracticaAlquler_de_choches\APIAlquilerVehiculos\wwwroot. Static files may be unavailable.
+2026-11-23 01:55:29.159 [INF] Usuario 5 ha iniciado sesion
+2026-11-23 01:58:27.888 [INF] Usuario 5 ha iniciado sesion
+2026-11-23 01:59:11.545 [INF] Usuario 1 ha iniciado sesion
+2026-11-23 01:59:29.759 [INF] Usuario 5 ha iniciado sesion
+2026-11-23 02:00:13.020 [INF] Buscando cliente 1
+2026-11-23 02:00:22.852 [INF] Buscando cliente 2
+2026-11-23 02:00:32.206 [INF] Buscando cliente 4
+2026-11-23 02:00:32.221 [WRN] Cliente 4 NO encontrado 
+2026-11-23 02:05:40.493 [INF] Buscando cliente 4
+2026-11-23 02:05:40.618 [WRN] Cliente 4 NO encontrado 
+2026-11-23 02:05:45.873 [INF] Buscando cliente 1
+2026-11-23 02:05:50.566 [INF] Buscando cliente 2
+2026-11-23 02:06:21.680 [INF] Usuario 1 ha iniciado sesion
+2026-11-23 02:08:41.331 [INF] Buscando cliente 2
+2026-11-23 02:09:13.965 [INF] Buscando cliente 2
+2026-11-23 02:09:21.211 [INF] Buscando cliente 3
+2026-11-23 02:09:21.223 [WRN] Cliente 3 NO encontrado 
+2026-11-23 02:09:25.797 [INF] Buscando cliente 1
+2026-11-23 02:09:30.106 [INF] Buscando cliente 2
+2026-11-23 02:12:37.153 [INF] Iniciando aplicación...
+2026-11-23 02:12:37.218 [INF] Configurando servicios...
+2026-11-23 02:12:37.221 [INF] Configurando servicios...
+2026-11-23 02:12:37.239 [INF] Configurando la conexión a Redis...
+2026-11-23 02:12:37.399 [INF] Conexión a Redis configurada correctamente.
+2026-11-23 02:12:38.087 [WRN] Entity 'Trabajador' has a global query filter defined and is the required end of a relationship with the entity 'Oficina'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-23 02:12:38.092 [WRN] Entity 'Trabajador' has a global query filter defined and is the required end of a relationship with the entity 'Parte'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-23 02:12:39.346 [INF] Todas las marcas seed ya existen.
+2026-11-23 02:12:39.362 [INF] Todas las pólizas seed ya existen.
+2026-11-23 02:12:39.397 [INF] Todos los vehículos seed ya existen.
+2026-11-23 02:12:39.560 [WRN] The WebRootPath was not found: C:\Users\Marcos\Documents\Proyectos\Back-end\C#\PracticaAlquler_de_choches\APIAlquilerVehiculos\wwwroot. Static files may be unavailable.
+2026-11-23 02:12:46.648 [INF] Usuario 5 ha iniciado sesion
+2026-11-23 02:13:36.812 [INF] Buscando cliente 1
+2026-11-23 02:13:43.098 [INF] Buscando cliente 2
+2026-11-23 02:42:27.396 [INF] Usuario 5 ha iniciado sesion
+2026-11-23 02:49:51.948 [INF] Buscando cliente 2
+2026-11-23 02:49:56.402 [INF] Buscando cliente 1
+2026-11-23 02:59:03.540 [INF] Iniciando aplicación...
+2026-11-23 02:59:03.599 [INF] Configurando servicios...
+2026-11-23 02:59:03.601 [INF] Configurando servicios...
+2026-11-23 02:59:03.619 [INF] Configurando la conexión a Redis...
+2026-11-23 02:59:03.742 [INF] Conexión a Redis configurada correctamente.
+2026-11-23 02:59:04.345 [WRN] Entity 'Trabajador' has a global query filter defined and is the required end of a relationship with the entity 'Oficina'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-23 02:59:04.348 [WRN] Entity 'Trabajador' has a global query filter defined and is the required end of a relationship with the entity 'Parte'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-23 02:59:05.431 [INF] Todas las marcas seed ya existen.
+2026-11-23 02:59:05.438 [INF] Todas las pólizas seed ya existen.
+2026-11-23 02:59:05.463 [INF] Todos los vehículos seed ya existen.
+2026-11-23 02:59:05.591 [WRN] The WebRootPath was not found: C:\Users\Marcos\Documents\Proyectos\Back-end\C#\PracticaAlquler_de_choches\APIAlquilerVehiculos\wwwroot. Static files may be unavailable.
+2026-11-23 03:00:01.469 [INF] Usuario 5 ha iniciado sesion
+2026-11-23 03:00:23.456 [INF] Buscando cliente 1
+2026-11-23 03:04:03.615 [INF] Obteniendo clientes paginados - Página: 0, Tamaño: 10
+2026-11-23 03:24:50.993 [INF] Iniciando aplicación...
+2026-11-23 03:24:51.444 [INF] Configurando servicios...
+2026-11-23 03:24:51.447 [INF] Configurando servicios...
+2026-11-23 03:24:51.797 [INF] Configurando la conexión a Redis...
+2026-11-23 03:24:51.954 [INF] Conexión a Redis configurada correctamente.
+2026-11-23 03:24:52.950 [WRN] Entity 'Trabajador' has a global query filter defined and is the required end of a relationship with the entity 'Oficina'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-23 03:24:52.954 [WRN] Entity 'Trabajador' has a global query filter defined and is the required end of a relationship with the entity 'Parte'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-23 03:24:54.189 [INF] Todas las marcas seed ya existen.
+2026-11-23 03:24:54.196 [INF] Todas las pólizas seed ya existen.
+2026-11-23 03:24:54.222 [INF] Todos los vehículos seed ya existen.
+2026-11-23 03:24:54.353 [WRN] The WebRootPath was not found: C:\Users\Marcos\Documents\Proyectos\Back-end\C#\PracticaAlquler_de_choches\APIAlquilerVehiculos\wwwroot. Static files may be unavailable.
+2026-11-23 03:25:32.785 [INF] Usuario 6 ha iniciado sesion
+2026-11-23 03:30:39.326 [INF] Iniciando aplicación...
+2026-11-23 03:30:39.400 [INF] Configurando servicios...
+2026-11-23 03:30:39.402 [INF] Configurando servicios...
+2026-11-23 03:30:39.424 [INF] Configurando la conexión a Redis...
+2026-11-23 03:30:39.546 [INF] Conexión a Redis configurada correctamente.
+2026-11-23 03:30:40.223 [WRN] Entity 'Trabajador' has a global query filter defined and is the required end of a relationship with the entity 'Oficina'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-23 03:30:40.226 [WRN] Entity 'Trabajador' has a global query filter defined and is the required end of a relationship with the entity 'Parte'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-23 03:30:41.239 [INF] Todas las marcas seed ya existen.
+2026-11-23 03:30:41.246 [INF] Todas las pólizas seed ya existen.
+2026-11-23 03:30:41.277 [INF] Todos los vehículos seed ya existen.
+2026-11-23 03:30:41.392 [WRN] The WebRootPath was not found: C:\Users\Marcos\Documents\Proyectos\Back-end\C#\PracticaAlquler_de_choches\APIAlquilerVehiculos\wwwroot. Static files may be unavailable.
+2026-11-23 03:30:43.721 [INF] Usuario 6 ha iniciado sesion
+2026-11-23 03:47:09.473 [INF] Iniciando aplicación...
+2026-11-23 03:47:09.541 [INF] Configurando servicios...
+2026-11-23 03:47:09.543 [INF] Configurando servicios...
+2026-11-23 03:47:09.565 [INF] Configurando la conexión a Redis...
+2026-11-23 03:47:09.701 [INF] Conexión a Redis configurada correctamente.
+2026-11-23 03:47:10.522 [WRN] Entity 'Trabajador' has a global query filter defined and is the required end of a relationship with the entity 'Oficina'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-23 03:47:10.527 [WRN] Entity 'Trabajador' has a global query filter defined and is the required end of a relationship with the entity 'Parte'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-23 03:47:12.146 [INF] Todas las marcas seed ya existen.
+2026-11-23 03:47:12.155 [INF] Todas las pólizas seed ya existen.
+2026-11-23 03:47:12.184 [INF] Todos los vehículos seed ya existen.
+2026-11-23 03:47:12.443 [WRN] The WebRootPath was not found: C:\Users\Marcos\Documents\Proyectos\Back-end\C#\PracticaAlquler_de_choches\APIAlquilerVehiculos\wwwroot. Static files may be unavailable.
+2026-11-23 03:47:29.789 [INF] Usuario 6 ha iniciado sesion
+2026-11-23 03:49:53.539 [INF] Iniciando aplicación...
+2026-11-23 03:49:53.599 [INF] Configurando servicios...
+2026-11-23 03:49:53.602 [INF] Configurando servicios...
+2026-11-23 03:49:53.619 [INF] Configurando la conexión a Redis...
+2026-11-23 03:49:53.740 [INF] Conexión a Redis configurada correctamente.
+2026-11-23 03:49:54.454 [WRN] Entity 'Trabajador' has a global query filter defined and is the required end of a relationship with the entity 'Oficina'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-23 03:49:54.459 [WRN] Entity 'Trabajador' has a global query filter defined and is the required end of a relationship with the entity 'Parte'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-23 03:49:55.661 [INF] Todas las marcas seed ya existen.
+2026-11-23 03:49:55.669 [INF] Todas las pólizas seed ya existen.
+2026-11-23 03:49:55.705 [INF] Todos los vehículos seed ya existen.
+2026-11-23 03:49:55.843 [WRN] The WebRootPath was not found: C:\Users\Marcos\Documents\Proyectos\Back-end\C#\PracticaAlquler_de_choches\APIAlquilerVehiculos\wwwroot. Static files may be unavailable.
+2026-11-23 03:50:01.169 [INF] Usuario 6 ha iniciado sesion
+2026-11-23 03:50:22.006 [ERR] Error al cargar cliente
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at APIAlquilerVehiculos.Mappers.ClienteMapper.NormalizarDocumento(String doc) in C:\Users\Marcos\Documents\Proyectos\Back-end\C#\PracticaAlquler_de_choches\APIAlquilerVehiculos\Mappers\ClienteMapper.cs:line 51
+   at APIAlquilerVehiculos.Mappers.ClienteMapper.UpdateEntity(UpdateClienteDto dto, Int64 id) in C:\Users\Marcos\Documents\Proyectos\Back-end\C#\PracticaAlquler_de_choches\APIAlquilerVehiculos\Mappers\ClienteMapper.cs:line 34
+   at APIAlquilerVehiculos.Services.Clientes.ClienteService.UpdateAsync(ClaimsPrincipal principal, Int64 id, UpdateClienteDto updatedCliente, CancellationToken cancellationToken) in C:\Users\Marcos\Documents\Proyectos\Back-end\C#\PracticaAlquler_de_choches\APIAlquilerVehiculos\Services\Clientes\ClienteService.cs:line 152
+2026-11-23 03:50:35.676 [INF] Buscando cliente 1
+2026-11-23 03:50:42.533 [INF] Buscando cliente 2
+2026-11-23 03:54:27.660 [INF] Iniciando aplicación...
+2026-11-23 03:54:27.737 [INF] Configurando servicios...
+2026-11-23 03:54:27.739 [INF] Configurando servicios...
+2026-11-23 03:54:27.762 [INF] Configurando la conexión a Redis...
+2026-11-23 03:54:27.888 [INF] Conexión a Redis configurada correctamente.
+2026-11-23 03:54:28.634 [WRN] Entity 'Trabajador' has a global query filter defined and is the required end of a relationship with the entity 'Oficina'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-23 03:54:28.638 [WRN] Entity 'Trabajador' has a global query filter defined and is the required end of a relationship with the entity 'Parte'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-23 03:54:29.977 [INF] Todas las marcas seed ya existen.
+2026-11-23 03:54:29.986 [INF] Todas las pólizas seed ya existen.
+2026-11-23 03:54:30.040 [INF] Todos los vehículos seed ya existen.
+2026-11-23 03:54:30.179 [WRN] The WebRootPath was not found: C:\Users\Marcos\Documents\Proyectos\Back-end\C#\PracticaAlquler_de_choches\APIAlquilerVehiculos\wwwroot. Static files may be unavailable.
+2026-11-23 03:54:33.869 [INF] Usuario 6 ha iniciado sesion
+2026-11-23 03:54:52.619 [INF] Buscando cliente 2
+2026-11-23 03:54:57.161 [INF] Cliente 2 actualizdo correctamente
+2026-11-23 03:55:49.994 [WRN] Cliente 2 dado de baja correctamente
+2026-11-23 03:56:24.734 [INF] Usuario 1 ha iniciado sesion
+2026-11-23 03:57:22.624 [INF] Buscando cliente 2
+2026-11-23 03:57:49.367 [INF] Buscando cliente 1
+2026-11-23 03:58:04.786 [INF] Buscando cliente 1
+2026-11-23 11:24:09.201 [INF] Usuario 6 ha iniciado sesion
+2026-11-23 11:51:17.348 [INF] Usuario 1 ha iniciado sesion
+2026-11-23 11:51:44.509 [INF] Obteniendo clientes paginados - Página: 0, Tamaño: 10
+2026-11-23 12:48:12.318 [INF] Iniciando aplicación...
+2026-11-23 12:48:13.013 [INF] Configurando servicios...
+2026-11-23 12:48:13.017 [INF] Configurando servicios...
+2026-11-23 12:48:13.434 [INF] Configurando la conexión a Redis...
+2026-11-23 12:48:13.646 [INF] Conexión a Redis configurada correctamente.
+2026-11-23 12:48:15.309 [WRN] Entity 'Trabajador' has a global query filter defined and is the required end of a relationship with the entity 'Oficina'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-23 12:48:15.316 [WRN] Entity 'Trabajador' has a global query filter defined and is the required end of a relationship with the entity 'Parte'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-23 12:48:17.048 [INF] Todas las marcas seed ya existen.
+2026-11-23 12:48:17.065 [INF] Todas las pólizas seed ya existen.
+2026-11-23 12:48:17.102 [INF] Todos los vehículos seed ya existen.
+2026-11-23 12:48:17.408 [WRN] The WebRootPath was not found: C:\Users\Marcos\Documents\Proyectos\Back-end\C#\PracticaAlquler_de_choches\APIAlquilerVehiculos\wwwroot. Static files may be unavailable.
+2026-11-23 12:48:22.371 [INF] Usuario 1 ha iniciado sesion
+2026-11-23 12:48:52.054 [INF] Buscando cliente 2
+2026-11-23 12:48:57.151 [WRN] Cliente 2 dado de baja correctamente
+2026-11-23 12:49:00.365 [INF] Buscando cliente 2
+2026-11-23 12:49:00.384 [WRN] Cliente 2 NO encontrado 
+2026-11-23 12:49:39.821 [INF] Buscando cliente 2
+2026-11-23 12:49:39.830 [WRN] Cliente 2 NO encontrado 
+2026-11-23 12:50:52.962 [INF] Buscando cliente 2
+2026-11-23 12:51:25.350 [INF] Buscando cliente 2
+2026-11-23 12:51:28.354 [ERR] Excepción no manejada. ErrorId: ad351da4
+System.OperationCanceledException: The operation was canceled.
+   at System.Threading.CancellationToken.ThrowOperationCanceledException()
+   at Npgsql.NpgsqlCommand.ExecuteReader(Boolean async, CommandBehavior behavior, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteReader(Boolean async, CommandBehavior behavior, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteDbDataReaderAsync(CommandBehavior behavior, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.InitializeReaderAsync(AsyncEnumerator enumerator, CancellationToken cancellationToken)
+   at Npgsql.EntityFrameworkCore.PostgreSQL.Storage.Internal.NpgsqlExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.MoveNextAsync()
+   at Microsoft.EntityFrameworkCore.Query.ShapedQueryCompilingExpressionVisitor.SingleOrDefaultAsync[TSource](IAsyncEnumerable`1 asyncEnumerable, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.ShapedQueryCompilingExpressionVisitor.SingleOrDefaultAsync[TSource](IAsyncEnumerable`1 asyncEnumerable, CancellationToken cancellationToken)
+   at APIAlquilerVehiculos.Services.Clientes.ClienteService.ClienteSinAutorizacionAsync(ClaimsPrincipal principal, Int64 id, CancellationToken cancellationToken, String message) in C:\Users\Marcos\Documents\Proyectos\Back-end\C#\PracticaAlquler_de_choches\APIAlquilerVehiculos\Services\Clientes\ClienteService.cs:line 275
+   at APIAlquilerVehiculos.Services.Clientes.ClienteService.GetByIdAsync(ClaimsPrincipal principal, Int64 id, CancellationToken cancellationToken) in C:\Users\Marcos\Documents\Proyectos\Back-end\C#\PracticaAlquler_de_choches\APIAlquilerVehiculos\Services\Clientes\ClienteService.cs:line 70
+   at APIAlquilerVehiculos.Controllers.ClienteController.GetByIdAsync(Int64 id, CancellationToken cancellationToken) in C:\Users\Marcos\Documents\Proyectos\Back-end\C#\PracticaAlquler_de_choches\APIAlquilerVehiculos\Controllers\ClienteController.cs:line 72
+   at lambda_method416(Closure, Object)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.AwaitableObjectResultExecutor.Execute(ActionContext actionContext, IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Awaited|12_0(ControllerActionInvoker invoker, ValueTask`1 actionResultValueTask)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.InvokeInnerFilterAsync()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at GlobalExceptionHandler.InvokeAsync(HttpContext context) in C:\Users\Marcos\Documents\Proyectos\Back-end\C#\PracticaAlquler_de_choches\APIAlquilerVehiculos\MiddleWares\GlobalExceptionHandler.cs:line 13
+2026-11-23 12:51:28.468 [WRN] Cliente 2 NO encontrado 
+2026-11-23 12:51:44.692 [INF] Iniciando aplicación...
+2026-11-23 12:51:44.766 [INF] Configurando servicios...
+2026-11-23 12:51:44.769 [INF] Configurando servicios...
+2026-11-23 12:51:44.792 [INF] Configurando la conexión a Redis...
+2026-11-23 12:51:44.968 [INF] Conexión a Redis configurada correctamente.
+2026-11-23 12:51:45.945 [WRN] Entity 'Trabajador' has a global query filter defined and is the required end of a relationship with the entity 'Oficina'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-23 12:51:45.949 [WRN] Entity 'Trabajador' has a global query filter defined and is the required end of a relationship with the entity 'Parte'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-23 12:51:47.753 [INF] Todas las marcas seed ya existen.
+2026-11-23 12:51:47.765 [INF] Todas las pólizas seed ya existen.
+2026-11-23 12:51:47.796 [INF] Todos los vehículos seed ya existen.
+2026-11-23 12:51:47.946 [WRN] The WebRootPath was not found: C:\Users\Marcos\Documents\Proyectos\Back-end\C#\PracticaAlquler_de_choches\APIAlquilerVehiculos\wwwroot. Static files may be unavailable.
+2026-11-23 12:52:05.563 [INF] Buscando cliente 2
+2026-11-23 12:52:05.921 [WRN] Cliente 2 NO encontrado 
+2026-11-23 12:52:12.247 [INF] Usuario 1 ha iniciado sesion
+2026-11-23 12:52:24.104 [INF] Buscando cliente 2
+2026-11-23 12:52:24.117 [WRN] Cliente 2 NO encontrado 
+2026-11-23 12:52:24.909 [INF] Buscando cliente 2
+2026-11-23 12:52:24.926 [WRN] Cliente 2 NO encontrado 
+2026-11-23 12:52:26.363 [INF] Buscando cliente 2
+2026-11-23 12:52:26.378 [WRN] Cliente 2 NO encontrado 
+2026-11-23 12:53:00.190 [INF] Iniciando aplicación...
+2026-11-23 12:53:00.262 [INF] Configurando servicios...
+2026-11-23 12:53:00.265 [INF] Configurando servicios...
+2026-11-23 12:53:00.285 [INF] Configurando la conexión a Redis...
+2026-11-23 12:53:00.420 [INF] Conexión a Redis configurada correctamente.
+2026-11-23 12:53:01.277 [WRN] Entity 'Trabajador' has a global query filter defined and is the required end of a relationship with the entity 'Oficina'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-23 12:53:01.284 [WRN] Entity 'Trabajador' has a global query filter defined and is the required end of a relationship with the entity 'Parte'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-23 12:53:02.621 [INF] Todas las marcas seed ya existen.
+2026-11-23 12:53:02.630 [INF] Todas las pólizas seed ya existen.
+2026-11-23 12:53:02.672 [INF] Todos los vehículos seed ya existen.
+2026-11-23 12:53:02.802 [WRN] The WebRootPath was not found: C:\Users\Marcos\Documents\Proyectos\Back-end\C#\PracticaAlquler_de_choches\APIAlquilerVehiculos\wwwroot. Static files may be unavailable.
+2026-11-23 12:53:17.441 [INF] Buscando cliente 2
