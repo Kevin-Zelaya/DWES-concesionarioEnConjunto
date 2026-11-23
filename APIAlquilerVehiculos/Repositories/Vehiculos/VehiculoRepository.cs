@@ -98,6 +98,21 @@ public class VehiculoRepository : IVehiculosRepository
         return response;
     }
 
+    public async Task<Vehiculo?> UpdateEstado(string id, EstadoEnum estadoEnum)
+    {
+        var response = await _context.Vehiculos.FirstOrDefaultAsync(v=> v.Id == id && v.Activo == true); 
+        if (response == null) return null;
+
+        response.UpdatedAt = DateTime.Now;
+        response.Estado = estadoEnum;
+        
+        _context.Entry(response).CurrentValues.SetValues(response);
+        await _context.SaveChangesAsync();
+        await _context.SaveChangesAsync();
+
+        return response;
+    }
+
     /// <inheritdoc cref="DeleteAsync"/>
     public async Task<bool> DeleteAsync(string id)
     {
