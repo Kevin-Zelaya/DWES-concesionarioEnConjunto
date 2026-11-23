@@ -15,7 +15,6 @@ public record ReservaDto(
     Estado Estado,
     List<LineaReservaDto> Lineas,
     decimal PrecioTotal,
-    long? PagoId,
     string? Notas
 );
 

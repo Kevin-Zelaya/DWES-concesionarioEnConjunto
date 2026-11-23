@@ -78,15 +78,6 @@ public interface IReservaService
     Task<Result<Reserva, DomainError>> UpdateNotaAsync(string codigoReferencia, ReservaUpdateNotaRequestDto request, CancellationToken ct = default);
 
     /// <summary>
-    /// Actualiza el pago asociado a una reserva.
-    /// </summary>
-    /// <param name="codigoReferencia">Código de referencia de la reserva que se desea actualizar.</param>
-    /// <param name="request">Datos del pago que se desea asociar a la reserva.</param>
-    /// <param name="ct">Token para cancelar la operación.</param>
-    /// <returns>El resultado de la actualización de la reserva o un error de dominio.</returns>
-    Task<Result<Reserva, DomainError>> UpdatePagoAsync(string codigoReferencia, ReservaUpdatePagoRequestDto request, CancellationToken ct = default);
-
-    /// <summary>
     /// Actualiza las fechas de recogida y devolución de una reserva.
     /// </summary>
     /// <param name="codigoReferencia">Código de referencia de la reserva que se desea actualizar.</param>

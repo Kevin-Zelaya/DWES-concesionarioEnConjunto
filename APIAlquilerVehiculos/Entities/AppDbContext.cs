@@ -22,6 +22,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options)
 	public DbSet<Poliza> Polizas {get; set;}
 	public DbSet<Extra> Extras {get; set;}
 	public DbSet<Recargo> Recargos {get; set;}
+	public DbSet<Pago> Pagos { get; set; }
 	// separar en otro archivo el fluent api
 	
 	//USUARIOS

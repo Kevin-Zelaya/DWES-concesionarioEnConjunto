@@ -243,29 +243,6 @@ public class ReservaController(
             : response.Error.ToHttpResult<Reserva>();
     }
 
-    [HttpPatch("{codigo}/pago")]
-    [Authorize(Roles = $"{Roles.Cliente},{Roles.Operario},{Roles.Responsable}")]
-    [SwaggerOperation(
-        Summary = "Actualizar el pago de una reserva",
-        Description = "Modifica el pago asociado a una reserva."
-    )]
-    [SwaggerResponse(200, "Pago actualizado correctamente.", typeof(Reserva))]
-    [SwaggerResponse(401, "No autenticado.")]
-    [SwaggerResponse(403, "No tienes permisos para modificar este pago.")]
-    [SwaggerResponse(404, "Reserva no encontrada.")]
-    public async Task<ActionResult<Reserva>> UpdatePago(
-        [SwaggerParameter("Código de referencia de la reserva.")]
-        string codigo,
-        [FromBody] ReservaUpdatePagoRequestDto request,
-        CancellationToken ct)
-    {
-        var response = await _service.UpdatePagoAsync(codigo, request, ct);
-
-        return response.IsSuccess
-            ? Ok(response.Value)
-            : response.Error.ToHttpResult<Reserva>();
-    }
-
     [HttpPatch("{codigo}/fechas")]
     [Authorize(Roles = $"{Roles.Cliente},{Roles.Operario},{Roles.Responsable}")]
     [SwaggerOperation(

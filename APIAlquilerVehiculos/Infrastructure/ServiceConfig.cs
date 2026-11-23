@@ -1,3 +1,4 @@
+using APIAlquilerVehiculos.Services.Pagos;
 using APIAlquilerVehiculos.Services.Trabajadores;
 using Serilog;
 
@@ -15,6 +16,9 @@ public static class ServiceConfig
         services.AddScoped<ICache, RedisCache>();
         services.AddScoped<ITrabajadorService, TrabajadorService>();
         services.AddScoped<IDisponibilidadService, DisponibilidadService>();
+        services.AddScoped<IPasarelaPago, PasarelaPagoSimulada>();
+        services.AddScoped<IPagoService, PagoService>();
+        services.AddScoped<ICifradorTarjeta, CifradorTarjeta>();
         return services;
     }
 }
