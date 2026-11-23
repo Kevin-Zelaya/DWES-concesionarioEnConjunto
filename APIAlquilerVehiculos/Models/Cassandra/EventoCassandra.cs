@@ -1,5 +1,5 @@
-
 using APIAlquilerVehiculos.Models.Cassandra.Enums;
+
 namespace APIAlquilerVehiculos.Models.Cassandra;
 
 /// <summary>
@@ -26,7 +26,7 @@ public class EventoCassandra
     /// <summary>
     /// Tipo de evento ocurrido.
     /// </summary>
-public TipoEvento Tipo { get; set; }
+    public TipoEvento Tipo { get; set; }
     /// <summary>
     /// Fecha y hora en la que ocurrió el evento.
     /// </summary>

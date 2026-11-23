@@ -3,6 +3,7 @@ using APIAlquilerVehiculos.Configuration;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
+
 namespace APIAlquilerVehiculos.Configuration;
 
 public static class CassandraConfiguration
