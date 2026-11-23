@@ -48,6 +48,16 @@ public class AuthService(IValidator<SignupDto> validatorSignupAsync, UserManager
             var docDuplicado = dniNorm ?? nieNorm ?? pasaporteNorm ?? string.Empty;
             return Result.Failure<UsuarioResponseDto, DomainError>(AuthErrors.DuplicateDocument(docDuplicado));
         }
+        
+        // Comprobamos que no existe otro Email identico
+        if (await userManager.FindByEmailAsync(request.Email) is not null)
+        {
+            logger.LogInformation("Email duplicado: {Email}", request.Email);
+            return Result.Failure<UsuarioResponseDto, DomainError>(
+                AuthErrors.DuplicateEmail(request.Email)
+            );
+        }
+        
         await using var transaction = await dbContext.Database.BeginTransactionAsync();
 
         try
@@ -132,6 +142,7 @@ public class AuthService(IValidator<SignupDto> validatorSignupAsync, UserManager
     {
         // Cargamos Usuario junto con Cliente y Trabajador para evitar NullReferenceException y comprobar IsActivo
         var user = await userManager.Users
+            .IgnoreQueryFilters()
             .Include(u => u.Cliente)
             .Include(u => u.Trabajador)
             .FirstOrDefaultAsync(u => u.Email == request.Email);
@@ -141,10 +152,16 @@ public class AuthService(IValidator<SignupDto> validatorSignupAsync, UserManager
             logger.LogWarning("Credenciales invalidas del usuario");
             return Result.Failure<AuthResponseDto, DomainError>(AuthErrors.InvalidCredentials());
         }
-
+        
+        var roles = await userManager.GetRolesAsync(user);
+        
         // Comprobamos que su ficha asociada siga activa (baja lógica)
-        if ((user.Cliente is not null && !user.Cliente.IsActivo) ||
-            (user.Trabajador is not null && !user.Trabajador.IsActivo))
+        if ((roles.Contains(Roles.Cliente) &&
+             (user.Cliente is null || !user.Cliente.IsActivo)) ||
+            ((roles.Contains(Roles.Operario) ||
+              roles.Contains(Roles.Mecanico) ||
+              roles.Contains(Roles.Responsable)) &&
+             (user.Trabajador is null || !user.Trabajador.IsActivo)))
         {
             logger.LogWarning("Intento de login de cuenta desactivada {UserId}", user.Id);
             return Result.Failure<AuthResponseDto, DomainError>(AuthErrors.InactiveAccount());
@@ -156,8 +173,7 @@ public class AuthService(IValidator<SignupDto> validatorSignupAsync, UserManager
             logger.LogWarning("Contraseña incorrecta del usuario {UserId}", user.Id);
             return Result.Failure<AuthResponseDto, DomainError>(AuthErrors.InvalidCredentials());
         }
-
-        var roles = await userManager.GetRolesAsync(user);
+        
         var rolPrincipal = roles.FirstOrDefault() ?? Roles.Cliente;
 
         var claims = new List<Claim>

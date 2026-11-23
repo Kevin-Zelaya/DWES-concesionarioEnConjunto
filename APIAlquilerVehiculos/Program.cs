@@ -51,11 +51,8 @@ builder.Services
     .AddDatabases(builder.Configuration)
     .AddServices()
     .AddRepositories()
+    .AddAuthenticationConfing(builder.Configuration)
     .AddRedisConnection(builder.Configuration);
-
-builder.Services.AddAuthenticationConfing(builder.Configuration);
-
-builder.Services.AddScoped<IAuthService, AuthService>();
 
 builder.Services.AddValidatorsFromAssemblyContaining<Program>();
 builder.Services.AddFluentValidationAutoValidation();
