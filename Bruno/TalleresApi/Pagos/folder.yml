@@ -1,0 +1,9 @@
+info:
+  name: Pagos
+  type: folder
+  seq: 4
+
+request:
+  auth:
+    type: bearer
+    token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIzIiwiZW1haWwiOiJvcGVyYXJpb0BhbHF1aWxlci5jb20iLCJqdGkiOiIxYzI1M2ZiZi00NDNjLTQ4ZmUtYWFjNS1jNmFkNzI2ZjZjYWEiLCJpYXQiOjE3OTU0NTkzMjksInJvbGUiOiJPcGVyYXJpbyIsInRpcG9fdHJhYmFqbyI6Ik9wZXJhcmlvIiwibmJmIjoxNzk1NDU5MzI5LCJleHAiOjE3OTU0NjY1MjksImlzcyI6IkFscXVpbGVyVmVoaWN1bG9zQXBpIiwiYXVkIjoiQWxxdWlsZXJWZWhpY3Vsb3NDbGllbnQifQ.UJnMY5rbZ8CFP6zso7fTFpKRzBYMpn8NS92lhEjXlJI

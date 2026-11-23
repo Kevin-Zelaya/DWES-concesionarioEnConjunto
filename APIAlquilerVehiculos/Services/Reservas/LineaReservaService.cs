@@ -19,11 +19,13 @@ public class LineaReservaService(
         _logger.LogDebug(
             "[SERVICE-CREATE] Creando {Cantidad} líneas para la reserva {ReservaId}.",
             lineas.Count, lineas.FirstOrDefault()?.ReservaId);
-        // calcular subtotales
+
+        // Procesar las líneas nuevas y calcular sus subtotales.
         var nuevas = await ProcesarNuevas(lineas, dias, ct);
-        nuevas.ForEach(l => l.CalcularSubtotal(dias));
-        
-        var response = await _repository.CreateRangeAsync(lineas, ct);
+
+        nuevas.ForEach(l => l.CalcularSubtotal());
+
+        var response = await _repository.CreateRangeAsync(nuevas, ct);
 
         return Result.Success<List<LineaReserva>, DomainError>(response)
             .Tap(l => _logger.LogInformation(
@@ -50,7 +52,7 @@ public class LineaReservaService(
             if (existente is not null)
             {
                 existente.Cantidad += linea.Cantidad;
-                existente.CalcularSubtotal(dias);
+                existente.CalcularSubtotal();
             }
             else
             {

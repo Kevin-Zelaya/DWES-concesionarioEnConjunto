@@ -1,0 +1,23 @@
+info:
+  name: PATCHESTADO200
+  type: http
+  seq: 9
+
+http:
+  method: PATCH
+  url: http://{{host}}:{{port}}/api/reservas/KOMZCU/estado
+  body:
+    type: json
+    data: |-
+      {
+        "estado": "EnCurso",
+        "rowVersion": 836
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false

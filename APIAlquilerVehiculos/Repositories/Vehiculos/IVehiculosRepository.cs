@@ -3,6 +3,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using APIAlquilerVehiculos.Models;
 using APIAlquilerVehiculos.Models.Enums;
+using APIAlquilerVehiculos.Models.Reservas;
+using APIAlquilerVehiculos.Models.Enums;
 
 namespace APIAlquilerVehiculos.Repositories.Vehiculos;
 
@@ -29,6 +31,12 @@ public interface IVehiculosRepository: ICrudRepository<Vehiculo,string>
     public Task<(List<Vehiculo> items, int count, int totalPages, bool HasPreviousPage, bool HasNextPage)>
         GetPaginatedVehiculosAsync
         (int pageNumber, int pageSize, CancellationToken ct = default);
+
+    Task<List<Vehiculo>> GetByCategoriaAsync(CategoriaEnum categoria, CancellationToken ct = default);
+
+    Task<Vehiculo?> UpdateEstadoAsync(string id, EstadoEnum estado, CancellationToken ct = default);
+
+    Task BloquearVehiculoAsync(string vehiculoId, CancellationToken ct = default);
 
     
     /// <summary>

@@ -1,3 +1,4 @@
+using APIAlquilerVehiculos.Models;
 using APIAlquilerVehiculos.Models.Reservas;
 
 
@@ -53,15 +54,6 @@ public interface IReservaRepository
     /// <param name="ct">Token para cancelar la operación.</param>
     /// <returns>Reserva actualizada o null si no existe.</returns>
     Task<Reserva?> UpdateNotaAsync(string CodigoReferencia, ReservaUpdateNotaRequestDto request, CancellationToken ct = default);
-
-    /// <summary>
-    /// Actualiza la información del pago de una reserva.
-    /// </summary>
-    /// <param name="CodigoReferencia">Código de referencia de la reserva.</param>
-    /// <param name="request">Datos con la nueva información del pago.</param>
-    /// <param name="ct">Token para cancelar la operación.</param>
-    /// <returns>Reserva actualizada o null si no existe.</returns>
-    Task<Reserva?> UpdatePagoAsync(string CodigoReferencia, ReservaUpdatePagoRequestDto request, CancellationToken ct = default);
 
     /// <summary>
     /// Actualiza el estado de una reserva.
@@ -127,4 +119,19 @@ public interface IReservaRepository
     /// </returns>
     Task<(List<Reserva> items, int count, int totalPages, bool HasPreviousPage, bool HasNextPage)> GetPaginatedReservasByEmployeeIdAsync(long id, int pageNumber, int pageSize, CancellationToken ct = default);
 
+   Task<bool> ExistsReservaSolapadaAsync(
+        string vehiculoId,
+        DateTime fechaRecogida,
+        DateTime fechaDevolucion,
+        long? reservaIdExcluir = null,
+        CancellationToken ct = default);
+
+    public Task<Oficina?> GetOficinaById(long id, CancellationToken ct = default);
+
+
+    Task<bool> ExistsReservasActivasAsync(
+    string vehiculoId,
+    long reservaIdExcluir,
+    CancellationToken ct = default);
+    
 }

@@ -259,7 +259,7 @@ public static class CatalogoSeeder
                     Matricula = "3456BCD",
                     Modelo = "Ariya",
                     Acriss = "IFAE",
-                    categoria = CategoriaEnum.Sub,
+                    categoria = CategoriaEnum.Suv,
                     precioPorDia = 65m,
                     Color = "Negro",
                     Combustible = CombustibleEnum.Electrico,
@@ -411,7 +411,8 @@ public static class CatalogoSeeder
                 continue;
             }
 
-            vehiculo.Marca_id = marcaId;
+            vehiculo.MarcaId = marcaId; // ESTA ES LA LÍNEA QUE FALTABA
+
             vehiculo.Concesionario_id = concesionarioId;
             vehiculo.CreatedAt = ahora;
 

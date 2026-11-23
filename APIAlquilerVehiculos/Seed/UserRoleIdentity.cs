@@ -1,4 +1,4 @@
-﻿using APIAlquilerVehiculos.Entities;
+using APIAlquilerVehiculos.Entities;
 using APIAlquilerVehiculos.Models;
 using APIAlquilerVehiculos.Models.Usuarios;
 using Microsoft.AspNetCore.Identity;
@@ -58,6 +58,7 @@ public static class UserRoleSeeder {
         if (userResponsable is not null)
         {
             trabajadorResponsable = await db.Trabajadores
+                .IgnoreQueryFilters()
                 .FirstOrDefaultAsync(t => t.IdUsuario == userResponsable.Id);
 
             if (trabajadorResponsable is null)
@@ -88,7 +89,7 @@ public static class UserRoleSeeder {
         );
 
         // si se ha creado bien lo mete a la bd
-        if (userOperario is not null && !await db.Trabajadores.AnyAsync(t => t.IdUsuario == userOperario.Id))
+        if (userOperario is not null && !await db.Trabajadores.IgnoreQueryFilters().AnyAsync(t => t.IdUsuario == userOperario.Id))
         {
             db.Trabajadores.Add(new Trabajador
             {
@@ -114,7 +115,7 @@ public static class UserRoleSeeder {
         );
 
         // si se ha creado bien lo mete a la bd
-        if (userMecanico is not null && !await db.Trabajadores.AnyAsync(t => t.IdUsuario == userMecanico.Id))
+        if (userMecanico is not null && !await db.Trabajadores.IgnoreQueryFilters().AnyAsync(t => t.IdUsuario == userMecanico.Id))
         {
             db.Trabajadores.Add(new Trabajador
             {
@@ -140,7 +141,7 @@ public static class UserRoleSeeder {
         );
 
         // si se ha creado bien lo mete a la bd
-        if (userCliente is not null && !await db.Clientes.AnyAsync(c => c.IdUsuario == userCliente.Id))
+        if (userCliente is not null && !await db.Clientes.IgnoreQueryFilters().AnyAsync(c => c.IdUsuario == userCliente.Id))
         {
             db.Clientes.Add(new Cliente
             {

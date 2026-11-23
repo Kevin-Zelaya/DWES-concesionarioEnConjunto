@@ -8,7 +8,8 @@ using APIAlquilerVehiculos.Models.Reservas;
 /// <param name="Estado"></param>
 /// <param name="RowVersion"></param>
 public record ReservaUpdateNotaRequestDto(
+    [Required]
     string Nota,
-    [property: Required]
+    [Required]
     uint RowVersion
 );

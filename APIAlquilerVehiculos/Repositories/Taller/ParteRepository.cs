@@ -1,76 +1,81 @@
-﻿using APIAlquilerVehiculos.Models;
-using APIAlquilerVehiculos.Models.Enums;
+﻿using APIAlquilerVehiculos.Entities;
+using APIAlquilerVehiculos.Models;
 using APIAlquilerVehiculos.Models.Reservas;
 using APIAlquilerVehiculos.Models.Usuarios;
+using Microsoft.EntityFrameworkCore;
 
 namespace APIAlquilerVehiculos.Repositories.Taller;
 
-public class ParteRepository : IParteRepository
+public class ParteRepository(AppDbContext context) : IParteRepository
 {
-    private readonly List<Parte> _partes = [];
-    private long _nextId = 1;
-
-    // Datos de prueba en memoria para desarrollar 
-    private readonly List<Trabajador> _trabajadores =
+    private static readonly Estado[] EstadosReservaViva =
     [
-        new Trabajador
-        {
-            Id = 1,
-            Nombre = "Carlos",
-            Apellidos = "Gómez",
-            IsActivo = true,
-            Dni = null,
-            TipoTrabajador = TipoTrabajador.Operaciones
-        }
+        Estado.Pendiente,
+        Estado.Confirmada,
+        Estado.EnCurso
     ];
 
-    private readonly List<Vehiculo> _vehiculos =
-    [
-        new Vehiculo { Id = "veh00000001", Matricula = "1234BCD", Estado = EstadoEnum.Disponible, Activo = true }
-    ];
+    public async Task<List<Parte>> GetAllAsync() =>
+        await context.Partes
+            .AsNoTracking()
+            .Include(p => p.Vehiculo)
+            .OrderByDescending(p => p.FechaApertura)
+            .ToListAsync();
 
-    public Task<List<Parte>> GetAllAsync() =>
-        Task.FromResult(_partes.ToList());
+    public async Task<Parte?> GetByIdAsync(long id) =>
+        await context.Partes
+            .Include(p => p.Vehiculo)
+            .FirstOrDefaultAsync(p => p.Id == id);
 
-    public Task<Parte?> GetByIdAsync(long id) =>
-        Task.FromResult(_partes.FirstOrDefault(p => p.Id == id));
-
-    public Task<Parte> CreateAsync(Parte obj)
+    public async Task<Parte> CreateAsync(Parte obj)
     {
-        obj.Id = _nextId++;
-        _partes.Add(obj);
-        return Task.FromResult(obj);
+        await context.Partes.AddAsync(obj);
+        await context.SaveChangesAsync();
+        return obj;
     }
 
-    public Task<Parte?> UpdateAsync(Parte obj)
+    public async Task<Parte?> UpdateAsync(Parte obj)
     {
-        var index = _partes.FindIndex(p => p.Id == obj.Id);
-        if (index == -1) return Task.FromResult<Parte?>(null);
+        var existe = await context.Partes.AnyAsync(p => p.Id == obj.Id);
+        if (!existe) return null;
 
-        _partes[index] = obj;
-        return Task.FromResult<Parte?>(obj);
+        context.Partes.Update(obj);
+        await context.SaveChangesAsync();
+        return obj;
     }
 
-    public Task<bool> DeleteAsync(long id)
+    public async Task<bool> DeleteAsync(long id)
     {
-        var parte = _partes.FirstOrDefault(p => p.Id == id);
-        if (parte is null) return Task.FromResult(false);
+        var parte = await context.Partes.FindAsync(id);
+        if (parte is null) return false;
 
-        return Task.FromResult(_partes.Remove(parte));
+        context.Partes.Remove(parte);
+        await context.SaveChangesAsync();
+        return true;
     }
 
-    public Task<bool> TieneParteAbiertoAsync(string vehiculoId) =>
-        Task.FromResult(_partes.Any(p => p.VehiculoId == vehiculoId && p.Estado == EstadoParte.Abierto));
+    public async Task<bool> TieneParteAbiertoAsync(string vehiculoId) =>
+        await context.Partes
+            .AnyAsync(p => p.VehiculoId == vehiculoId && p.Estado == EstadoParte.Abierto);
 
-    public Task<Trabajador?> GetTrabajadorByIdAsync(long trabajadorId) =>
-        Task.FromResult(_trabajadores.FirstOrDefault(t => t.Id == trabajadorId));
+    public async Task<Trabajador?> GetTrabajadorByIdAsync(long trabajadorId) =>
+        await context.Trabajadores
+            .AsNoTracking()
+            .FirstOrDefaultAsync(t => t.Id == trabajadorId);
 
-    public Task<Vehiculo?> GetVehiculoByIdAsync(string vehiculoId) =>
-        Task.FromResult(_vehiculos.FirstOrDefault(v => v.Id == vehiculoId));
+    public async Task<Vehiculo?> GetVehiculoByIdAsync(string vehiculoId) =>
+        await context.Vehiculos
+            .FirstOrDefaultAsync(v => v.Id == vehiculoId);
 
-    public Task<List<Reserva>> GetReservasVivasByVehiculoIdAsync(string vehiculoId) =>
-        Task.FromResult(new List<Reserva>());
+    public async Task<List<Reserva>> GetReservasVivasByVehiculoIdAsync(string vehiculoId) =>
+        await context.Reservas
+            .AsNoTracking()
+            .Where(r => r.VehiculoId == vehiculoId && EstadosReservaViva.Contains(r.Estado))
+            .ToListAsync();
 
-    public Task UpdateVehiculoAsync(Vehiculo vehiculo) =>
-        Task.CompletedTask;
+    public async Task UpdateVehiculoAsync(Vehiculo vehiculo)
+    {
+        context.Vehiculos.Update(vehiculo);
+        await context.SaveChangesAsync();
+    }
 }

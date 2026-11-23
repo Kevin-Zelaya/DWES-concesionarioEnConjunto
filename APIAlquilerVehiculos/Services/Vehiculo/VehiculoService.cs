@@ -1,4 +1,6 @@
-﻿using System.Net;
+﻿using System.ComponentModel.DataAnnotations;
+using System.Net;
+using APIAlquilerVehiculos.DTOs.Marcas;
 using APIAlquilerVehiculos.Dtos.Vehiculo;
 using APIAlquilerVehiculos.Errors.Common;
 using APIAlquilerVehiculos.Mappers.Vehiculos;
@@ -6,6 +8,7 @@ using APIAlquilerVehiculos.Models.Enums;
 using APIAlquilerVehiculos.Repositories.Taller;
 using APIAlquilerVehiculos.Repositories.Vehiculos;
 using CSharpFunctionalExtensions;
+using FluentValidation;
 
 namespace APIAlquilerVehiculos.Services.Vehiculo;
 

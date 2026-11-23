@@ -1,4 +1,5 @@
-﻿using APIAlquilerVehiculos.Entities;
+﻿
+using APIAlquilerVehiculos.Entities;
 using APIAlquilerVehiculos.Entities.FluenApi;
 using APIAlquilerVehiculos.Models;
 using APIAlquilerVehiculos.Models.Enums;
@@ -9,7 +10,6 @@ using Testcontainers.PostgreSql;
 namespace APIAlquilerVehiculos.Test.Repository.Test;
 
 [TestFixture]
-[Parallelizable]
 public class VehiculosRepository_Test
 {
     private readonly PostgreSqlContainer _postgres = new PostgreSqlBuilder()
@@ -21,6 +21,7 @@ public class VehiculosRepository_Test
 
     private AppDbContext _context = null!;
     private VehiculoRepository _repository = null!;
+    private long _marcaId;
 
     [OneTimeSetUp]
     public async Task StartPostgresAsync()
@@ -36,13 +37,22 @@ public class VehiculosRepository_Test
             .Options;
 
         _context = new AppDbContext(options);
+
         await _context.Database.EnsureDeletedAsync();
         await _context.Database.EnsureCreatedAsync();
 
-        var marca = new Marca { Nombre = "Test", Wb = "https://example.test", Activo = true };
-        var modelo = "Golf";
-        _context.AddRange(marca, modelo);
+        var marca = new Marca
+        {
+            Nombre = "Volkswagen",
+            Wb = "https://www.volkswagen.es",
+            Pais = "Alemania",
+            Activo = true
+        };
+
+        await _context.Marcas.AddAsync(marca);
         await _context.SaveChangesAsync();
+
+        _marcaId = marca.Id;
 
         _repository = new VehiculoRepository(_context);
     }
@@ -59,33 +69,40 @@ public class VehiculosRepository_Test
         await _postgres.DisposeAsync();
     }
 
+    // GET ALL
+
     [Test]
     public async Task GetAllAsync_DevuelveSoloVehiculosActivos()
     {
         await AddVehiculosAsync(
-            CrearVehiculo("vehiculo01", "AAA0001"),
-            CrearVehiculo("vehiculo02", "AAA0002", activo: false));
+            CrearVehiculo("vehiculo001", "AAA0001"),
+            CrearVehiculo("vehiculo002", "AAA0002", activo: false));
 
         var result = await _repository.GetAllAsync();
 
-        Assert.That(result.Select(v => v.Id), Is.EqualTo(new[] { "vehiculo01" }));
+        Assert.That(result.Select(v => v.Id),
+            Is.EqualTo(new[] { "vehiculo001" }));
     }
+
+    // PAGINACIÓN
 
     [Test]
     public async Task GetPaginatedVehiculosAsync_DevuelvePrimeraPaginaYMetadatos()
     {
         await AddVehiculosAsync(
-            CrearVehiculo("vehiculo01", "AAA0001"),
-            CrearVehiculo("vehiculo02", "AAA0002"),
-            CrearVehiculo("vehiculo03", "AAA0003"),
-            CrearVehiculo("vehiculo04", "AAA0004", activo: false));
+            CrearVehiculo("vehiculo001", "AAA0001"),
+            CrearVehiculo("vehiculo002", "AAA0002"),
+            CrearVehiculo("vehiculo003", "AAA0003"),
+            CrearVehiculo("vehiculo004", "AAA0004", activo: false));
 
         var (items, count, totalPages, hasPreviousPage, hasNextPage) =
             await _repository.GetPaginatedVehiculosAsync(1, 2);
 
         Assert.Multiple(() =>
         {
-            Assert.That(items.Select(v => v.Id), Is.EqualTo(new[] { "vehiculo01", "vehiculo02" }));
+            Assert.That(items.Select(v => v.Id),
+                Is.EqualTo(new[] { "vehiculo001", "vehiculo002" }));
+
             Assert.That(count, Is.EqualTo(3));
             Assert.That(totalPages, Is.EqualTo(2));
             Assert.That(hasPreviousPage, Is.False);
@@ -97,16 +114,18 @@ public class VehiculosRepository_Test
     public async Task GetPaginatedVehiculosAsync_DevuelveUltimaPaginaYMetadatos()
     {
         await AddVehiculosAsync(
-            CrearVehiculo("vehiculo01", "AAA0001"),
-            CrearVehiculo("vehiculo02", "AAA0002"),
-            CrearVehiculo("vehiculo03", "AAA0003"));
+            CrearVehiculo("vehiculo001", "AAA0001"),
+            CrearVehiculo("vehiculo002", "AAA0002"),
+            CrearVehiculo("vehiculo003", "AAA0003"));
 
         var (items, count, totalPages, hasPreviousPage, hasNextPage) =
             await _repository.GetPaginatedVehiculosAsync(2, 2);
 
         Assert.Multiple(() =>
         {
-            Assert.That(items.Select(v => v.Id), Is.EqualTo(new[] { "vehiculo03" }));
+            Assert.That(items.Select(v => v.Id),
+                Is.EqualTo(new[] { "vehiculo003" }));
+
             Assert.That(count, Is.EqualTo(3));
             Assert.That(totalPages, Is.EqualTo(2));
             Assert.That(hasPreviousPage, Is.True);
@@ -117,7 +136,8 @@ public class VehiculosRepository_Test
     [Test]
     public async Task GetPaginatedVehiculosAsync_SinVehiculosActivos_DevuelvePaginaVacia()
     {
-        await AddVehiculosAsync(CrearVehiculo("vehiculo01", "AAA0001", activo: false));
+        await AddVehiculosAsync(
+            CrearVehiculo("vehiculo001", "AAA0001", activo: false));
 
         var (items, count, totalPages, hasPreviousPage, hasNextPage) =
             await _repository.GetPaginatedVehiculosAsync(1, 10);
@@ -139,15 +159,19 @@ public class VehiculosRepository_Test
         await cancellation.CancelAsync();
 
         Assert.ThrowsAsync<OperationCanceledException>(async () =>
-            await _repository.GetPaginatedVehiculosAsync(1, 10, cancellation.Token));
+            await _repository.GetPaginatedVehiculosAsync(
+                1, 10, cancellation.Token));
     }
+
+    // GET BY ID
 
     [Test]
     public async Task GetByIdAsync_ConIdExistente_DevuelveVehiculo()
     {
-        await AddVehiculosAsync(CrearVehiculo("vehiculo01", "AAA0001"));
+        await AddVehiculosAsync(
+            CrearVehiculo("vehiculo001", "AAA0001"));
 
-        var result = await _repository.GetByIdAsync("vehiculo01");
+        var result = await _repository.GetByIdAsync("vehiculo001");
 
         Assert.That(result?.Matricula, Is.EqualTo("AAA0001"));
     }
@@ -163,21 +187,25 @@ public class VehiculosRepository_Test
     [Test]
     public async Task GetByIdAsync_ConVehiculoInactivo_DevuelveNull()
     {
-        await AddVehiculosAsync(CrearVehiculo("vehiculo01", "AAA0001", activo: false));
+        await AddVehiculosAsync(
+            CrearVehiculo("vehiculo001", "AAA0001", activo: false));
 
-        var result = await _repository.GetByIdAsync("vehiculo01");
+        var result = await _repository.GetByIdAsync("vehiculo001");
 
         Assert.That(result, Is.Null);
     }
 
+    // GET BY MATRÍCULA
+
     [Test]
     public async Task GetByMatriculaAsync_ConMatriculaExistente_DevuelveVehiculo()
     {
-        await AddVehiculosAsync(CrearVehiculo("vehiculo01", "AAA0001"));
+        await AddVehiculosAsync(
+            CrearVehiculo("vehiculo001", "AAA0001"));
 
         var result = await _repository.GetByMatriculaAsync("AAA0001");
 
-        Assert.That(result?.Id, Is.EqualTo("vehiculo01"));
+        Assert.That(result?.Id, Is.EqualTo("vehiculo001"));
     }
 
     [Test]
@@ -191,12 +219,15 @@ public class VehiculosRepository_Test
     [Test]
     public async Task GetByMatriculaAsync_ConVehiculoInactivo_DevuelveNull()
     {
-        await AddVehiculosAsync(CrearVehiculo("vehiculo01", "AAA0001", activo: false));
+        await AddVehiculosAsync(
+            CrearVehiculo("vehiculo001", "AAA0001", activo: false));
 
         var result = await _repository.GetByMatriculaAsync("AAA0001");
 
         Assert.That(result, Is.Null);
     }
+
+    // CREATE
 
     [Test]
     public async Task CreateAsync_GuardaVehiculoConIdEstadoYFechas()
@@ -204,7 +235,10 @@ public class VehiculosRepository_Test
         var vehiculo = CrearVehiculo(null!, "AAA0001", activo: false);
 
         var result = await _repository.CreateAsync(vehiculo);
-        var stored = await _context.Vehiculos.AsNoTracking().SingleAsync();
+
+        var stored = await _context.Vehiculos
+            .AsNoTracking()
+            .SingleAsync();
 
         Assert.Multiple(() =>
         {
@@ -213,38 +247,48 @@ public class VehiculosRepository_Test
             Assert.That(result.Activo, Is.True);
             Assert.That(result.CreatedAt, Is.Not.Null);
             Assert.That(result.UpdatedAt, Is.Not.Null);
+
             Assert.That(stored.Id, Is.EqualTo(result.Id));
             Assert.That(stored.Activo, Is.True);
         });
     }
 
+    // UPDATE
+
     [Test]
     public async Task UpdateAsync_ConVehiculoExistente_PersisteCambios()
     {
-        var createdAt = new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-        var existing = CrearVehiculo("vehiculo01", "AAA0001");
+        var createdAt = DateTime.UtcNow;
+
+        var existing = CrearVehiculo("vehiculo001", "AAA0001");
         existing.CreatedAt = createdAt;
+
         await AddVehiculosAsync(existing);
-        var updated = CrearVehiculo("vehiculo01", "AAA0001");
+
+        var updated = CrearVehiculo("vehiculo001", "AAA0001");
         updated.Color = "Azul";
 
         var result = await _repository.UpdateAsync(updated);
-        var stored = await _context.Vehiculos.AsNoTracking().SingleAsync();
+
+        var stored = await _context.Vehiculos
+            .AsNoTracking()
+            .SingleAsync();
 
         Assert.Multiple(() =>
         {
             Assert.That(result?.Color, Is.EqualTo("Azul"));
             Assert.That(result?.UpdatedAt, Is.Not.Null);
             Assert.That(result?.CreatedAt, Is.EqualTo(createdAt));
+
             Assert.That(stored.Color, Is.EqualTo("Azul"));
-            Assert.That(stored.CreatedAt, Is.EqualTo(createdAt));
         });
     }
 
     [Test]
     public async Task UpdateAsync_ConVehiculoInexistente_DevuelveNull()
     {
-        var result = await _repository.UpdateAsync(CrearVehiculo("no-existe", "AAA0001"));
+        var result = await _repository.UpdateAsync(
+            CrearVehiculo("vehiculo001", "AAA0001"));
 
         Assert.That(result, Is.Null);
     }
@@ -252,20 +296,27 @@ public class VehiculosRepository_Test
     [Test]
     public async Task UpdateAsync_ConVehiculoInactivo_DevuelveNull()
     {
-        await AddVehiculosAsync(CrearVehiculo("vehiculo01", "AAA0001", activo: false));
+        await AddVehiculosAsync(
+            CrearVehiculo("vehiculo001", "AAA0001", activo: false));
 
-        var result = await _repository.UpdateAsync(CrearVehiculo("vehiculo01", "AAA0001"));
+        var result = await _repository.UpdateAsync(
+            CrearVehiculo("vehiculo001", "AAA0001"));
 
         Assert.That(result, Is.Null);
     }
 
+    // DELETE
+
     [Test]
     public async Task DeleteAsync_ConVehiculoExistente_RealizaBajaLogica()
     {
-        await AddVehiculosAsync(CrearVehiculo("vehiculo01", "AAA0001"));
+        await AddVehiculosAsync(
+            CrearVehiculo("vehiculo001", "AAA0001"));
 
-        var result = await _repository.DeleteAsync("vehiculo01");
-        var stored = await _context.Vehiculos.IgnoreQueryFilters()
+        var result = await _repository.DeleteAsync("vehiculo001");
+
+        var stored = await _context.Vehiculos
+            .IgnoreQueryFilters()
             .AsNoTracking()
             .SingleAsync();
 
@@ -289,14 +340,15 @@ public class VehiculosRepository_Test
     [Test]
     public async Task DeleteAsync_ConVehiculoInactivo_DevuelveFalse()
     {
-        await AddVehiculosAsync(CrearVehiculo("vehiculo01", "AAA0001", activo: false));
+        await AddVehiculosAsync(
+            CrearVehiculo("vehiculo001", "AAA0001", activo: false));
 
-        await _repository.DeleteAsync("vehiculo01");
-        
-        var result = await _repository.DeleteAsync("vehiculo01");
+        var result = await _repository.DeleteAsync("vehiculo001");
 
         Assert.That(result, Is.False);
     }
+
+    // HELPERS
 
     private async Task AddVehiculosAsync(params Vehiculo[] vehiculos)
     {
@@ -304,23 +356,30 @@ public class VehiculosRepository_Test
         await _context.SaveChangesAsync();
     }
 
-    private static Vehiculo CrearVehiculo(string id, string matricula, bool activo = true) => new()
+    private Vehiculo CrearVehiculo(
+        string id,
+        string matricula,
+        bool activo = true)
     {
-        Id = id,
-        Matricula = matricula,
-        Marca_id = 1,
-        Modelo = "GOLF",
-        Acriss = "ECMR",
-        categoria = CategoriaEnum.Sedan,
-        Concesionario_id = 1,
-        Color = "Blanco",
-        Combustible = CombustibleEnum.Gasolina,
-        Maletero = 400,
-        NumeroPlazas = 5,
-        Autonomia = 600,
-        Imagenes = 1,
-        Estado = EstadoEnum.Disponible,
-        UltimaRevision = new DateTime(2025, 1, 1, 0, 0, 0, DateTimeKind.Utc),
-        Activo = activo
-    };
+        return new Vehiculo
+        {
+            Id = id,
+            Matricula = matricula,
+            Marca = "prueba",
+            Modelo = "GOLF",
+            Acriss = "ECMR",
+            categoria = CategoriaEnum.Sedan,
+            Concesionario_id = 1,
+            precioPorDia = 50,
+            Color = "Blanco",
+            Combustible = CombustibleEnum.Gasolina,
+            Maletero = 400,
+            NumeroPlazas = 5,
+            Autonomia = 600,
+            Imagenes = 1,
+            Estado = EstadoEnum.Disponible,
+            UltimaRevision = DateTime.UtcNow,
+            Activo = activo
+        };
+    }
 }

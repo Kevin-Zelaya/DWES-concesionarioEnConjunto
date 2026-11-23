@@ -1,4 +1,5 @@
 using APIAlquilerVehiculos.Entities.FluenApi;
+using APIAlquilerVehiculos.Entities.FluentApi;
 using APIAlquilerVehiculos.Models;
 using APIAlquilerVehiculos.Models.Reservas;
 using APIAlquilerVehiculos.Models.Usuarios;
@@ -21,12 +22,16 @@ public class AppDbContext(DbContextOptions<AppDbContext> options)
 	public DbSet<Poliza> Polizas {get; set;}
 	public DbSet<Extra> Extras {get; set;}
 	public DbSet<Recargo> Recargos {get; set;}
+	public DbSet<Pago> Pagos { get; set; }
 	// separar en otro archivo el fluent api
 	
 	//USUARIOS
 	public DbSet<Cliente> Clientes {get; set;}
 	public DbSet<Trabajador> Trabajadores {get; set;}
 	public DbSet<Oficina> Oficinas { get; set; }
+	
+	// Taller
+	public DbSet<Parte> Partes { get; set; }
 	
 	protected override void OnModelCreating(ModelBuilder modelBuilder)
 	{
@@ -37,6 +42,9 @@ public class AppDbContext(DbContextOptions<AppDbContext> options)
 		VehiculoYRelacionadosConfig.EntityConfigure(modelBuilder);
 		ReservaYRelacionadosConfigure.EntityConfigure(modelBuilder);
 		UsuarioYRelacionadosConfig.EntityConfigure(modelBuilder);
+		
+		// Taller
+		ParteConfig.EntityConfigure(modelBuilder);
 
 		//TABLAS DE IDENTITY POR DEFECTO
 		modelBuilder.Entity<IdentityUserClaim<long>>().ToTable("user_claims");

@@ -64,6 +64,16 @@ public class VehiculoRepository : IVehiculosRepository
         return await _context.Vehiculos.AsNoTracking().FirstOrDefaultAsync(v => v.Id == id && v.Activo == true);
     }
 
+    public async Task<List<Vehiculo>> GetByCategoriaAsync(
+        CategoriaEnum categoria,
+        CancellationToken ct = default)
+    {
+        return await _context.Vehiculos
+            .AsNoTracking()
+            .Where(v => v.categoria == categoria && v.Activo)
+            .ToListAsync(ct);
+}
+
     /// <inheritdoc cref="GetByMatriculaAsync"/>
     public async Task<Vehiculo?> GetByMatriculaAsync(string matricula)
     {
@@ -85,14 +95,22 @@ public class VehiculoRepository : IVehiculosRepository
     }
 
     /// <inheritdoc cref="UpdateAsync"/>
+    /// <inheritdoc cref="UpdateAsync"/>
     public async Task<Vehiculo?> UpdateAsync(Vehiculo obj)
     {
-        var response = await _context.Vehiculos.FirstOrDefaultAsync(v=> v.Id == obj.Id && v.Activo == true); 
-        if (response == null) return null;
+        var response = await _context.Vehiculos
+            .FirstOrDefaultAsync(v => v.Id == obj.Id && v.Activo);
 
-        obj.UpdatedAt = DateTime.Now;
+        if (response == null)
+            return null;
+
+        var createdAt = response.CreatedAt;
+
         _context.Entry(response).CurrentValues.SetValues(obj);
-        await _context.SaveChangesAsync();
+
+        response.CreatedAt = createdAt;
+        response.UpdatedAt = DateTime.UtcNow;
+
         await _context.SaveChangesAsync();
 
         return response;
@@ -127,5 +145,36 @@ public class VehiculoRepository : IVehiculosRepository
         await _context.SaveChangesAsync();
 
         return true;
+    }
+
+    public async Task<Vehiculo?> UpdateEstadoAsync(
+        string id,
+        EstadoEnum estado,
+        CancellationToken ct = default)
+    {
+        var vehiculo = await _context.Vehiculos
+            .FirstOrDefaultAsync(v => v.Id == id, ct);
+
+        if (vehiculo is null)
+            return null;
+
+        vehiculo.Estado = estado;
+
+        await _context.SaveChangesAsync(ct);
+
+        return vehiculo;
+    }
+
+    public async Task BloquearVehiculoAsync(
+        string vehiculoId,
+        CancellationToken ct = default)
+    {
+        await _context.Vehiculos
+            .FromSqlInterpolated(
+                $"SELECT * FROM \"Vehiculos\" WHERE \"Id\" = {vehiculoId} FOR UPDATE")
+            .IgnoreQueryFilters()
+            .AsNoTracking()
+            .Select(v => v.Id)
+            .FirstOrDefaultAsync(ct);
     }
 }

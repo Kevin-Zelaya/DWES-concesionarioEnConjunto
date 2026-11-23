@@ -18,8 +18,10 @@ public static class VehiculoYRelacionadosConfig
 
             // Identificador generado por el servidor
             entity.Property(v => v.Id).HasValueGenerator<YoutubeIdValueGenerator>().ValueGeneratedOnAdd().HasMaxLength(11);
-
-            // Matrícula única
+            entity.HasOne(v => v.Marca)
+                .WithMany()
+                .HasForeignKey(v => v.MarcaId)
+                .OnDelete(DeleteBehavior.Restrict);            // Matrícula única
             entity.HasIndex(v => v.Matricula).IsUnique();
 
             entity.Property(v => v.Matricula).IsRequired().HasMaxLength(7);
@@ -61,10 +63,6 @@ public static class VehiculoYRelacionadosConfig
             // Fecha de revisión
             entity.Property(v => v.UltimaRevision).IsRequired();
 
-            // Relaciones
-            entity.HasOne<Marca>()
-                .WithMany()
-                .HasForeignKey(v => v.Marca_id).OnDelete(DeleteBehavior.Restrict); // no se elimina en cascada
         });
 
         // ==========================================

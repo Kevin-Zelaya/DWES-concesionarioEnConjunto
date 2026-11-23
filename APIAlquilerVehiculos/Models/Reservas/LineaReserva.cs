@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using APIAlquilerVehiculos.Models.Reservas;
 
 /// <summary>
@@ -15,6 +16,7 @@ public class LineaReserva
    /// <summary> fk de reserva, así para poder agregar mismo
    /// concepto pero con diferente precio por día </summary>
    public long ReservaId{get; set;}
+   [JsonIgnore]
    public Reserva Reserva { get; set; } = null!;
    
    /// <summary> Referencia al nombre pero no con fk </summary>
@@ -26,11 +28,11 @@ public class LineaReserva
    public TipoPrecio TipoPrecio {get; set;}
    public decimal Subtotal {get; set;}
    // Evita el delegar este calculo al servicio
-   public void CalcularSubtotal(int dias)
+   public void CalcularSubtotal()
     {
         Subtotal = TipoPrecio switch
         {
-            TipoPrecio.Diario => PrecioUnitario * Cantidad * dias,
+            TipoPrecio.Diario => PrecioUnitario * Cantidad,
             TipoPrecio.Unico => PrecioUnitario * Cantidad,
             _ => 0m
         };

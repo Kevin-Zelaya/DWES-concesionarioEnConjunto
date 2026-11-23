@@ -5,7 +5,7 @@ public record ReservaDto(
     long Id,
     string CodigoRefencia,
     long ClienteId,
-    long TrabajadorId,
+    long? TrabajadorId,
     CategoriaEnum Categoria,
     string VehiculoId,
     DateTime FechaCreacion,
@@ -15,7 +15,6 @@ public record ReservaDto(
     Estado Estado,
     List<LineaReservaDto> Lineas,
     decimal PrecioTotal,
-    long? PagoId,
     string? Notas
 );
 

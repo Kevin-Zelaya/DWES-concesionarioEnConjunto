@@ -23,8 +23,8 @@ public class Vehiculo
     /// <summary>
     /// Identificador de la marca del vehículo.
     /// </summary>
-    public long Marca_id { get; set; }
-
+    public long MarcaId { get; set; }
+    public Marca Marca { get; set; } = null!;
     /// <summary>
     /// Establece el identificador del modelo del vehículo.
     /// </summary>

@@ -5,7 +5,7 @@ public static class ReservasMappers
 
     public static Reserva ToEntity(
         this ReservaCreateRequestDto dto,
-        long trabajadorId)
+        long? trabajadorId)
     {
         return new Reserva
         {
@@ -52,7 +52,6 @@ public static class ReservasMappers
             reserva.Estado,
             reserva.Lineas.Select(l => l.ToDto()).ToList(),
             reserva.PrecioTotal,
-            reserva.PagoId,
             reserva.Notas
         );
     }

@@ -14,7 +14,6 @@ public record ClienteFilterDto
     [SwaggerSchema(Description = "Apellidos del funko", Nullable = true)]
     public string? Apellidos  { get; init; } 
     
-
     [EmailAddress(ErrorMessage = "El formato del email no es válido")] 
     [StringLength(255, MinimumLength = 2, ErrorMessage = "Los apellidos del ciente no puede superar los 255 caracteres y debe ser superior a 2")]
     [SwaggerSchema(Description = "Email del cliente", Nullable = true)]

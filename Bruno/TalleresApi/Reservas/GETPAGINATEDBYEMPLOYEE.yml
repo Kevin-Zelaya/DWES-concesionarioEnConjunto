@@ -1,0 +1,16 @@
+info:
+  name: GETPAGINATEDBYEMPLOYEE
+  type: http
+  seq: 6
+
+http:
+  method: GET
+  url: http://{{host}}:{{port}}/api/reservas/trabajador/3
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false

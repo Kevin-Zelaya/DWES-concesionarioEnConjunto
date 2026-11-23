@@ -21,7 +21,7 @@ public class ReservaYRelacionadosConfigure
 
             entity.HasIndex(r => r.CodigoRefencia)
                 .IsUnique();
-            entity.Property(v => v.CodigoRefencia).HasValueGenerator<CodigoReferenciaGenerator>().ValueGeneratedOnAdd().HasMaxLength(6);
+            entity.Property(r => r.CodigoRefencia).HasValueGenerator<CodigoReferenciaGenerator>().ValueGeneratedOnAdd().HasMaxLength(6);
             // Relación con vehículo
             entity.HasOne(r => r.Vehiculo)
                 .WithMany()
@@ -38,13 +38,6 @@ public class ReservaYRelacionadosConfigure
             entity.HasOne<Trabajador>()
                 .WithMany()
                 .HasForeignKey(r => r.TrabajadorId)
-                .OnDelete(DeleteBehavior.Restrict);
-
-            // Relación con pago
-            entity.HasOne(r => r.Pago)
-                .WithOne()
-                .HasForeignKey<Reserva>(r => r.PagoId)
-                .IsRequired(false)
                 .OnDelete(DeleteBehavior.Restrict);
 
             // Categoría de vehículo solicitada
@@ -233,6 +226,7 @@ public class ReservaYRelacionadosConfigure
         // ==========================================
         // PAGOS
         // ==========================================
+       
         modelbuilder.Entity<Pago>(entity =>
         {
             entity.HasKey(p => p.Id);
@@ -240,33 +234,48 @@ public class ReservaYRelacionadosConfigure
             entity.Property(p => p.Id)
                 .ValueGeneratedOnAdd();
 
-            entity.Property(p => p.Importe)
-                .IsRequired();
+            entity.HasOne(p => p.Reserva)
+                .WithMany(r => r.Pagos)
+                .HasForeignKey(p => p.ReservaId)
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
 
-            // Divisa por defecto EUR
+            entity.Property(p => p.Importe)
+                .IsRequired()
+                .HasPrecision(10, 2);
+
             entity.Property(p => p.Divisa)
                 .IsRequired()
                 .HasMaxLength(3)
                 .HasDefaultValue("EUR");
 
-            // Estado del pago
             entity.Property(p => p.Estado)
                 .IsRequired()
                 .HasConversion<string>();
 
-            // Marca de la tarjeta
             entity.Property(p => p.MarcaTarjeta)
                 .IsRequired()
                 .HasConversion<string>();
 
-            // Últimos dígitos de la tarjeta
-            entity.Property(p => p.UltimosDigito)
-                .IsRequired(false)
+            entity.Property(p => p.Fecha)
+                .IsRequired()
+                .HasColumnType("timestamp with time zone");
+
+            entity.Property(p => p.UltimosCuatroDigitos)
+                .IsRequired()
                 .HasMaxLength(4);
 
-            // Número de tarjeta cifrado
             entity.Property(p => p.TarjetaCifrada)
-                .IsRequired(false);
+                .IsRequired();
+
+            entity.Property(p => p.ReferenciaPasarela)
+                .IsRequired()
+                .HasMaxLength(150);
+
+            entity.HasIndex(p => p.ReservaId);
+            entity.HasIndex(p => p.ReferenciaPasarela)
+                .IsUnique();
         });
+
     }
 }

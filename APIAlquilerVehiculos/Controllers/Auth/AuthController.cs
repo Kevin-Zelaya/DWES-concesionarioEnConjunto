@@ -77,6 +77,7 @@ public class AuthController (IAuthService authService, ILogger<AuthController> l
     )]
     [SwaggerResponse(200, "Datos del usuario y fecha de creación y de inicio de sesión", typeof(UsuarioResponseDto))]
     [SwaggerResponse(404, "Usuario no encontrado")]
+    [SwaggerResponse(401, "Usuario no autorizado")]
     public async Task<ActionResult<UsuarioResponseDto>> GetCurrentUser()
     {
         var result = await authService.GetCurrentUserAsync(User);
