@@ -133,19 +133,12 @@ public class ClientesRepositoryTest
     #region FindAllPagedAsync
 
     [Test]
-    public async Task FindAllPagedAsync_Devuelve_Clientes_Activos_EsNull()
+    public async Task FindAllPagedAsync_Devuelve_Clientes_Activos_PorDefecto()
     {
-        var filter = new ClienteFilterDto
-        {
-            IsActivo = null,
-            Page = 0,
-            Size = 10,
-            SortBy = "id",
-            Direction = "asc"
-        };
+        // Act
+        var (items, totalCount) = await _repository.FindAllPagedAsync(1, 10);
 
-        var (items, totalCount) = await _repository.FindAllPagedAsync(filter);
-
+        // Assert
         totalCount.Should().Be(2);
         items.Should().HaveCount(2);
         items.Should().OnlyContain(c => c.IsActivo);
@@ -153,200 +146,62 @@ public class ClientesRepositoryTest
     }
 
     [Test]
-    public async Task FindAllPagedAsync_Devuelve_Clientes_SiInactivos()
+    public async Task FindAllPagedAsync_Devuelve_Todos_Clientes_Incluyendo_Inactivos()
     {
-        var filter = new ClienteFilterDto
-        {
-            IsActivo = false,
-            Page = 0,
-            Size = 10,
-            SortBy = "id",
-            Direction = "asc"
-        };
+        // Act
+        var (items, totalCount) = await _repository.FindAllPagedAsync(1, 10, incluirInactivos: true);
 
-        var (items, totalCount) = await _repository.FindAllPagedAsync(filter);
-
-        totalCount.Should().Be(1);
-        items.Should().ContainSingle();
-        items[0].Nombre.Should().Be("Carlos");
-        items[0].IsActivo.Should().BeFalse();
+        // Assert
+        totalCount.Should().Be(3);
+        items.Should().HaveCount(3);
+        items.Should().Contain(c => !c.IsActivo && c.Nombre == "Carlos");
     }
 
     [Test]
-    public async Task FindAllPagedAsync_Devuelve_Clientes_SiActivos()
+    public async Task FindAllPagedAsync_Devuelve_Clientes_Ordenados_Por_Apellidos_Y_Nombre()
     {
-        var filter = new ClienteFilterDto
-        {
-            IsActivo = true,
-            Page = 0,
-            Size = 10,
-            SortBy = "id",
-            Direction = "asc"
-        };
+        // Act (En SeedData: Ana García Ruiz, Juan Pérez López)
+        var (items, totalCount) = await _repository.FindAllPagedAsync(1, 10, incluirInactivos: false);
 
-        var (items, totalCount) = await _repository.FindAllPagedAsync(filter);
-
+        // Assert
         totalCount.Should().Be(2);
-        items.Should().HaveCount(2);
-    }
-
-    [Test]
-    public async Task FindAllPagedAsync_Devuelve_Clientes_Filtrados_Nombre()
-    {
-        var filter = new ClienteFilterDto
-        {
-            Nombre = "Juan",
-            Page = 0,
-            Size = 10,
-            SortBy = "id",
-            Direction = "asc"
-        };
-
-        var (items, totalCount) = await _repository.FindAllPagedAsync(filter);
-
-        totalCount.Should().Be(1);
-        items[0].Nombre.Should().Be("Juan");
-    }
-
-    [Test]
-    public async Task FindAllPagedAsync_Devuelve_Clientes_Filtrados_Apellidos()
-    {
-        var filter = new ClienteFilterDto
-        {
-            Apellidos = "García",
-            Page = 0,
-            Size = 10,
-            SortBy = "id",
-            Direction = "asc"
-        };
-
-        var (items, totalCount) = await _repository.FindAllPagedAsync(filter);
-
-        totalCount.Should().Be(1);
         items[0].Apellidos.Should().Be("García Ruiz");
+        items[1].Apellidos.Should().Be("Pérez López");
     }
 
     [Test]
-    public async Task FindAllPagedAsync_Devuelve_Clientes_Filtrados_Email()
+    public async Task FindAllPagedAsync_Devuelve_Primera_Pagina_Con_Tamano_Pagina()
     {
-        var filter = new ClienteFilterDto
-        {
-            Email = "ana.garcia@test.com",
-            Page = 0,
-            Size = 10,
-            SortBy = "id",
-            Direction = "asc"
-        };
+        // Act
+        var (items, totalCount) = await _repository.FindAllPagedAsync(1, 1, incluirInactivos: false);
 
-        var (items, totalCount) = await _repository.FindAllPagedAsync(filter);
-
-        totalCount.Should().Be(1);
-        items[0].Usuario.Email.Should().Be("ana.garcia@test.com");
-    }
-
-    [Test]
-    public async Task FindAllPagedAsync_Devuelve_ListaVacia_Ningun_Cliente_Coincide_Filtros()
-    {
-        var filter = new ClienteFilterDto
-        {
-            Nombre = "NoExisteEsteNombre",
-            Page = 0,
-            Size = 10,
-            SortBy = "id",
-            Direction = "asc"
-        };
-
-        var (items, totalCount) = await _repository.FindAllPagedAsync(filter);
-
-        totalCount.Should().Be(0);
-        items.Should().BeEmpty();
-    }
-
-    [Test]
-    public async Task FindAllPagedAsync_Devuelve_Clientes_Nombre_Ascendente()
-    {
-        var filter = new ClienteFilterDto
-        {
-            Page = 0,
-            Size = 10,
-            SortBy = "nombre",
-            Direction = "asc"
-        };
-
-        var (items, _) = await _repository.FindAllPagedAsync(filter);
-
-        items[0].Nombre.Should().Be("Ana");
-        items[1].Nombre.Should().Be("Juan");
-    }
-
-    [Test]
-    public async Task FindAllPagedAsync_Devuelve_Clientes_Apellidos_Descendente()
-    {
-        var filter = new ClienteFilterDto
-        {
-            Page = 0,
-            Size = 10,
-            SortBy = "apellidos",
-            Direction = "desc"
-        };
-
-        var (items, _) = await _repository.FindAllPagedAsync(filter);
-
-        items[0].Apellidos.Should().Be("Pérez López");
-        items[1].Apellidos.Should().Be("García Ruiz");
-    }
-
-    [Test]
-    public async Task FindAllPagedAsync_Devuelve_Clientes_Email_Descendente()
-    {
-        var filter = new ClienteFilterDto
-        {
-            Page = 0,
-            Size = 10,
-            SortBy = "email",
-            Direction = "desc"
-        };
-
-        var (items, _) = await _repository.FindAllPagedAsync(filter);
-
-        items[0].IdUsuario.Should().Be(2);
-        items[1].IdUsuario.Should().Be(1);
-    }
-
-    [Test]
-    public async Task FindAllPagedAsync_Devuelve_Primera_PaginaCon_TamanoPagina()
-    {
-        var filter = new ClienteFilterDto
-        {
-            Page = -1, // Se ajusta a 0
-            Size = 1,
-            SortBy = "id",
-            Direction = "asc"
-        };
-
-        var (items, totalCount) = await _repository.FindAllPagedAsync(filter);
-
+        // Assert
         totalCount.Should().Be(2);
         items.Should().ContainSingle();
-        items[0].Id.Should().Be(1);
+        items[0].Apellidos.Should().Be("García Ruiz");
     }
 
     [Test]
     public async Task FindAllPagedAsync_Devuelve_Segunda_Pagina_Correctamente()
     {
-        var filter = new ClienteFilterDto
-        {
-            Page = 1,
-            Size = 1,
-            SortBy = "id",
-            Direction = "asc"
-        };
+        // Act
+        var (items, totalCount) = await _repository.FindAllPagedAsync(2, 1, incluirInactivos: false);
 
-        var (items, totalCount) = await _repository.FindAllPagedAsync(filter);
-
+        // Assert
         totalCount.Should().Be(2);
         items.Should().ContainSingle();
-        items[0].Id.Should().Be(2);
+        items[0].Apellidos.Should().Be("Pérez López");
+    }
+
+    [Test]
+    public async Task FindAllPagedAsync_Devuelve_Lista_Vacia_Cuando_Pagina_Supera_Resultados()
+    {
+        // Act
+        var (items, totalCount) = await _repository.FindAllPagedAsync(10, 10, incluirInactivos: false);
+
+        // Assert
+        totalCount.Should().Be(2);
+        items.Should().BeEmpty();
     }
 
     #endregion
@@ -486,44 +341,66 @@ public class ClientesRepositoryTest
     public async Task UpdatePartialAsync_Devuelve_Cliente_Reactivado_Cuando_Cliente_Estaba_Inactivo()
     {
         // Arrange
-        var clienteInactivo = await _db.Clientes
-            .IgnoreQueryFilters()
-            .FirstAsync(c => c.Id == 3);
+        const long clienteId = 3;
 
         // Act
-        var result = await _repository.UpdatePartialAsync(clienteInactivo);
+        var result = await _repository.UpdatePartialAsync(clienteId);
 
         // Assert
         result.Should().NotBeNull();
-        result!.Id.Should().Be(3);
+        result!.Id.Should().Be(clienteId);
         result.IsActivo.Should().BeTrue();
         result.DeletedAt.Should().BeNull();
         result.UpdatedAt.Should().NotBeNull();
 
         _db.ChangeTracker.Clear();
-        var clienteEnBd = await _db.Clientes.FirstOrDefaultAsync(c => c.Id == 3);
+        var clienteEnBd = await _db.Clientes
+            .IgnoreQueryFilters()
+            .FirstOrDefaultAsync(c => c.Id == clienteId);
+
         clienteEnBd.Should().NotBeNull();
         clienteEnBd!.IsActivo.Should().BeTrue();
         clienteEnBd.DeletedAt.Should().BeNull();
+        clienteEnBd.UpdatedAt.Should().NotBeNull();
     }
 
     [Test]
     public async Task UpdatePartialAsync_Devuelve_Cliente_Actualizado_Cuando_Cliente_Ya_Estaba_Activo()
     {
         // Arrange
-        var clienteActivo = await _db.Clientes.FirstAsync(c => c.Id == 1);
+        const long clienteId = 1;
 
         // Act
-        var result = await _repository.UpdatePartialAsync(clienteActivo);
+        var result = await _repository.UpdatePartialAsync(clienteId);
 
         // Assert
         result.Should().NotBeNull();
-        result!.Id.Should().Be(1);
+        result!.Id.Should().Be(clienteId);
         result.IsActivo.Should().BeTrue();
         result.DeletedAt.Should().BeNull();
         result.UpdatedAt.Should().NotBeNull();
+
+        _db.ChangeTracker.Clear();
+        var clienteEnBd = await _db.Clientes
+            .FirstOrDefaultAsync(c => c.Id == clienteId);
+
+        clienteEnBd.Should().NotBeNull();
+        clienteEnBd!.IsActivo.Should().BeTrue();
+        clienteEnBd.DeletedAt.Should().BeNull();
     }
 
+    [Test]
+    public async Task UpdatePartialAsync_Devuelve_Null_Cuando_Cliente_No_Existe()
+    {
+        // Arrange
+        const long idInexistente = 999999;
+
+        // Act
+        var result = await _repository.UpdatePartialAsync(idInexistente);
+
+        // Assert
+        result.Should().BeNull();
+    }
     #endregion
 
     #region DeleteAsync
@@ -599,10 +476,17 @@ public class ClientesRepositoryTest
     [TestCase(Estado.NoPresentado, false)]
     public async Task TieneReservasVivasAsync_Devuelve_True_Si_Reserva_Esta_Pendiente_Confirmada_EnCurso(Estado estado, bool esperado)
     {
+        var marca = new Marca
+        {
+            Nombre = "Marca Test" // ajusta las propiedades requeridas de Marca
+        };
+        _db.Marcas.Add(marca);
+        await _db.SaveChangesAsync();
+        
         var vehiculo = new Vehiculo
         {
             Id = "deUKZ4KCd9J",
-            MarcaId = 1,
+            MarcaId = marca.Id,
             Modelo = "Corolla",
             Matricula = "1234ABC"
         };
