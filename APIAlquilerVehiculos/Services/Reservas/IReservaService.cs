@@ -37,7 +37,7 @@ public interface IReservaService
     /// </summary>
     /// <param name="ct">Token para cancelar la operación.</param>
     /// <returns>El resultado de la consulta con la lista de reservas o un error de dominio.</returns>
-    Task<Result<List<Reserva>, DomainError>> GetAllReservasAsync(CancellationToken ct = default);
+    Task<Result<List<ReservaDto>, DomainError>> GetAllReservasAsync(CancellationToken ct = default);
 
     /// <summary>
     /// Obtiene las reservas de forma paginada.
@@ -111,4 +111,25 @@ public interface IReservaService
     /// <param name="ct">Token para cancelar la operación.</param>
     /// <returns>El resultado de la comprobación de existencia o un error de dominio.</returns>
     Task<Result<bool, DomainError>> ExistsAsync(long id, CancellationToken ct = default);
+
+    /// <summary>
+    /// Procesa las reservas confirmadas cuyo plazo de recogida ha finalizado
+    /// y que deben marcarse como no presentadas.
+    /// </summary>
+    /// <param name="ct">Token para cancelar la operación.</param>
+    Task ProcesarReservasPendientesAsync(CancellationToken ct = default);
+
+    /// <summary>
+    /// Detecta las reservas en curso cuya fecha de devolución ha vencido
+    /// y registra las incidencias correspondientes.
+    /// </summary>
+    /// <param name="ct">Token para cancelar la operación.</param>
+    Task ProcesarDevolucionesTardiasAsync(CancellationToken ct = default);
+
+    /// <summary>
+    /// Detecta las reservas próximas cuya asignación de vehículo no está disponible
+    /// y registra las incidencias correspondientes.
+    /// </summary>
+    /// <param name="ct">Token para cancelar la operación.</param>
+    Task ProcesarVehiculosNoDisponiblesAsync(CancellationToken ct = default);
 }

@@ -14,7 +14,7 @@ public record ClienteDto (
     [property: SwaggerSchema(Description = "Nombre del cliente")]
     string Nombre,
     
-    [property: SwaggerSchema(Description = "Nombre del cliente")]
+    [property: SwaggerSchema(Description = "Apellidos del cliente")]
     string Apellidos,
     
     [property: SwaggerSchema(Description = "Correo electronico del cliente")]

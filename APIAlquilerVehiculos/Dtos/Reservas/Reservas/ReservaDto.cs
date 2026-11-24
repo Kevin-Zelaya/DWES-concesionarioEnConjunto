@@ -1,3 +1,4 @@
+using APIAlquilerVehiculos.DTOs.Pagos;
 using APIAlquilerVehiculos.Models.Enums;
 using APIAlquilerVehiculos.Models.Reservas;
 
@@ -14,6 +15,7 @@ public record ReservaDto(
     int DiasAlquiler,
     Estado Estado,
     List<LineaReservaDto> Lineas,
+    List<PagoResponse> Pagos,
     decimal PrecioTotal,
     string? Notas
 );

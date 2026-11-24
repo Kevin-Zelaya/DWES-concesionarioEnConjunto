@@ -54,7 +54,9 @@ builder.Services
     .AddServices()
     .AddRepositories()
     .AddAuthenticationConfing(builder.Configuration)
-    .AddRedisConnection(builder.Configuration);
+    .AddBackground()
+    .AddRedisConnection(builder.Configuration)
+    .AddMemoryCache();
 
 builder.Services.AddValidatorsFromAssemblyContaining<Program>();
 builder.Services.AddFluentValidationAutoValidation();
@@ -105,6 +107,14 @@ using (var scope = app.Services.CreateScope())
         scope.ServiceProvider,
         logger,
         1
+    );
+    await CatalogoSeeder.SeedExtrasAsync(
+        scope.ServiceProvider,
+        logger
+    );
+    await CatalogoSeeder.SeedRecargosAsync(
+        scope.ServiceProvider,
+        logger
     );
 }
 //app.UseHttpsRedirection();
