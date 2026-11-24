@@ -1,0 +1,7 @@
+info:
+  name: ObtenerPorId
+  type: folder
+  seq: 2
+
+request:
+  auth: inherit

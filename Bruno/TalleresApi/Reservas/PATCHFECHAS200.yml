@@ -1,0 +1,24 @@
+info:
+  name: PATCHFECHAS200
+  type: http
+  seq: 8
+
+http:
+  method: PATCH
+  url: http://{{host}}:{{port}}/api/reservas/KOMZCU/fechas
+  body:
+    type: json
+    data: |-
+      {
+        "fechaRecogida": "2026-12-28T10:00:00",
+        "fechaDevolucion": "2026-12-30T18:00:00",
+        "rowVersion": 822
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false

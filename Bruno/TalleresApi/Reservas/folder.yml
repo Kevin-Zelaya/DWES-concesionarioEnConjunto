@@ -1,0 +1,9 @@
+info:
+  name: Reservas
+  type: folder
+  seq: 2
+
+request:
+  auth:
+    type: bearer
+    token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIzIiwiZW1haWwiOiJvcGVyYXJpb0BhbHF1aWxlci5jb20iLCJqdGkiOiI4NDgxMDU3Zi1iMTIwLTQ2MTctYTM5MS05MGQ1NjhkMmM0MTYiLCJpYXQiOjE3OTU0NzI3NzcsInJvbGUiOiJPcGVyYXJpbyIsInRpcG9fdHJhYmFqbyI6Ik9wZXJhcmlvIiwibmJmIjoxNzk1NDcyNzc3LCJleHAiOjE3OTU0Nzk5NzcsImlzcyI6IkFscXVpbGVyVmVoaWN1bG9zQXBpIiwiYXVkIjoiQWxxdWlsZXJWZWhpY3Vsb3NDbGllbnQifQ.QonHNcXdVkZ25QpVrNk2eeh42R-CV_hW5yqglZ8n-U0

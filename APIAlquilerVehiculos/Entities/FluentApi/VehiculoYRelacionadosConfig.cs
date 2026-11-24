@@ -1,0 +1,97 @@
+using APIAlquilerVehiculos.Models;
+using APIAlquilerVehiculos.Models.Enums;
+using APIAlquilerVehiculos.Validators.ValueGenerators;
+using Microsoft.EntityFrameworkCore;
+
+namespace APIAlquilerVehiculos.Entities.FluenApi;
+
+public static class VehiculoYRelacionadosConfig
+{
+    public static void EntityConfigure(ModelBuilder modelBuilder)
+    {
+        // ==========================================
+        // VEHICULOS
+        // ==========================================
+        modelBuilder.Entity<Vehiculo>(entity =>
+        {
+            entity.HasKey(v => v.Id);
+
+            // Identificador generado por el servidor
+            entity.Property(v => v.Id).HasValueGenerator<YoutubeIdValueGenerator>().ValueGeneratedOnAdd().HasMaxLength(11);
+            entity.HasOne(v => v.Marca)
+                .WithMany()
+                .HasForeignKey(v => v.MarcaId)
+                .OnDelete(DeleteBehavior.Restrict);            // Matrícula única
+            entity.HasIndex(v => v.Matricula).IsUnique();
+
+            entity.Property(v => v.Matricula).IsRequired().HasMaxLength(7);
+
+            // Código ACRISS
+            entity.Property(v => v.Acriss).IsRequired().HasMaxLength(4);
+
+            // Categoría de negocio
+            entity.Property(v => v.categoria).IsRequired().HasConversion<string>();
+
+            // Características
+            entity.Property(v => v.Color).IsRequired();
+            // se guarda como string no como número
+            entity.Property(v => v.Combustible)
+                .HasConversion<string>()
+                .HasMaxLength(50)
+                .IsRequired();
+
+            entity.Property(v => v.Maletero).IsRequired();
+
+            entity.Property(v => v.NumeroPlazas).IsRequired();
+
+            entity.Property(v => v.Autonomia).IsRequired();
+
+            entity.Property(v => v.Imagenes).IsRequired();
+
+            // Propiedades de control
+            entity.Property(v => v.CreatedAt).HasDefaultValue(null);
+            
+            entity.Property(v => v.UpdatedAt).HasDefaultValue(null);
+
+            entity.Property(v => v.DeletedAt).HasDefaultValue(null);
+            
+            entity.Property(v => v.Activo).HasDefaultValue(true);
+
+            // Estado del vehículo
+            entity.Property(v => v.Estado).IsRequired().HasConversion<string>().HasDefaultValue(EstadoEnum.Disponible);
+
+            // Fecha de revisión
+            entity.Property(v => v.UltimaRevision).IsRequired();
+
+        });
+
+        // ==========================================
+        // MARCAS
+        // ==========================================
+        modelBuilder.Entity<Marca>(entity =>
+        {
+            entity.HasKey(m => m.Id);
+
+            entity.Property(m => m.Id).ValueGeneratedOnAdd();
+
+            entity.Property(m => m.Nombre).IsRequired();
+
+            entity.Property(m => m.Wb).IsRequired();
+
+            // Propiedades de Control
+            entity.Property(m => m.Activo).IsRequired().HasDefaultValue(true);
+
+            entity.Property(m => m.CreatedAt).HasDefaultValue(null);
+            
+            entity.Property(m => m.UpdatedAt).HasDefaultValue(null);
+
+            entity.Property(m => m.DeletedAt).HasDefaultValue(null);
+            
+            // Índice para búsquedas por nombre
+            entity.HasIndex(m => m.Nombre);
+
+            // Filtro de baja lógica
+            entity.HasQueryFilter(m => m.Activo);
+        });
+    }
+}

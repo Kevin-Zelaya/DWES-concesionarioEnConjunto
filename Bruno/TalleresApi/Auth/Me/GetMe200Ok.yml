@@ -1,0 +1,18 @@
+info:
+  name: GetMe200Ok
+  type: http
+  seq: 1
+
+http:
+  method: GET
+  url: "{{baseUrl}}/api/auth/me"
+  auth:
+    type: bearer
+    token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIzIiwiZW1haWwiOiJvcGVyYXJpb0BhbHF1aWxlci5jb20iLCJqdGkiOiJlNjFlZWI4NS03NjBiLTRlNWMtOWQxZC0xYTJkNGJhN2VkZDQiLCJpYXQiOjE3OTUwOTkxMzQsInJvbGUiOiJPcGVyYXJpbyIsInRpcG9fdHJhYmFqbyI6Ik9wZXJhcmlvIiwibmJmIjoxNzk1MDk5MTM0LCJleHAiOjE3OTUxMDAwMzQsImlzcyI6IkFscXVpbGVyVmVoaWN1bG9zQXBpIiwiYXVkIjoiQWxxdWlsZXJWZWhpY3Vsb3NDbGllbnQifQ.iJEULgjLzlLQ2dEZkVlGo8rIYwOmCxItEm20wx2gylk
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false

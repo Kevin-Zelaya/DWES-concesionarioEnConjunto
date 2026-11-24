@@ -1,0 +1,16 @@
+using APIAlquilerVehiculos.Models.Enums;
+
+public record ReservaCreateRequestDto(
+    long ClienteId,
+    CategoriaEnum Categoria,
+    string VehiculoId,
+    DateTime FechaRecogida,
+    DateTime FechaDevolucion,
+    List<LineaReservaCreateRequestDto> Lineas
+);
+
+public record LineaReservaCreateRequestDto(
+    TipoLinea Tipo,
+    long TipoId,
+    int Cantidad
+);
