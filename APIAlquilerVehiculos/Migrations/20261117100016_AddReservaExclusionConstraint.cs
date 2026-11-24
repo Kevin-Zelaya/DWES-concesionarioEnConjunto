@@ -386,7 +386,7 @@ namespace APIAlquilerVehiculos.Migrations
                 ADD CONSTRAINT "EX_Reservas_Vehiculo_Fechas"
                 EXCLUDE USING gist (
                     "VehiculoId" WITH =,
-                    tsrange(
+                    tstzrange(
                         "FechaRecogida",
                         "FechaDevolucion",
                         '[)'

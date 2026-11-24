@@ -1,12 +1,16 @@
 using APIAlquilerVehiculos.Entities;
 using Microsoft.EntityFrameworkCore;
 
+/// <summary>
+/// Implementa las operaciones de acceso a datos para la gestión de pólizas.
+/// </summary>
+/// <param name="context">Contexto de base de datos de la aplicación.</param>
 public class PolizaRepository(AppDbContext context) : IPolizaRepository
 {
     // CREATE
-    public async Task<Poliza> CreateAsync(
-        Poliza poliza,
-        CancellationToken ct = default)
+
+    /// <inheritdoc cref="IPolizaRepository.CreateAsync(Poliza, CancellationToken)"/>
+    public async Task<Poliza> CreateAsync(Poliza poliza, CancellationToken ct = default)
     {
         await context.Polizas.AddAsync(poliza, ct);
         await context.SaveChangesAsync(ct);
@@ -14,16 +18,16 @@ public class PolizaRepository(AppDbContext context) : IPolizaRepository
     }
 
     // READ
-    public async Task<Poliza?> GetByIdAsync(
-        long id,
-        CancellationToken ct = default)
+
+    /// <inheritdoc cref="IPolizaRepository.GetByIdAsync(long, CancellationToken)"/>
+    public async Task<Poliza?> GetByIdAsync(long id, CancellationToken ct = default)
     {
         return await context.Polizas
             .FirstOrDefaultAsync(p => p.Id == id, ct);
     }
 
-    public async Task<List<Poliza>> GetAllAsync(
-        CancellationToken ct = default)
+    /// <inheritdoc cref="IPolizaRepository.GetAllAsync(CancellationToken)"/>
+    public async Task<List<Poliza>> GetAllAsync(CancellationToken ct = default)
     {
         return await context.Polizas
             .AsNoTracking()
@@ -31,10 +35,9 @@ public class PolizaRepository(AppDbContext context) : IPolizaRepository
     }
 
     // UPDATE
-    public async Task<Poliza?> UpdateAsync(
-        long id,
-        Poliza poliza,
-        CancellationToken ct = default)
+
+    /// <inheritdoc cref="IPolizaRepository.UpdateAsync(long, Poliza, CancellationToken)"/>
+    public async Task<Poliza?> UpdateAsync(long id, Poliza poliza, CancellationToken ct = default)
     {
         var existente = await context.Polizas
             .FirstOrDefaultAsync(p => p.Id == id, ct);
@@ -53,9 +56,9 @@ public class PolizaRepository(AppDbContext context) : IPolizaRepository
     }
 
     // DELETE
-    public async Task<bool> DeleteAsync(
-        long id,
-        CancellationToken ct = default)
+
+    /// <inheritdoc cref="IPolizaRepository.DeleteAsync(long, CancellationToken)"/>
+    public async Task<bool> DeleteAsync(long id, CancellationToken ct = default)
     {
         var poliza = await context.Polizas
             .FirstOrDefaultAsync(p => p.Id == id, ct);

@@ -1,4 +1,5 @@
 
+using System.Text.Json.Serialization;
 using APIAlquilerVehiculos.Models.Reservas;
 
 /// <summary>
@@ -19,6 +20,7 @@ public class Pago
     /// <summary>
     /// Reserva a la que pertenece el pago.
     /// </summary>
+    [JsonIgnore]
     public Reserva Reserva { get; set; } = null!;
 
     /// <summary>
