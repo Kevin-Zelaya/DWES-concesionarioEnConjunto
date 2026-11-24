@@ -24,7 +24,7 @@ public class Reserva
     public Estado Estado {get; set;}
     public List<LineaReserva> Lineas {get; set;} = [];
     public decimal PrecioTotal { get; set; }
-    public ICollection<Pago> Pagos { get; set; } = [];
+    public List<Pago> Pagos { get; set; } = [];
     public string? Notas {get; set;}
     // control de concurrencia
     public uint RowVersion {get; set;}

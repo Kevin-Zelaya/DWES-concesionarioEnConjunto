@@ -61,7 +61,7 @@ public class VehiculoRepository : IVehiculosRepository
     /// <inheritdoc cref="GetByIdAsync"/>
     public async Task<Vehiculo?> GetByIdAsync(string id)
     {
-        return await _context.Vehiculos.AsNoTracking().FirstOrDefaultAsync(v => v.Id == id && v.Activo == true);
+        return await _context.Vehiculos.FirstOrDefaultAsync(v => v.Id == id && v.Activo == true);
     }
 
     public async Task<List<Vehiculo>> GetByCategoriaAsync(

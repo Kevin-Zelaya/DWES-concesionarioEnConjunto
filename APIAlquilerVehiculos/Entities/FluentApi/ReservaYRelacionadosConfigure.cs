@@ -48,15 +48,16 @@ public class ReservaYRelacionadosConfigure
             // Fechas
             entity.Property(r => r.FechaCreacion)
                 .IsRequired()
-                .HasDefaultValueSql("CURRENT_TIMESTAMP");
+                .HasDefaultValueSql("CURRENT_TIMESTAMP")
+                .HasColumnType("timestamp with time zone");
 
             entity.Property(r => r.FechaRecogida)
                 .IsRequired()
-                .HasColumnType("timestamp without time zone");
+                .HasColumnType("timestamp with time zone");
 
             entity.Property(r => r.FechaDevolucion)
                 .IsRequired()
-                .HasColumnType("timestamp without time zone");
+                .HasColumnType("timestamp with time zone");
 
             // Estado de la reserva
             entity.Property(r => r.Estado)

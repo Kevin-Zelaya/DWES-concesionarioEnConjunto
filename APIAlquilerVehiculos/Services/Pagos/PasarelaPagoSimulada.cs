@@ -9,11 +9,9 @@ public class PasarelaPagoSimulada : IPasarelaPago
         decimal importe,
         CancellationToken ct = default)
     {
-        bool aprobado = numeroTarjeta == "79927398713";
-
         var resultado = new ResultadoPasarela
         {
-            Aprobado = aprobado,
+            Aprobado = new Random().Next(0, 2) == 1,
             Referencia = Guid.NewGuid().ToString("N")
         };
 

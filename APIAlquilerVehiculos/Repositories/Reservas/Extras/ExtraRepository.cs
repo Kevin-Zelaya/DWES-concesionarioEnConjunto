@@ -1,12 +1,16 @@
 using APIAlquilerVehiculos.Entities;
 using Microsoft.EntityFrameworkCore;
 
+/// <summary>
+/// Implementa las operaciones de acceso a datos para la gestión de extras.
+/// </summary>
+/// <param name="context">Contexto de base de datos de la aplicación.</param>
 public class ExtraRepository(AppDbContext context) : IExtraRepository
 {
     // CREATE
-    public async Task<Extra> CreateAsync(
-        Extra extra,
-        CancellationToken ct = default)
+
+    /// <inheritdoc cref="IExtraRepository.CreateAsync(Extra, CancellationToken)"/>
+    public async Task<Extra> CreateAsync(Extra extra, CancellationToken ct = default)
     {
         await context.Extras.AddAsync(extra, ct);
         await context.SaveChangesAsync(ct);
@@ -14,16 +18,16 @@ public class ExtraRepository(AppDbContext context) : IExtraRepository
     }
 
     // READ
-    public async Task<Extra?> GetByIdAsync(
-        long id,
-        CancellationToken ct = default)
+
+    /// <inheritdoc cref="IExtraRepository.GetByIdAsync(long, CancellationToken)"/>
+    public async Task<Extra?> GetByIdAsync(long id, CancellationToken ct = default)
     {
         return await context.Extras
             .FirstOrDefaultAsync(e => e.Id == id, ct);
     }
 
-    public async Task<List<Extra>> GetAllAsync(
-        CancellationToken ct = default)
+    /// <inheritdoc cref="IExtraRepository.GetAllAsync(CancellationToken)"/>
+    public async Task<List<Extra>> GetAllAsync(CancellationToken ct = default)
     {
         return await context.Extras
             .AsNoTracking()
@@ -31,10 +35,9 @@ public class ExtraRepository(AppDbContext context) : IExtraRepository
     }
 
     // UPDATE
-    public async Task<Extra?> UpdateAsync(
-        long id,
-        Extra extra,
-        CancellationToken ct = default)
+
+    /// <inheritdoc cref="IExtraRepository.UpdateAsync(long, Extra, CancellationToken)"/>
+    public async Task<Extra?> UpdateAsync(long id, Extra extra, CancellationToken ct = default)
     {
         var existente = await context.Extras
             .FirstOrDefaultAsync(e => e.Id == id, ct);
@@ -54,17 +57,20 @@ public class ExtraRepository(AppDbContext context) : IExtraRepository
     }
 
     // DELETE
-    public async Task<bool> DeleteAsync(
-        long id,
-        CancellationToken ct = default)
+
+    /// <inheritdoc cref="IExtraRepository.DeleteAsync(long, CancellationToken)"/>
+    public async Task<bool> DeleteAsync(long id, CancellationToken ct = default)
     {
+        // Buscamos el extra
         var extra = await context.Extras
             .FirstOrDefaultAsync(e => e.Id == id, ct);
 
         if (extra is null)
             return false;
 
-        context.Extras.Remove(extra);
+        // Desactivamos el extra
+        extra.Activa = false;
+
         await context.SaveChangesAsync(ct);
 
         return true;

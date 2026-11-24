@@ -26,7 +26,9 @@ public static class ServiceConfig
         services.AddScoped<IPasarelaPago, PasarelaPagoSimulada>();
         services.AddScoped<IPagoService, PagoService>();
         services.AddScoped<ICifradorTarjeta, CifradorTarjeta>();
-        services.AddScoped<IUsuarioService, UsuarioService>();
+        services.AddSingleton<IncidenciaService>();
+        services.AddScoped<IExtraService, ExtraService>();
+        services.AddScoped<IPolizaService, PolizaService>();
         return services;
     }
 }

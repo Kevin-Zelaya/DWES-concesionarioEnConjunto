@@ -1,11 +1,21 @@
 using APIAlquilerVehiculos.Errors.Common;
 using CSharpFunctionalExtensions;
 
+/// <summary>
+/// Fábrica encargada de crear las líneas de reserva según su tipo.
+/// Obtiene los datos de pólizas, extras y recargos desde sus respectivos repositorios.
+/// </summary>
 public class LineaReservaFactory(
     IPolizaRepository polizaRepository,
     IExtraRepository extraRepository,
     IRecargoRepository recargoRepository) : ILineaReservaFactory
 {
+    /// <summary>
+    /// Crea una línea de reserva según el tipo indicado en la solicitud.
+    /// </summary>
+    /// <param name="request">Datos necesarios para crear la línea de reserva.</param>
+    /// <param name="ct">Token para cancelar la operación.</param>
+    /// <returns>Resultado con la línea creada o el error producido.</returns>
     public async Task<Result<LineaReserva, DomainError>> CreateAsync(
         LineaReservaCreateRequestDto request,
         CancellationToken ct = default)

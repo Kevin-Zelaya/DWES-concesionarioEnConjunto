@@ -1,20 +1,20 @@
 using System.Data;
 using APIAlquilerVehiculos.Entities;
 using APIAlquilerVehiculos.Models;
+using APIAlquilerVehiculos.Models.Enums;
 using APIAlquilerVehiculos.Models.Reservas;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Serilog;
 
-public class ReservaRepository(
-    AppDbContext _context
-) : IReservaRepository
+/// <summary>
+/// Implementación de <see cref="IReservaRepository"/> para gestionar las operaciones de acceso a datos de las reservas.
+/// </summary>
+public class ReservaRepository(AppDbContext _context) : IReservaRepository
 {
-
-
     /// ======================
     /// CREATE
     /// ======================
+    /// <inheritdoc cref="IReservaRepository.CreateAsync(Reserva, CancellationToken)"/>
     public async Task<Reserva> CreateAsync(
         Reserva reserva,
         CancellationToken ct = default)
@@ -27,10 +27,13 @@ public class ReservaRepository(
     /// ======================
     /// READ
     /// ======================
+    /// <inheritdoc cref="IReservaRepository.GetReservaByCodigoReferenciaAsync(string, CancellationToken)"/>
     public async Task<Reserva?> GetReservaByCodigoReferenciaAsync(string codigo, CancellationToken ct = default)
     {
         return await _context.Reservas
             .Include(r => r.Lineas)
+            .Include(r => r.Pagos)
+            .Include(r => r.Vehiculo)
             .FirstOrDefaultAsync(r => r.CodigoRefencia == codigo);
     }
     /// <inheritdoc cref="IReservaRepository.GetByIdAsync(long, CancellationToken)"/>
@@ -40,6 +43,8 @@ public class ReservaRepository(
     {
         return await _context.Reservas
             .Include(r => r.Lineas)
+            .Include(r => r.Pagos)
+            .Include(r => r.Vehiculo)
             .FirstOrDefaultAsync(r => r.Id == id, ct);
     }
     /// <inheritdoc cref="IReservaRepository.GetPaginatedReservasAsync(int, int, CancellationToken)"/>
@@ -61,14 +66,12 @@ public class ReservaRepository(
         return await GetPaginatedReservasAsync(pageNumber, pageSize, id, true, ct);
     }
     /// <summary>
-    /// Privado, pertmite reutilzar la lógica del paginado
+    /// Actualiza una reserva aplicando el control de concurrencia mediante RowVersion.
     /// </summary>
-    /// <param name="pageNumber"></param>
-    /// <param name="pageSize"></param>
-    /// <param name="id"></param>
-    /// <param name="isEmployee"></param>
-    /// <param name="ct"></param>
-    /// <returns></returns>
+    /// <param name="reserva">Reserva que se desea actualizar.</param>
+    /// <param name="rowVersion">Versión original de la reserva para comprobar la concurrencia.</param>
+    /// <param name="ct">Token para cancelar la operación.</param>
+    /// <returns>La reserva actualizada.</returns>
     private async Task<(List<Reserva> items, int count, int totalPages, bool HasPreviousPage, bool HasNextPage)> GetPaginatedReservasAsync
     (int pageNumber, int pageSize, long id = 0, bool isEmployee = true, CancellationToken ct = default)
     {
@@ -108,12 +111,14 @@ public class ReservaRepository(
     {
         return await _context.Reservas
             .AsNoTracking()
+            .Include(r => r.Lineas)
+            .Include(r => r.Pagos)
             .ToListAsync(ct);
     }
-    /// <inheritdoc cref="IReservaRepository.UpdateAsync(Reserva, CancellationToken)"/>
     /// ======================
     /// UPDATE
     /// ======================
+    /// <inheritdoc cref="IReservaRepository.UpdateNotaAsync(string, ReservaUpdateNotaRequestDto, CancellationToken)"/>
     public async Task<Reserva?> UpdateNotaAsync(
         string CodigoReferencia,
         ReservaUpdateNotaRequestDto request,
@@ -161,13 +166,12 @@ public class ReservaRepository(
         return await UpdateAsync(response, request.RowVersion, ct);
     }
     /// <summary>
-    /// Metodo reutilizable que permite definir aqui el control de concurrencia
-    /// para reutilizarlo en todos lus update
+    /// Actualiza una reserva aplicando el control de concurrencia mediante RowVersion.
     /// </summary>
-    /// <param name="Reserva"></param>
-    /// <param name="RowVersion"></param>
-    /// <param name="ct"></param>
-    /// <returns></returns>
+    /// <param name="reserva">Reserva que se desea actualizar.</param>
+    /// <param name="rowVersion">Versión original de la reserva para comprobar la concurrencia.</param>
+    /// <param name="ct">Token para cancelar la operación.</param>
+    /// <returns>La reserva actualizada.</returns>
     private async Task<Reserva> UpdateAsync(
         Reserva Reserva,
         uint RowVersion,
@@ -183,7 +187,7 @@ public class ReservaRepository(
                 .Reference(r => r.Vehiculo)
                 .LoadAsync();
         }
-        catch (DBConcurrencyException)
+        catch (DbUpdateConcurrencyException)
         {
             Log.Error("[REPOSITORY-UPDATE] Error de concurrencia, al actualizar la reserva con codigó de referencia: {cr}", Reserva.CodigoRefencia);
             throw;
@@ -204,6 +208,7 @@ public class ReservaRepository(
     /// Comprueba si un vehículo tiene alguna reserva que se solape
     /// con el rango de fechas indicado.
     /// </summary>
+    /// <inheritdoc cref="IReservaRepository.ExistsReservaSolapadaAsync(string, DateTime, DateTime, long?, CancellationToken)"/>
     public async Task<bool> ExistsReservaSolapadaAsync(
         string vehiculoId,
         DateTime fechaRecogida,
@@ -229,6 +234,7 @@ public class ReservaRepository(
     /// =======================
     /// AUXILIAR
     /// =======================
+    /// <inheritdoc cref="IReservaRepository.GetOficinaById(long, CancellationToken)"/>
     public async Task<Oficina?> GetOficinaById(
         long id,
         CancellationToken ct = default)
@@ -237,7 +243,7 @@ public class ReservaRepository(
             .AsNoTracking()
             .FirstOrDefaultAsync(o => o.Id == id);
     }
-
+    /// <inheritdoc cref="IReservaRepository.ExistsReservasActivasAsync(string, long, CancellationToken)"/>
     public async Task<bool> ExistsReservasActivasAsync(
         string vehiculoId,
         long reservaIdExcluir,
@@ -254,5 +260,45 @@ public class ReservaRepository(
                     r.Estado == Estado.EnCurso
                 ),
                 ct);
+    }
+    /// <inheritdoc cref="IReservaRepository.GetReservasNoPresentadasAsync(DateTime, CancellationToken)"/>
+    public async Task<List<Reserva>> GetReservasNoPresentadasAsync(
+        DateTime fecha,
+        CancellationToken ct = default)
+    {
+        return await _context.Reservas
+            .AsNoTracking()
+            .Where(r =>
+                r.Estado == Estado.Confirmada &&
+                r.FechaRecogida < fecha)
+            .ToListAsync(ct);
+    }
+    /// <inheritdoc cref="IReservaRepository.GetReservasConDevolucionTardiaAsync(DateTime, CancellationToken)"/>
+    public async Task<List<Reserva>> GetReservasConDevolucionTardiaAsync(
+        DateTime fecha,
+        CancellationToken ct = default)
+    {
+        return await _context.Reservas
+            .AsNoTracking()
+            .Where(r => r.Estado == Estado.EnCurso &&
+                        r.FechaDevolucion < fecha)
+            .ToListAsync(ct);
+    }
+    /// <inheritdoc cref="IReservaRepository.GetReservasConVehiculoNoDisponibleAsync(DateTime, DateTime, CancellationToken)"/>
+    public async Task<List<Reserva>> GetReservasConVehiculoNoDisponibleAsync(
+        DateTime fechaInicio,
+        DateTime fechaFin,
+        CancellationToken ct = default)
+    {
+        
+        return await _context.Reservas
+        .AsNoTracking()
+        .Include(r => r.Vehiculo)
+        .Where(r => r.Estado == Estado.Confirmada &&
+                    r.Vehiculo != null &&
+                    r.Vehiculo.Estado == EstadoEnum.EnAlquiler &&
+                    r.FechaRecogida >= fechaInicio &&
+                    r.FechaRecogida <= fechaFin)
+        .ToListAsync(ct);
     }
 }

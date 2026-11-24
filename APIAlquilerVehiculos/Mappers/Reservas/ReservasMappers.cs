@@ -51,6 +51,7 @@ public static class ReservasMappers
             reserva.CalcularDiasAlquiler(),
             reserva.Estado,
             reserva.Lineas.Select(l => l.ToDto()).ToList(),
+            reserva.Pagos.Select(l => l.ToResponse()).ToList(),
             reserva.PrecioTotal,
             reserva.Notas
         );

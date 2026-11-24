@@ -2,6 +2,7 @@
 using APIAlquilerVehiculos.DTOs.Pagos;
 using APIAlquilerVehiculos.Errors.Common;
 using APIAlquilerVehiculos.Errors.Pagos;
+using APIAlquilerVehiculos.Models.Enums;
 using APIAlquilerVehiculos.Models.Reservas;
 using APIAlquilerVehiculos.Repositories.Pagos;
 using CSharpFunctionalExtensions;
@@ -11,7 +12,8 @@ namespace APIAlquilerVehiculos.Services.Pagos;
 public class PagoService(
     IPagoRepository _repository,
     IPasarelaPago _pasarela,
-    ICifradorTarjeta _cifrador
+    ICifradorTarjeta _cifrador,
+    IReservaService _ReservaService
 ) : IPagoService
 {
     public async Task<Result<PagoResponse, DomainError>> CrearPagoAsync(
@@ -50,7 +52,13 @@ public class PagoService(
         };
 
         if (resultado.Aprobado)
-            reserva.Estado = Estado.Confirmada;
+        {
+            await _ReservaService.UpdateStatusAsync(reserva.CodigoRefencia, new ReservaUpdateStatusRequestDto(
+                Estado: Estado.Confirmada,
+                RowVersion: reserva.RowVersion
+            ),
+            ct);
+        }
 
         await _repository.AddPagoAsync(pago, ct);
 
