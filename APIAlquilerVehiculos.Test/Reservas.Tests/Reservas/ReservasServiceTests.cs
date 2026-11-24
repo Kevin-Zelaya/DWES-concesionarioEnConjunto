@@ -1,14 +1,14 @@
-
-using APIAlquilerVehiculos.Tests.Infrastructure;
-using Microsoft.Extensions.DependencyInjection;
 using APIAlquilerVehiculos.Entities;
-using Microsoft.EntityFrameworkCore;
+using APIAlquilerVehiculos.Models;
 using APIAlquilerVehiculos.Models.Enums;
 using APIAlquilerVehiculos.Models.Reservas;
-using APIAlquilerVehiculos.Models;
 using APIAlquilerVehiculos.Models.Usuarios;
+using APIAlquilerVehiculos.Test.Infraestructure;
+using APIAlquilerVehiculos.Tests.Infrastructure;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 
-namespace APIAlquilerVehiculos.Tests.Services;
+namespace APIAlquilerVehiculos.Test.Reservas.Tests.Reservas;
 
 [TestFixture]
 public class ReservaServiceTests

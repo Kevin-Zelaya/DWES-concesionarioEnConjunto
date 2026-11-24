@@ -51,7 +51,7 @@ builder.Services.AddControllers(options =>
 // ======= Infraestructura ==========
 builder.Services
     .AddDatabases(builder.Configuration)
-    .AddServices()
+    .AddServices(builder.Configuration)
     .AddRepositories()
     .AddAuthenticationConfing(builder.Configuration)
     .AddBackground()

@@ -1,11 +1,8 @@
 using APIAlquilerVehiculos.Entities;
-using APIAlquilerVehiculos.Services;
-using APIAlquilerVehiculos.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 
-namespace APIAlquilerVehiculos.Tests.Infrastructure;
+namespace APIAlquilerVehiculos.Test.Infraestructure;
 
 public static class TestServices
 {
@@ -21,7 +18,7 @@ public static class TestServices
         services.AddScoped<IUnitOfWork, UnitOfWork>();
 
         services.AddRepositories();
-        services.AddServices();
+        services.AddServices(null);
 
         return services.BuildServiceProvider();
     }
