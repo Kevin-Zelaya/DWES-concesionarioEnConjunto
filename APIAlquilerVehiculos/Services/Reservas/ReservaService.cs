@@ -25,7 +25,8 @@ public class ReservaService(
     IVehiculosRepository _vehiculoRepository,
     IClienteRepository _clienteRepository,
     IncidenciaService _incidenciaService,
-    IRecargoRepository _recargoRepository
+    IRecargoRepository _recargoRepository,
+    INotificationService _notificationService
 
 ) : IReservaService
 {
@@ -133,7 +134,27 @@ public class ReservaService(
                 .Tap(r => _logger.LogInformation(
                     "[SERVICE-CREATE] Reserva creada correctamente con ID {Id} y código {Codigo}.",
                     r.Id,
-                    r.CodigoRefencia));
+                    r.CodigoRefencia))
+                // Notificaciones
+                .Tap(f => {
+                        _notificationService.NotifyUserAsync(
+                            cliente.IdUsuario.ToString(),
+                            new ResourceNotification<string>
+                            {
+                                Resource = "Reserva",
+                                Action = "Creada",
+                                ResourceId = reservaTS.CodigoRefencia,
+                                Message = "Tienes una nueva reserva pendiente de pago",
+                                Data = new
+                                {
+                                    reservaTS.FechaRecogida,
+                                    reservaTS.FechaDevolucion,
+                                    vehiculo.Matricula,
+                                    reservaTS.Estado
+                                },
+                                CreatedAt = reservaTS.FechaCreacion
+                            });});
+
         }
         catch (Exception ex)
         {

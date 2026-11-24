@@ -1,24 +1,29 @@
 using Microsoft.AspNetCore.SignalR;
 using Serilog;
 
-public class NotificationService(IHubContext<CocheHubs> _hubContext) : INotificationService
+public class NotificationService(IHubContext<CocheHubs> hubContext) : INotificationService
 {
-    /// <inheritdoc cref="INotificationService.NotifyResourceChangedAsync{T}(ResourceNotification{T})"/>
-    public async Task NotifyResourceChangedAsync<T>(
-        ResourceNotification<T> notification)
+    public async Task NotifyAdminsAsync<T>(ResourceNotification<T> notification)
+    {
+        await NotifyGroupAsync("admins", notification);
+    }
+
+    public async Task NotifyUserAsync<T>(string userId, ResourceNotification<T> notification)
+    {
+        await NotifyGroupAsync($"user-{userId}", notification);
+    }
+
+    public async Task NotifyGroupAsync<T>(string groupName, ResourceNotification<T> notification)
     {
         try
         {
-            await _hubContext.Clients
-                .Group("admins")
-                .SendAsync("ResourceUpdated", notification);
+            await hubContext.Clients.Group(groupName).SendAsync("ResourceUpdated", notification);
 
-            Log.Information("Notification sent: {Resource} updated successfully", notification.resource
-            );
+            Log.Information("Notificación {Resource} - {Action} enviada al grupo {Group}", notification.Resource, notification.Action, groupName);
         }
         catch (Exception ex)
         {
-            Log.Warning(ex, "Error al enviar notificacion de producto eliminado");
+            Log.Warning(ex, "Error al enviar notificación al grupo {Group}", groupName);
         }
     }
 }

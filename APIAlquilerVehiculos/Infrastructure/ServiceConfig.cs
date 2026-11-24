@@ -28,6 +28,8 @@ public static class ServiceConfig
         services.AddSingleton<IncidenciaService>();
         services.AddScoped<IExtraService, ExtraService>();
         services.AddScoped<IPolizaService, PolizaService>();
+        services.AddScoped<INotificationService, NotificationService>();
+        services.AddScoped<INotificationService, NotificationService>();
         return services;
     }
 }

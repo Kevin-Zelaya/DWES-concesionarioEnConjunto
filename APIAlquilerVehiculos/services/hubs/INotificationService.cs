@@ -1,12 +1,17 @@
 public interface INotificationService
 {
     /// <summary>
-    /// Generico, permite notificar a los administradores
-    /// con un mismo metodo de un recurso actualizado
+    /// Notifica a todos los administradores.
     /// </summary>
-    /// <typeparam name="T">Tipo de la llave primaria del recurso</typeparam>
-    /// <param name="notification">Dto formado para el caso</param>
-    /// <see cref="ResourceNotification{T}"/>
-    /// <returns></returns>
-    Task NotifyResourceChangedAsync<T>(ResourceNotification<T> notification);
+    Task NotifyAdminsAsync<T>(ResourceNotification<T> notification);
+
+    /// <summary>
+    /// Notifica a un usuario concreto.
+    /// </summary>
+    Task NotifyUserAsync<T>(string userId, ResourceNotification<T> notification);
+
+    /// <summary>
+    /// Notifica a todos los usuarios de un grupo.
+    /// </summary>
+    Task NotifyGroupAsync<T>(string groupName, ResourceNotification<T> notification);
 }
