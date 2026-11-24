@@ -25,28 +25,23 @@ public class ClienteService(IClienteRepository repository, IValidator<UpdateClie
     /// <summary>
     /// Buscar TODOS los clientes con filtros y paginación
     /// </summary>
-    /// <param name="dto">Filtros y paginación añadidos</param>
+    /// <param name="page">Número de pagina</param>
+    /// <param name="pageSize">Número de elementos por pagina</param>
+    /// <param name="incluirInactivos">Incluir clientes inactivos</param>
     /// <param name="cancellationToken">Token para cancelar la operación asíncrona</param>
     /// <returns>Devuelve una lista de clientes con o sin filtros, con paginación incluida</returns>
-    public async Task<Result<PagedResult<ClienteDto>, DomainError>> FindAllPagedAsync(ClienteFilterDto dto, CancellationToken cancellationToken)
+    public async Task<Result<IReadOnlyList<ClienteDto>, DomainError>> FindAllPagedAsync(CancellationToken cancellationToken, int page = 1, int pageSize = 10, bool incluirInactivos = false)
     {
-        logger.LogInformation("Obteniendo clientes paginados - Página: {Page}, Tamaño: {Size}", dto.Page, dto.Size);
+        logger.LogInformation("Obteniendo clientes paginados - Página: {Page}, Tamaño: {Size}", page, pageSize);
 
-        // Obtenemos la tupla del repo (ClienteFilterDto)
-        var (clientes, totalCount) = await repository.FindAllPagedAsync(dto, cancellationToken);
+        // evita skip negativos o páginas gigantes
+        page = Math.Max(page, 1);
+        pageSize = Math.Clamp(pageSize, 1, 100);
         
-        // Mapeamos Cliente al ClienteDto
-        var dtos = clientes.ToDtoList();
+        var (items, _) = await repository.FindAllPagedAsync(page, pageSize, incluirInactivos, cancellationToken);
+        var dtos = items.Select(t => t.ToResponseDto()).ToList();
 
-        var pagedResult = new PagedResult<ClienteDto>
-        {
-            Items = dtos,
-            TotalCount = totalCount,
-            Page = dto.Page + 1,
-            PageSize = dto.Size
-        };
-
-        return Result.Success<PagedResult<ClienteDto>, DomainError>(pagedResult);
+        return Result.Success<IReadOnlyList<ClienteDto>, DomainError>(dtos);
     }
     
     /// <summary>
@@ -203,8 +198,14 @@ public class ClienteService(IClienteRepository repository, IValidator<UpdateClie
     /// <returns>Devuelve los datos del cliente ta actualizados</returns>
     public async Task<Result<ClienteDto, DomainError>> UpdatePartialAsync(long id, CancellationToken cancellationToken)
     {
+        if (id <= 0)
+        {
+            logger.LogWarning("No se encontro el Cliente {id}", id); 
+            return Result.Failure<ClienteDto, DomainError>(ClienteErrors.NotFound(id));
+        }
         var clienteActual = await repository.FindByIdAsync(id, cancellationToken);
-        if (id <= 0 || clienteActual is null)
+        
+        if (clienteActual is null)
         {
             logger.LogWarning("No se encontro el Cliente {id}", id); 
             return Result.Failure<ClienteDto, DomainError>(ClienteErrors.NotFound(id));
@@ -217,20 +218,20 @@ public class ClienteService(IClienteRepository repository, IValidator<UpdateClie
         } 
 
         //Actualizamos Cliente y comprobamos que no sea null, si lo es salta error
-        var cliente = await repository.UpdatePartialAsync(clienteActual, cancellationToken);
+        var cliente = await repository.UpdatePartialAsync(id, cancellationToken);
       
         if (cliente is null)
         {
             logger.LogWarning("No se actualizo el cliente {id}", id); 
             return Result.Failure<ClienteDto, DomainError>(ClienteErrors.NotFound(id));
         }
-        
-        await cache.RemoveAsync(CacheKey(id));
 
         //Transformamos a ResponseDTO
         var clienteResponse = ClienteMapper.ToResponseDto(cliente);
+        //borrar de cache
+        await cache.RemoveAsync(CacheKey(id));
         logger.LogInformation("Cliente {id} con estado renovado correctamente", id);
-
+        
         //Devolvemos
         return Result.Success<ClienteDto, DomainError>(clienteResponse);
     }

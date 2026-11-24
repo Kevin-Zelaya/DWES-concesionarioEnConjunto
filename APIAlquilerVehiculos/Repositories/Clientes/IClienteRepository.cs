@@ -8,10 +8,13 @@ public interface IClienteRepository
     /// <summary>
     ///  Busqueda de clientes con paginado y filtros de busqueda
     /// </summary>
-    /// <param name="dto">Filtros y paginación añadida</param>
+    /// <param name="page">Número de pagina</param>
+    /// <param name="pageSize">Número de elementos por pagina</param>
+    /// <param name="incluirInactivos">Incluir clientes inactivos</param>
     /// <param name="cancellationToken">Token para cancelar la operación asíncrona</param>
-    /// <returns>Devuelve una lista de clientes</returns>
-    Task<(List<Cliente> Items, int TotalCount)> FindAllPagedAsync(ClienteFilterDto dto, CancellationToken cancellationToken = default);
+    /// <returns></returns>
+    Task<(List<Cliente> Items, int Total)> FindAllPagedAsync(int page, int pageSize, bool incluirInactivos = false,
+        CancellationToken cancellationToken = default);
     
     /// <summary>
     ///  Buscar un cliente concreto con su identificador
@@ -43,10 +46,10 @@ public interface IClienteRepository
     /// Actualizar estado del cliente de baja a activo
     /// Acceso único por el Administrador
     /// </summary>
-    /// <param name="cliente">cliente actual</param>
+    /// <param name="id">identificador del cliente</param>
     /// <param name="cancellationToken">Token para cancelar la operación asíncrona</param>
     /// <returns>Devuelve el cliente renovado</returns>
-    Task<Cliente?> UpdatePartialAsync(Cliente cliente, CancellationToken cancellationToken = default);
+    Task<Cliente?> UpdatePartialAsync(long id, CancellationToken cancellationToken = default);
 
     
     /// <summary>

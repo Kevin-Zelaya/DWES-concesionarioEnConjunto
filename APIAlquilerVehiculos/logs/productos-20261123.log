@@ -967,3 +967,59 @@ ORDER BY "MigrationId";
 2026-11-23 22:51:26.749 [INF] Todas las pólizas seed ya existen.
 2026-11-23 22:51:26.777 [INF] Todos los vehículos seed ya existen.
 2026-11-23 22:51:26.889 [WRN] The WebRootPath was not found: C:\Users\sergi\Desktop\Asignaturas-Daw\Entorno-Servicio\DWES-concesionarioEnConjunto\APIAlquilerVehiculos\wwwroot. Static files may be unavailable.
+2026-11-23 23:22:54.272 [INF] Iniciando aplicación...
+2026-11-23 23:22:54.420 [INF] Configurando servicios...
+2026-11-23 23:22:54.423 [INF] Configurando servicios...
+2026-11-23 23:22:54.464 [INF] Configurando la conexión a Redis...
+2026-11-23 23:22:54.730 [INF] Conexión a Redis configurada correctamente.
+2026-11-23 23:22:56.082 [WRN] Entity 'Trabajador' has a global query filter defined and is the required end of a relationship with the entity 'Oficina'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-23 23:22:56.086 [WRN] Entity 'Trabajador' has a global query filter defined and is the required end of a relationship with the entity 'Parte'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-23 23:22:56.088 [WRN] Entity 'Marca' has a global query filter defined and is the required end of a relationship with the entity 'Vehiculo'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-23 23:22:57.870 [ERR] Failed executing DbCommand (78ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+ALTER TABLE "Vehiculos" ADD CONSTRAINT "FK_Vehiculos_Marcas_MarcaId" FOREIGN KEY ("MarcaId") REFERENCES "Marcas" ("Id") ON DELETE RESTRICT;
+2026-11-23 23:26:58.242 [INF] Iniciando aplicación...
+2026-11-23 23:26:58.314 [INF] Configurando servicios...
+2026-11-23 23:26:58.316 [INF] Configurando servicios...
+2026-11-23 23:26:58.332 [INF] Configurando la conexión a Redis...
+2026-11-23 23:26:58.470 [INF] Conexión a Redis configurada correctamente.
+2026-11-23 23:26:59.155 [WRN] Entity 'Trabajador' has a global query filter defined and is the required end of a relationship with the entity 'Oficina'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-23 23:26:59.158 [WRN] Entity 'Trabajador' has a global query filter defined and is the required end of a relationship with the entity 'Parte'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-23 23:26:59.159 [WRN] Entity 'Marca' has a global query filter defined and is the required end of a relationship with the entity 'Vehiculo'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-23 23:26:59.900 [ERR] Failed executing DbCommand (6ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+ALTER TABLE "Vehiculos" ADD CONSTRAINT "FK_Vehiculos_Marcas_MarcaId" FOREIGN KEY ("MarcaId") REFERENCES "Marcas" ("Id") ON DELETE RESTRICT;
+2026-11-23 23:32:54.914 [INF] Iniciando aplicación...
+2026-11-23 23:32:55.077 [INF] Configurando servicios...
+2026-11-23 23:32:55.080 [INF] Configurando servicios...
+2026-11-23 23:32:55.125 [INF] Configurando la conexión a Redis...
+2026-11-23 23:32:55.374 [INF] Conexión a Redis configurada correctamente.
+2026-11-23 23:32:56.557 [WRN] Entity 'Trabajador' has a global query filter defined and is the required end of a relationship with the entity 'Oficina'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-23 23:32:56.561 [WRN] Entity 'Trabajador' has a global query filter defined and is the required end of a relationship with the entity 'Parte'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-23 23:32:56.562 [WRN] Entity 'Marca' has a global query filter defined and is the required end of a relationship with the entity 'Vehiculo'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-23 23:32:59.009 [ERR] Failed executing DbCommand (33ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+ALTER TABLE "Vehiculos" ADD CONSTRAINT "FK_Vehiculos_Marcas_MarcaId" FOREIGN KEY ("MarcaId") REFERENCES "Marcas" ("Id") ON DELETE RESTRICT;
+2026-11-23 23:34:10.077 [INF] Iniciando aplicación...
+2026-11-23 23:34:10.207 [INF] Configurando servicios...
+2026-11-23 23:34:10.211 [INF] Configurando servicios...
+2026-11-23 23:34:10.244 [INF] Configurando la conexión a Redis...
+2026-11-23 23:34:10.504 [INF] Conexión a Redis configurada correctamente.
+2026-11-23 23:34:11.796 [WRN] Entity 'Trabajador' has a global query filter defined and is the required end of a relationship with the entity 'Oficina'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-23 23:34:11.806 [WRN] Entity 'Trabajador' has a global query filter defined and is the required end of a relationship with the entity 'Parte'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-23 23:34:11.810 [WRN] Entity 'Marca' has a global query filter defined and is the required end of a relationship with the entity 'Vehiculo'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-23 23:34:12.635 [ERR] Failed executing DbCommand (42ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT "MigrationId", "ProductVersion"
+FROM "__EFMigrationsHistory"
+ORDER BY "MigrationId";
+2026-11-23 23:34:16.475 [INF] Rol creado en Identity: Cliente
+2026-11-23 23:34:16.490 [INF] Rol creado en Identity: Operario
+2026-11-23 23:34:16.500 [INF] Rol creado en Identity: Mecanico
+2026-11-23 23:34:16.512 [INF] Rol creado en Identity: Responsable
+2026-11-23 23:34:16.525 [INF] Rol creado en Identity: Administrador
+2026-11-23 23:34:16.814 [INF] Usuario seed creado: admin@alquiler.com con roles [Administrador]
+2026-11-23 23:34:16.909 [INF] Usuario seed creado: responsable@alquiler.com con roles [Operario, Responsable]
+2026-11-23 23:34:17.054 [INF] Usuario seed creado: operario@alquiler.com con roles [Operario]
+2026-11-23 23:34:17.189 [INF] Usuario seed creado: mecanico@alquiler.com con roles [Mecanico]
+2026-11-23 23:34:17.289 [INF] Usuario seed creado: cliente@alquiler.com con roles [Cliente]
+2026-11-23 23:34:17.491 [INF] Se han creado 17 marcas seed.
+2026-11-23 23:34:17.533 [INF] Se han creado 4 pólizas seed.
+2026-11-23 23:34:17.635 [INF] Se han creado 9 vehículos seed.
+2026-11-23 23:34:17.812 [WRN] The WebRootPath was not found: C:\Users\Marcos\Documents\Proyectos\Back-end\C#\PracticaAlquler_de_choches\APIAlquilerVehiculos\wwwroot. Static files may be unavailable.

@@ -10,42 +10,37 @@ namespace APIAlquilerVehiculos.Repositories.Clientes;
 public class ClienteRepository(AppDbContext db) : IClienteRepository
 {
     #region CRUD
-
+    
     /// <summary>
     ///  Busqueda de clientes con paginado y filtros de busqueda
     /// </summary>
-    /// <param name="dto">Filtros y paginación añadida</param>
+    /// <param name="page">Número de pagina</param>
+    /// <param name="pageSize">Número de elementos por pagina</param>
+    /// <param name="incluirInactivos">Incluir clientes inactivos</param>
     /// <param name="cancellationToken">Token para cancelar la operación asíncrona</param>
-    /// <returns>Devuelve una lista de clientes</returns>
-    public async Task<(List<Cliente> Items, int TotalCount)> FindAllPagedAsync(ClienteFilterDto dto, CancellationToken cancellationToken = default)
+    /// <returns></returns>
+    public async Task<(List<Cliente>, int)> FindAllPagedAsync(int page, int pageSize, bool incluirInactivos = false, CancellationToken cancellationToken = default)
     {
-        var query = dto.IsActivo.HasValue
-            ? db.Clientes.IgnoreQueryFilters().Include(c => c.Usuario).AsQueryable()
-            : db.Clientes.Include(c => c.Usuario).AsQueryable();
+        var query = db.Clientes
+            .AsNoTracking()
+            .Include(t => t.Usuario)
+            .AsQueryable();
 
-        if (!string.IsNullOrWhiteSpace(dto.Nombre))
-            query = query.Where(f => EF.Functions.Like(f.Nombre, $"%{dto.Nombre}%"));
-
-        if (!string.IsNullOrWhiteSpace(dto.Apellidos))
-            query = query.Where(f => EF.Functions.Like(f.Apellidos, $"%{dto.Apellidos}%"));
+        // si hay que incluir inactivos se ignora el query filter global (solo activos)
+        if (incluirInactivos)
+            query = query.IgnoreQueryFilters();
+        else
+            query = query.Where(t => t.IsActivo);
         
-        if (!string.IsNullOrWhiteSpace(dto.Email))
-            query = query.Where(p => EF.Functions.Like(p.Usuario.Email, $"%{dto.Email}%"));
-
-        if (dto.IsActivo.HasValue)
-            query = query.Where(p => p.IsActivo == dto.IsActivo.Value);
-        
-        
-        var totalCount = await query.CountAsync(cancellationToken);
-        query = ApplySorting(query, dto.SortBy, dto.Direction);
-        
-        var size = Math.Clamp(dto.Size, 1, 100);
-        var page = Math.Max(dto.Page, 0);
-
+        var total = await query.CountAsync(cancellationToken); // se cuenta el num de clientes
         var items = await query
-            .AsNoTracking().Skip(page * size).Take(size).ToListAsync(cancellationToken);
+            .OrderBy(c => c.Apellidos)
+            .ThenBy(c => c.Nombre)
+            .Skip((page - 1) * pageSize) // formula mitica
+            .Take(pageSize)
+            .ToListAsync(cancellationToken);
 
-        return (items, totalCount);
+        return (items, total);
     }
     
 
@@ -117,8 +112,18 @@ public class ClienteRepository(AppDbContext db) : IClienteRepository
     /// <param name="cliente">cliente actual</param>
     /// <param name="cancellationToken">Token para cancelar la operación asíncrona</param>
     /// <returns>Devuelve el cliente renovado</returns>
-    public async Task<Cliente?> UpdatePartialAsync(Cliente cliente, CancellationToken cancellationToken = default)
+    public async Task<Cliente?> UpdatePartialAsync(long id, CancellationToken cancellationToken = default)
     {
+        var cliente = await db.Clientes
+            .IgnoreQueryFilters()
+            .Include(c => c.Usuario)
+            .FirstOrDefaultAsync(c => c.Id == id, cancellationToken);
+
+        if (cliente is null)
+        {
+            return null;
+        }
+        
         cliente.IsActivo = true;
         cliente.DeletedAt = null;
         cliente.UpdatedAt = DateTime.UtcNow;
