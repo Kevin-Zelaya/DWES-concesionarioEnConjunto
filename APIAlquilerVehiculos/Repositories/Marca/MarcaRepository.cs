@@ -22,11 +22,11 @@ public class MarcaRepository : IMarcaRepository
     }
 
     /// <inheritdoc cref="GetAllAsync"/>
-    public async Task<List<Marca>> GetAllAsync()
+    public async Task<List<Marca>> GetAllAsync(CancellationToken ct = default)
     {
         return await _context.Marcas
             .Where(m => m.Activo == true)
-            .ToListAsync();
+            .ToListAsync(cancellationToken: ct);
     }
 
     /// <inheritdoc cref="GetPaginatedMarcasAsync"/>
@@ -68,21 +68,21 @@ public class MarcaRepository : IMarcaRepository
     }
 
     /// <inheritdoc cref="GetByIdAsync"/>
-    public async Task<Marca?> GetByIdAsync(long id)
+    public async Task<Marca?> GetByIdAsync(long id, CancellationToken ct = default)
     {
-        return await _context.Marcas .AsNoTracking() .FirstOrDefaultAsync(m => m.Id == id && m.Activo == true);
+        return await _context.Marcas .AsNoTracking() .FirstOrDefaultAsync(m => m.Id == id && m.Activo == true, cancellationToken: ct);
     }
    
     /// <inheritdoc cref="GetByNombreAsync"/>
-    public async Task<Marca?> GetByNombreAsync(string nombre)
+    public async Task<Marca?> GetByNombreAsync(string nombre, CancellationToken ct = default)
     {
         return await _context.Marcas
             .AsNoTracking()
-            .FirstOrDefaultAsync(m => m.Nombre == nombre && m.Activo == true);
+            .FirstOrDefaultAsync(m => m.Nombre == nombre && m.Activo == true, cancellationToken: ct);
     }
     
     /// <inheritdoc cref="CreateAsync"/>
-    public async Task<Marca> CreateAsync(Marca obj)
+    public async Task<Marca> CreateAsync(Marca obj, CancellationToken ct = default)
     {
         obj.CreatedAt = DateTime.UtcNow;
         obj.UpdatedAt = DateTime.UtcNow;
@@ -90,15 +90,15 @@ public class MarcaRepository : IMarcaRepository
         obj.Activo = true;
 
         _context.Marcas.Add(obj);
-        await _context.SaveChangesAsync();
+        await _context.SaveChangesAsync(ct);
 
         return obj;
     }
 
     /// <inheritdoc cref="UpdateAsync"/>
-    public async Task<Marca?> UpdateAsync(Marca obj)
+    public async Task<Marca?> UpdateAsync(Marca obj, CancellationToken ct = default)
     {
-        var response = await _context.Marcas.FirstOrDefaultAsync(m => m.Id == obj.Id && m.Activo == true);
+        var response = await _context.Marcas.FirstOrDefaultAsync(m => m.Id == obj.Id && m.Activo == true, cancellationToken: ct);
         if (response == null) return null;
 
         var createdAt = response.CreatedAt;
@@ -107,17 +107,17 @@ public class MarcaRepository : IMarcaRepository
         response.CreatedAt = createdAt;
         response.UpdatedAt = DateTime.UtcNow;
 
-        await _context.SaveChangesAsync();
+        await _context.SaveChangesAsync(ct);
 
         return response;
     }
 
     /// <inheritdoc cref="DeleteAsync"/>
-    public async Task<bool> DeleteAsync(long id)
+    public async Task<bool> DeleteAsync(long id, CancellationToken ct = default)
     {
         var obj = await _context.Marcas
             .FirstOrDefaultAsync(m =>
-                m.Id == id && m.Activo == true);
+                m.Id == id && m.Activo == true, cancellationToken: ct);
 
         if (obj == null) return false;
 
@@ -125,7 +125,7 @@ public class MarcaRepository : IMarcaRepository
         obj.DeletedAt = DateTime.UtcNow;
         obj.Activo = false;
 
-        await _context.SaveChangesAsync();
+        await _context.SaveChangesAsync(ct);
 
         return true;
     }

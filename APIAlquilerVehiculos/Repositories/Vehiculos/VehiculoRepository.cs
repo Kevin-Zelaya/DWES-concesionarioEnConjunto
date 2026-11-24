@@ -26,9 +26,9 @@ public class VehiculoRepository : IVehiculosRepository
     }
     
     /// <inheritdoc cref="GetAllAsync"/>
-    public async Task<List<Vehiculo>> GetAllAsync()
+    public async Task<List<Vehiculo>> GetAllAsync(CancellationToken ct = default)
     {
-        return await _context.Vehiculos.Where(v=> v.Activo == true ).AsNoTracking().ToListAsync();
+        return await _context.Vehiculos.Where(v=> v.Activo == true ).AsNoTracking().ToListAsync(ct);
     }
     
     /// <inheritdoc cref="GetPaginatedVehiculosAsync"/>
@@ -59,14 +59,12 @@ public class VehiculoRepository : IVehiculosRepository
     }
 
     /// <inheritdoc cref="GetByIdAsync"/>
-    public async Task<Vehiculo?> GetByIdAsync(string id)
+    public async Task<Vehiculo?> GetByIdAsync(string id,  CancellationToken ct = default)
     {
-        return await _context.Vehiculos.AsNoTracking().FirstOrDefaultAsync(v => v.Id == id && v.Activo == true);
+        return await _context.Vehiculos.AsNoTracking().FirstOrDefaultAsync(v => v.Id == id && v.Activo == true,ct);
     }
 
-    public async Task<List<Vehiculo>> GetByCategoriaAsync(
-        CategoriaEnum categoria,
-        CancellationToken ct = default)
+    public async Task<List<Vehiculo>> GetByCategoriaAsync(CategoriaEnum categoria, CancellationToken ct = default)
     {
         return await _context.Vehiculos
             .AsNoTracking()
@@ -75,13 +73,13 @@ public class VehiculoRepository : IVehiculosRepository
 }
 
     /// <inheritdoc cref="GetByMatriculaAsync"/>
-    public async Task<Vehiculo?> GetByMatriculaAsync(string matricula)
+    public async Task<Vehiculo?> GetByMatriculaAsync(string matricula,  CancellationToken ct = default)
     {
-        return await _context.Vehiculos.AsNoTracking().FirstOrDefaultAsync(v => v.Matricula == matricula && v.Activo == true);
+        return await _context.Vehiculos.AsNoTracking().FirstOrDefaultAsync(v => v.Matricula == matricula && v.Activo == true,ct);
     }
 
     /// <inheritdoc cref="CreateAsync"/>
-    public async Task<Vehiculo> CreateAsync(Vehiculo obj)
+    public async Task<Vehiculo> CreateAsync(Vehiculo obj,  CancellationToken ct = default)
     {
         obj.CreatedAt = DateTime.UtcNow;
         obj.UpdatedAt = DateTime.UtcNow;
@@ -89,17 +87,16 @@ public class VehiculoRepository : IVehiculosRepository
         obj.Id = null!;
 
         _context.Vehiculos.Add(obj);
-        await _context.SaveChangesAsync();
+        await _context.SaveChangesAsync(ct);
         
         return obj;
     }
-
+    
     /// <inheritdoc cref="UpdateAsync"/>
-    /// <inheritdoc cref="UpdateAsync"/>
-    public async Task<Vehiculo?> UpdateAsync(Vehiculo obj)
+    public async Task<Vehiculo?> UpdateAsync(Vehiculo obj,  CancellationToken ct = default)
     {
         var response = await _context.Vehiculos
-            .FirstOrDefaultAsync(v => v.Id == obj.Id && v.Activo);
+            .FirstOrDefaultAsync(v => v.Id == obj.Id && v.Activo,ct);
 
         if (response == null)
             return null;
@@ -111,30 +108,30 @@ public class VehiculoRepository : IVehiculosRepository
         response.CreatedAt = createdAt;
         response.UpdatedAt = DateTime.UtcNow;
 
-        await _context.SaveChangesAsync();
+        await _context.SaveChangesAsync(ct);
 
         return response;
     }
 
-    public async Task<Vehiculo?> UpdateEstado(string id, EstadoEnum estadoEnum)
+    /// <inheritdoc cref="UpdateEstado"/>
+    public async Task<Vehiculo?> UpdateEstado(string id, EstadoEnum estadoEnum,  CancellationToken ct = default)
     {
-        var response = await _context.Vehiculos.FirstOrDefaultAsync(v=> v.Id == id && v.Activo == true); 
+        var response = await _context.Vehiculos.FirstOrDefaultAsync(v=> v.Id == id && v.Activo == true,ct); 
         if (response == null) return null;
 
         response.UpdatedAt = DateTime.Now;
         response.Estado = estadoEnum;
         
         _context.Entry(response).CurrentValues.SetValues(response);
-        await _context.SaveChangesAsync();
-        await _context.SaveChangesAsync();
+        await _context.SaveChangesAsync(ct);
 
         return response;
     }
 
     /// <inheritdoc cref="DeleteAsync"/>
-    public async Task<bool> DeleteAsync(string id)
+    public async Task<bool> DeleteAsync(string id ,  CancellationToken ct = default)
     {
-        var objt = await _context.Vehiculos.FirstOrDefaultAsync(v=> v.Id == id && v.Activo == true); 
+        var objt = await _context.Vehiculos.FirstOrDefaultAsync(v=> v.Id == id && v.Activo == true,ct); 
         if (objt == null) return false;
 
         objt.UpdatedAt = DateTime.UtcNow;
@@ -142,32 +139,13 @@ public class VehiculoRepository : IVehiculosRepository
         objt.Activo = false;
         objt.Estado = EstadoEnum.Retirado;
         
-        await _context.SaveChangesAsync();
+        await _context.SaveChangesAsync(ct);
 
         return true;
     }
 
-    public async Task<Vehiculo?> UpdateEstadoAsync(
-        string id,
-        EstadoEnum estado,
-        CancellationToken ct = default)
-    {
-        var vehiculo = await _context.Vehiculos
-            .FirstOrDefaultAsync(v => v.Id == id, ct);
-
-        if (vehiculo is null)
-            return null;
-
-        vehiculo.Estado = estado;
-
-        await _context.SaveChangesAsync(ct);
-
-        return vehiculo;
-    }
-
-    public async Task BloquearVehiculoAsync(
-        string vehiculoId,
-        CancellationToken ct = default)
+    /// <inheritdoc cref="BloquearVehiculoAsync"/>
+    public async Task BloquearVehiculoAsync(string vehiculoId, CancellationToken ct = default)
     {
         await _context.Vehiculos
             .FromSqlInterpolated(

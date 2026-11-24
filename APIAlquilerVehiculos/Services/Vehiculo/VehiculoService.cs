@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.Net;
-using APIAlquilerVehiculos.DTOs.Marcas;
+﻿using System.Net;
 using APIAlquilerVehiculos.Dtos.Vehiculo;
 using APIAlquilerVehiculos.Errors.Common;
 using APIAlquilerVehiculos.Mappers.Vehiculos;
@@ -8,7 +6,6 @@ using APIAlquilerVehiculos.Models.Enums;
 using APIAlquilerVehiculos.Repositories.Taller;
 using APIAlquilerVehiculos.Repositories.Vehiculos;
 using CSharpFunctionalExtensions;
-using FluentValidation;
 
 namespace APIAlquilerVehiculos.Services.Vehiculo;
 
@@ -116,16 +113,16 @@ public class VehiculoService : IVehiculoService
         // no eliminar en caso de que no este en estado disponible
         if (exist.Estado != EstadoEnum.Disponible )
             return UnitResult.Failure<DomainError>(ConflictError.Business($"No se puede eliminar un vehiculo que no este en estado Disponible"));
-        // no eliminar en caso de que existan partes aviertos
+        // no eliminar en caso de que existan partes abiertos
         var marcaExist = await _parteRepository.TieneParteAbiertoAsync(id);
         if (marcaExist)
             return UnitResult.Failure<DomainError>(NotFoundError.Messagee($"No se puede eliminar"));
 
         // no eliminar en caso de que existan partes activos de este vehiculo
         
-        var deletd = await _vehiculosRepository.DeleteAsync(id);
+        var deleted = await _vehiculosRepository.DeleteAsync(id);
 
-        if (deletd == false)
+        if (deleted == false)
             return UnitResult.Failure<DomainError>(NotFoundError.FromResource("vehiculo", $"{id}"));
 
         return UnitResult.Success<DomainError>();
@@ -159,6 +156,7 @@ public class VehiculoService : IVehiculoService
                 resultado.HasPreviousPage, resultado.HasNextPage));
     }
     
+    /// <inheritdoc cref="GetPaginatedVehiculosAsync"/>
     public async Task<Result<VehiculoResponseDto, DomainError>> UpdateEstado(string id, EstadoEnum estadoEnum, CancellationToken ct = default)
     {
         //conflicto por la falta de existencia del objeto a actualizar
@@ -171,7 +169,7 @@ public class VehiculoService : IVehiculoService
             return new DomainError(
                 "No se puede pasar a disponible un vehiculo con reservas o partes activos",
                 HttpStatusCode.BadRequest);
-        // no se puede pasar a reservado con partes abiertos
+        // no se puede pasar ha reservado con partes abiertos
         if (estadoEnum == EstadoEnum.Reservado && await _parteRepository.TieneParteAbiertoAsync(id))
             return new DomainError(
                 "No se puede pasar a reservado un vehiculo con partes activos",
@@ -186,7 +184,7 @@ public class VehiculoService : IVehiculoService
             return new DomainError(
                 "No se puede pasar a Mantenimiento un vehiculo con reservas activas",
                 HttpStatusCode.BadRequest);
-        // no puede pasar a retirado con reservas y partes aviertos
+        // no puede pasar ha retirado con reservas y partes aviertos
         if (estadoEnum == EstadoEnum.Retirado && await _parteRepository.TieneParteAbiertoAsync(id) && exist.Estado == EstadoEnum.Reservado)
             return new DomainError(
                 "No se puede pasar a retirado un vehiculo con reservas o partes activos",

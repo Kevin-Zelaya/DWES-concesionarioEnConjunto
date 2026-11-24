@@ -578,7 +578,7 @@ public class ReservaService(
                     }
                 }
 
-                await _vehiculoRepository.UpdateEstadoAsync(
+                await _vehiculoRepository.UpdateEstado(
                     reserva.VehiculoId,
                     nuevoEstadoVehiculo.Value,
                     ct);

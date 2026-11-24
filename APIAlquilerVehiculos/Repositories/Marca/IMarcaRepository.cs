@@ -32,6 +32,6 @@ public interface IMarcaRepository : ICrudRepository<Marca, long>
     /// <summary>
     /// Obtiene una marca por su nombre.
     /// </summary>
-    public Task<Marca?> GetByNombreAsync(string nombre);
+    public Task<Marca?> GetByNombreAsync(string nombre, CancellationToken ct = default);
 }
 
