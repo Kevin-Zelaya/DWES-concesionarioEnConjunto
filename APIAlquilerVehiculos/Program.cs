@@ -11,6 +11,7 @@ using Serilog;
 using APIAlquilerVehiculos.Configuration;
 using APIAlquilerVehiculos.Repositories.Marcas;
 using APIAlquilerVehiculos.Services.Marcas;
+using APIAlquilerVehiculos.Configuration.Initializers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -58,6 +59,8 @@ builder.Services
     .AddRedisConnection(builder.Configuration)
     .AddCassandraConnection(builder.Configuration);
 
+// Registrar el inicializador de Cassandra
+builder.Services.AddSingleton<CassandraInitializer>();
 builder.Services.AddValidatorsFromAssemblyContaining<Program>();
 builder.Services.AddFluentValidationAutoValidation();
 
@@ -67,6 +70,15 @@ builder.Services.AddValidatorsFromAssemblyContaining<SignupDtoValidator>();
 // ======= MIDDLEWARES ==========
 
 var app = builder.Build();
+
+// Crear las tablas necesarias en Cassandra
+using (var scope = app.Services.CreateScope())
+{
+    var initializer = scope.ServiceProvider
+        .GetRequiredService<CassandraInitializer>();
+
+    initializer.Initialize();
+}
 app.UseGlobalExceptionHandler();
 var apiConfig = app.Services
     .GetRequiredService<IOptions<ApiConfig>>()

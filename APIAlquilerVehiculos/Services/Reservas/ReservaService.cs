@@ -10,6 +10,9 @@ using APIAlquilerVehiculos.Repositories.Clientes;
 using APIAlquilerVehiculos.Repositories.Vehiculos;
 using CSharpFunctionalExtensions;
 using Microsoft.EntityFrameworkCore;
+using APIAlquilerVehiculos.Entities.Cassandra;
+using APIAlquilerVehiculos.Services.Cassandra;
+using System.Linq;
 
 public class ReservaService(
     IReservaRepository _repository,
@@ -19,7 +22,8 @@ public class ReservaService(
     ILineaReservaFactory _lineaReservaFactory,
     IDisponibilidadService _disponibilidadService,
     IVehiculosRepository _vehiculoRepository,
-    IClienteRepository _clienteRepository
+    IClienteRepository _clienteRepository,
+    ReservaEventoService _reservaEventoService
 ) : IReservaService
 {
     // =========================================================
@@ -134,10 +138,30 @@ public class ReservaService(
 
             // Cambiar el estado del vehículo.
             vehiculo.Estado = EstadoEnum.Reservado;
+           
 
             // Guardar y confirmar los cambios.
             await _unitOfWork.SaveChangesAsync();
             await _unitOfWork.CommitTransactionAsync();
+             
+             // Registrar evento de reserva creada en Cassandra.
+            await _reservaEventoService.RegistrarEventoAsync(new ReservaEvento
+            {
+                EventoId = Guid.NewGuid(),
+                ReservaId = reservaTS.Id,
+                CodigoReferencia = reservaTS.CodigoRefencia ?? string.Empty,
+                TipoEvento = "ReservaCreada",
+                FechaEvento = DateTime.UtcNow,
+                VehiculoId = vehiculo.Id,
+                Modelo = vehiculo.Modelo,
+                Categoria = vehiculo.categoria.ToString(),
+                Polizas = lineasCreadas.Value
+                    .Where(l => l.Tipo == TipoLinea.Poliza)
+                    .Select(l => l.Concepto)
+                    .ToList(),
+                FechaRecogida = reservaTS.FechaRecogida,
+                FechaDevolucion = reservaTS.FechaDevolucion
+            });
 
             reservaTS.Lineas = lineasCreadas.Value;
 
