@@ -71,7 +71,7 @@ var apiConfig = app.Services
     .Value;
 
 // Inicializar bases de datos
-await app.InitializeDatabasesAsync();
+// await app.InitializeDatabasesAsync();
 
 if (apiConfig.shouldRecreateDb)
 {

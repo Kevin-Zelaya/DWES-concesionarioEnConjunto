@@ -93,19 +93,19 @@ public class TallerController(IParteService service, AppDbContext context) : Con
     /// </summary>
     private async Task<long?> ObtenerTrabajadorIdAutenticadoAsync()
     {
-        // 1. Si el JWT ya incluye un claim directo "trabajadorId", lo usamos directamente
         var trabajadorClaim = User.FindFirstValue("trabajadorId");
         if (long.TryParse(trabajadorClaim, out var trabajadorIdDirecto))
             return trabajadorIdDirecto;
 
-        // 2. Si el JWT guarda el Id de Usuario (NameIdentifier), buscamos su perfil de Trabajador
-        var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier)
+                          ?? User.FindFirstValue("sub");
         if (!long.TryParse(userIdClaim, out var usuarioId))
             return null;
 
         var trabajador = await context.Trabajadores
+            .IgnoreQueryFilters()
             .AsNoTracking()
-            .FirstOrDefaultAsync(t => t.IdUsuario == usuarioId);
+            .FirstOrDefaultAsync(t => t.IdUsuario == usuarioId && t.IsActivo);
 
         return trabajador?.Id;
     }
