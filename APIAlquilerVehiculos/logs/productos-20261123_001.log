@@ -1,0 +1,67 @@
+2026-11-23 23:37:46.474 [INF] Iniciando aplicación...
+2026-11-23 23:37:46.544 [INF] Configurando servicios...
+2026-11-23 23:37:46.545 [INF] Configurando servicios...
+2026-11-23 23:37:46.569 [INF] Configurando la conexión a Redis...
+2026-11-23 23:37:46.699 [INF] Conexión a Redis configurada correctamente.
+2026-11-23 23:37:47.400 [WRN] Entity 'Trabajador' has a global query filter defined and is the required end of a relationship with the entity 'Oficina'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-23 23:37:47.405 [WRN] Entity 'Trabajador' has a global query filter defined and is the required end of a relationship with the entity 'Parte'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-23 23:37:47.407 [WRN] Entity 'Marca' has a global query filter defined and is the required end of a relationship with the entity 'Vehiculo'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-23 23:38:04.646 [INF] Iniciando aplicación...
+2026-11-23 23:38:04.771 [INF] Configurando servicios...
+2026-11-23 23:38:04.773 [INF] Configurando servicios...
+2026-11-23 23:38:04.802 [INF] Configurando la conexión a Redis...
+2026-11-23 23:38:04.980 [INF] Conexión a Redis configurada correctamente.
+2026-11-23 23:38:05.950 [WRN] Entity 'Trabajador' has a global query filter defined and is the required end of a relationship with the entity 'Oficina'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-23 23:38:05.960 [WRN] Entity 'Trabajador' has a global query filter defined and is the required end of a relationship with the entity 'Parte'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-23 23:38:05.962 [WRN] Entity 'Marca' has a global query filter defined and is the required end of a relationship with the entity 'Vehiculo'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-23 23:38:08.218 [INF] Todas las marcas seed ya existen.
+2026-11-23 23:38:08.228 [INF] Todas las pólizas seed ya existen.
+2026-11-23 23:38:08.347 [INF] Todos los vehículos seed ya existen.
+2026-11-23 23:38:09.115 [WRN] The WebRootPath was not found: C:\Users\Marcos\Documents\Proyectos\Back-end\C#\PracticaAlquler_de_choches\APIAlquilerVehiculos\wwwroot. Static files may be unavailable.
+2026-11-23 23:41:16.433 [INF] Iniciando aplicación...
+2026-11-23 23:41:16.494 [INF] Configurando servicios...
+2026-11-23 23:41:16.495 [INF] Configurando servicios...
+2026-11-23 23:41:16.519 [INF] Configurando la conexión a Redis...
+2026-11-23 23:41:16.666 [INF] Conexión a Redis configurada correctamente.
+2026-11-23 23:41:17.288 [WRN] Entity 'Trabajador' has a global query filter defined and is the required end of a relationship with the entity 'Oficina'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-23 23:41:17.292 [WRN] Entity 'Trabajador' has a global query filter defined and is the required end of a relationship with the entity 'Parte'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-23 23:41:17.292 [WRN] Entity 'Marca' has a global query filter defined and is the required end of a relationship with the entity 'Vehiculo'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-23 23:41:19.106 [INF] Todas las marcas seed ya existen.
+2026-11-23 23:41:19.123 [INF] Todas las pólizas seed ya existen.
+2026-11-23 23:41:19.198 [INF] Todos los vehículos seed ya existen.
+2026-11-23 23:41:19.400 [WRN] The WebRootPath was not found: C:\Users\Marcos\Documents\Proyectos\Back-end\C#\PracticaAlquler_de_choches\APIAlquilerVehiculos\wwwroot. Static files may be unavailable.
+2026-11-23 23:42:10.100 [WRN] Credenciales invalidas del usuario
+2026-11-23 23:42:23.943 [INF] Usuario 1 ha iniciado sesion
+2026-11-23 23:42:38.012 [INF] Buscando cliente 2
+2026-11-23 23:42:38.132 [WRN] Cliente 2 NO encontrado 
+2026-11-23 23:42:51.365 [INF] Buscando cliente 1
+2026-11-23 23:42:55.792 [INF] Buscando cliente 2
+2026-11-23 23:42:55.803 [WRN] Cliente 2 NO encontrado 
+2026-11-23 23:43:08.278 [INF] Obteniendo clientes paginados - Página: 0, Tamaño: 10
+2026-11-23 23:43:24.040 [INF] Cliente 2 y Usuario 6 registrados correctamente
+2026-11-23 23:43:29.199 [INF] Usuario 6 ha iniciado sesion
+2026-11-23 23:43:35.050 [INF] Usuario 1 ha iniciado sesion
+2026-11-23 23:43:49.406 [INF] Buscando cliente 2
+2026-11-23 23:44:00.835 [WRN] Cliente 2 dado de baja correctamente
+2026-11-23 23:44:04.061 [INF] Buscando cliente 2
+2026-11-23 23:44:13.189 [INF] Cliente 2 con estado renovado correctamente
+2026-11-23 23:44:44.496 [INF] Buscando cliente 2
+2026-11-23 23:45:04.897 [INF] Buscando cliente 2
+2026-11-23 23:45:18.071 [WRN] Intento de login de cuenta desactivada 6
+2026-11-23 23:45:50.498 [INF] Buscando cliente 2
+2026-11-23 23:45:51.638 [INF] Buscando cliente 2
+2026-11-23 23:57:35.774 [INF] Buscando cliente 2
+2026-11-23 23:57:57.490 [INF] Iniciando aplicación...
+2026-11-23 23:57:57.581 [INF] Configurando servicios...
+2026-11-23 23:57:57.584 [INF] Configurando servicios...
+2026-11-23 23:57:57.619 [INF] Configurando la conexión a Redis...
+2026-11-23 23:57:57.873 [INF] Conexión a Redis configurada correctamente.
+2026-11-23 23:57:59.028 [WRN] Entity 'Trabajador' has a global query filter defined and is the required end of a relationship with the entity 'Oficina'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-23 23:57:59.034 [WRN] Entity 'Trabajador' has a global query filter defined and is the required end of a relationship with the entity 'Parte'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-23 23:57:59.037 [WRN] Entity 'Marca' has a global query filter defined and is the required end of a relationship with the entity 'Vehiculo'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-23 23:58:00.897 [INF] Todas las marcas seed ya existen.
+2026-11-23 23:58:00.912 [INF] Todas las pólizas seed ya existen.
+2026-11-23 23:58:00.957 [INF] Todos los vehículos seed ya existen.
+2026-11-23 23:58:01.180 [WRN] The WebRootPath was not found: C:\Users\Marcos\Documents\Proyectos\Back-end\C#\PracticaAlquler_de_choches\APIAlquilerVehiculos\wwwroot. Static files may be unavailable.
+2026-11-23 23:58:08.406 [INF] Usuario 1 ha iniciado sesion
+2026-11-23 23:58:24.813 [INF] Buscando cliente 2

@@ -13,10 +13,13 @@ public interface IClienteService
     /// <summary>
     /// Buscar TODOS los clientes con filtros y paginación
     /// </summary>
-    /// <param name="dto">Filtros y paginación añadidos</param>
+    /// <param name="page">Número de pagina</param>
+    /// <param name="pageSize">Número de elementos por pagina</param>
+    /// <param name="incluirInactivos">Incluir clientes inactivos</param>
     /// <param name="cancellationToken">Token para cancelar la operación asíncrona</param>
     /// <returns>Devuelve una lista de clientes con o sin filtros, con paginación incluida</returns>
-    Task<Result<PagedResult<ClienteDto>, DomainError>> FindAllPagedAsync(ClienteFilterDto dto, CancellationToken cancellationToken);
+    Task<Result<IReadOnlyList<ClienteDto>, DomainError>> FindAllPagedAsync(CancellationToken cancellationToken, int page = 1, int pageSize = 10,
+        bool incluirInactivos = false);
     
     /// <summary>
     /// Busca un usuario específico

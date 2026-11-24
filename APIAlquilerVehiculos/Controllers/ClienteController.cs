@@ -37,10 +37,12 @@ public class ClienteController(IClienteService service) : ControllerBase
     [SwaggerResponse(401, "No autenticado")]
     [SwaggerResponse(403, "Permisos insuficientes")]
     [SwaggerResponse(500, "Error interno del servidor")]
-    public async Task<ActionResult<List<ClienteDto>>> GetAllAsync([FromQuery, SwaggerParameter("Filtros opcionales", Required = false)] ClienteFilterDto filter,
-        CancellationToken cancellationToken)
+    public async Task<ActionResult<List<ClienteDto>>> GetAllAsync(CancellationToken cancellationToken, 
+        [FromQuery, SwaggerParameter("Número de pagina", Required = true)] int page = 1,
+        [FromQuery, SwaggerParameter("Número de elementos por pagina", Required = true)] int pageSize = 10,
+        [FromQuery, SwaggerParameter("Filtro de buscar por clientes inactivos", Required = false)] bool incluirInactivos = false)
     {
-        var resultado = await _service.FindAllPagedAsync(filter, cancellationToken);
+        var resultado = await _service.FindAllPagedAsync(cancellationToken, page, pageSize, incluirInactivos);
 
         // Si se produce un error, devolvemos su mensaje y código HTTP.
         if (resultado.IsFailure)
@@ -58,7 +60,7 @@ public class ClienteController(IClienteService service) : ControllerBase
         Summary = "Obtener todos los funkos",
         Description = "Devuelve una lista paginada de funkos con filtros opcionales",
         OperationId = "GetAllAsync",
-        Tags = new[] { "Funkos" }
+        Tags = new[] { "Clientes" }
     )]
     //[SwaggerRequestExample(typeof(FunkoFilterDto), typeof(FunkoFilterExample))] 
     [SwaggerResponse(200, "Lista de funkos obtenida", typeof(List<ClienteDto>))]
