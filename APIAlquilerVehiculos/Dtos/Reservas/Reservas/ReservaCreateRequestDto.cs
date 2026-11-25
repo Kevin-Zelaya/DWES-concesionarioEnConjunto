@@ -4,8 +4,8 @@ public record ReservaCreateRequestDto(
     long ClienteId,
     CategoriaEnum Categoria,
     string VehiculoId,
-    DateTimeOffset FechaRecogida,
-    DateTimeOffset FechaDevolucion,
+    DateTime FechaRecogida,
+    DateTime FechaDevolucion,
     List<LineaReservaCreateRequestDto> Lineas
 );
 
