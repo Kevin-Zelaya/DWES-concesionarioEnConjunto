@@ -25,7 +25,8 @@ public class ReservaService(
     IVehiculosRepository _vehiculoRepository,
     IClienteRepository _clienteRepository,
     IncidenciaService _incidenciaService,
-    IRecargoRepository _recargoRepository
+    IRecargoRepository _recargoRepository,
+    INotificationService _notificationService
 
 ) : IReservaService
 {
@@ -38,7 +39,9 @@ public class ReservaService(
     public async Task<Result<ReservaDto, DomainError>> CreateReservaAsync(ReservaCreateRequestDto reserva, long TrabajadorId, CancellationToken ct = default)
     {
         _logger.LogDebug("[SERVICE-CREATE] Intentando crear una reserva.");
-
+        // para compatiblidad con fechas especificas transformamos los datatime 
+        var fechaRecogida= DateTime.SpecifyKind(reserva.FechaRecogida, DateTimeKind.Local).ToUniversalTime();
+        var fechaDevolucion = DateTime.SpecifyKind(reserva.FechaDevolucion, DateTimeKind.Local).ToUniversalTime();
         // Comprobamos si existe el cliente
         var cliente = await _clienteRepository.FindByUserId(reserva.ClienteId, ct);
 
@@ -54,14 +57,16 @@ public class ReservaService(
                 NotFoundError.FromResource("Oficina", "1"));
 
         // Comprobamos que las fechas estén dentro del horario de atención
-        if (!oficina.EstaDentroDelHorario(reserva.FechaRecogida) ||
-            !oficina.EstaDentroDelHorario(reserva.FechaDevolucion))
+        if (!oficina.EstaDentroDelHorario(fechaRecogida) ||
+            !oficina.EstaDentroDelHorario(fechaDevolucion))
             return Result.Failure<ReservaDto, DomainError>(
                 ReservaErrors.HorarioNoValido());
 
         // Iniciamos la transacción
         await _unitOfWork.BeginTransactionAsync(ct);
-
+        // Mapear ek request a entidad
+        var reservaTS = reserva.ToEntity(TrabajadorId);
+        reservaTS.ClienteId = cliente.Id;
         try
         {
             // Bloqueamos el vehículo para evitar modificaciones simultáneas
@@ -69,9 +74,9 @@ public class ReservaService(
 
             // Comprobamos si el vehículo está disponible para las fechas indicadas
             var disponibilidad = await _disponibilidadService.EstaDisponibleAsync(
-                reserva.VehiculoId,
-                reserva.FechaRecogida,
-                reserva.FechaDevolucion,
+                reservaTS.VehiculoId,
+                reservaTS.FechaRecogida,
+                reservaTS.FechaDevolucion,
                 ct: ct);
 
             if (disponibilidad.IsFailure)
@@ -96,9 +101,7 @@ public class ReservaService(
                 return Result.Failure<ReservaDto, DomainError>(lineasFactorizadas.Error);
             }
 
-            // Creamos la reserva y asignamos el cliente
-            var reservaTS = reserva.ToEntity(TrabajadorId);
-            reservaTS.ClienteId = cliente.Id;
+            // Creamos la reserva 
             reservaTS = await _repository.CreateAsync(reservaTS, ct);
 
             // Asociamos las líneas a la reserva creada
@@ -133,7 +136,27 @@ public class ReservaService(
                 .Tap(r => _logger.LogInformation(
                     "[SERVICE-CREATE] Reserva creada correctamente con ID {Id} y código {Codigo}.",
                     r.Id,
-                    r.CodigoRefencia));
+                    r.CodigoRefencia))
+                // Notificaciones
+                .Tap(f => {
+                        _notificationService.NotifyUserAsync(
+                            cliente.IdUsuario.ToString(),
+                            new ResourceNotification<string>
+                            {
+                                Resource = "Reserva",
+                                Action = "Creada",
+                                ResourceId = reservaTS.CodigoRefencia,
+                                Message = "Tienes una nueva reserva pendiente de pago",
+                                Data = new
+                                {
+                                    reservaTS.FechaRecogida,
+                                    reservaTS.FechaDevolucion,
+                                    vehiculo.Matricula,
+                                    reservaTS.Estado
+                                },
+                                CreatedAt = reservaTS.FechaCreacion
+                            });});
+
         }
         catch (Exception ex)
         {

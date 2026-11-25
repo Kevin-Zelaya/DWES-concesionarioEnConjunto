@@ -14,8 +14,8 @@ public static class ReservasMappers
             Categoria = dto.Categoria,
             VehiculoId = dto.VehiculoId,
             FechaCreacion = DateTime.UtcNow,
-            FechaRecogida = dto.FechaRecogida,
-            FechaDevolucion = dto.FechaDevolucion,
+            FechaRecogida = DateTime.SpecifyKind(dto.FechaRecogida, DateTimeKind.Local).ToUniversalTime(),
+            FechaDevolucion = DateTime.SpecifyKind(dto.FechaDevolucion, DateTimeKind.Local).ToUniversalTime(),
             Estado = Estado.Pendiente,
             Lineas = [],
             PrecioTotal = 0m

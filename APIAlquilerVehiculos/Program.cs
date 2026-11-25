@@ -56,7 +56,8 @@ builder.Services
     .AddAuthenticationConfing(builder.Configuration)
     .AddBackground()
     .AddRedisConnection(builder.Configuration)
-    .AddMemoryCache();
+    .AddMemoryCache()
+    .AddSignalR();
 
 builder.Services.AddValidatorsFromAssemblyContaining<Program>();
 builder.Services.AddFluentValidationAutoValidation();
@@ -135,6 +136,7 @@ if (app.Environment.IsDevelopment())
         c.SwaggerEndpoint("/swagger/v1/swagger.json", "API Alquiler Vehículos v1"));
 }
 // ======= Buscar todos los controladores ==========
+app.MapHub<CocheHubs>("/hubs/coche");
 app.MapControllers();
 
 
