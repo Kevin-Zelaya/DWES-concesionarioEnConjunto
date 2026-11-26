@@ -405,7 +405,7 @@ public class TrabajadorRepositoryTest
         {
             Id = "VEH-01",
             Matricula = "9999XYZ",
-            Marca = "Ford",
+            MarcaId = 1,
             Modelo = "Focus",
             Acriss = "CCMR",
             categoria = CategoriaEnum.Familiar,

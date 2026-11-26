@@ -56,8 +56,10 @@ builder.Services
     .AddServices()
     .AddRepositories()
     .AddAuthenticationConfing(builder.Configuration)
+    .AddBackground()
     .AddRedisConnection(builder.Configuration)
-    .AddCassandraConnection(builder.Configuration);
+    .AddMemoryCache()
+    .AddSignalR();
 
 // Registrar el inicializador de Cassandra
 builder.Services.AddSingleton<CassandraInitializer>();
@@ -85,7 +87,7 @@ var apiConfig = app.Services
     .Value;
 
 // Inicializar bases de datos
-await app.InitializeDatabasesAsync();
+// await app.InitializeDatabasesAsync();
 
 if (apiConfig.shouldRecreateDb)
 {
@@ -120,6 +122,14 @@ using (var scope = app.Services.CreateScope())
         logger,
         1
     );
+    await CatalogoSeeder.SeedExtrasAsync(
+        scope.ServiceProvider,
+        logger
+    );
+    await CatalogoSeeder.SeedRecargosAsync(
+        scope.ServiceProvider,
+        logger
+    );
 }
 //app.UseHttpsRedirection();
 
@@ -139,6 +149,7 @@ if (app.Environment.IsDevelopment())
         c.SwaggerEndpoint("/swagger/v1/swagger.json", "API Alquiler Vehículos v1"));
 }
 // ======= Buscar todos los controladores ==========
+app.MapHub<CocheHubs>("/hubs/coche");
 app.MapControllers();
 
 

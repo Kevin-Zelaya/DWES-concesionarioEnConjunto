@@ -1,5 +1,6 @@
 using APIAlquilerVehiculos.Repositories.Clientes;
 using APIAlquilerVehiculos.Repositories.Pagos;
+using APIAlquilerVehiculos.Repositories.Taller;
 using APIAlquilerVehiculos.Repositories.Trabajadores;
 using APIAlquilerVehiculos.Repositories.Vehiculos;
 using Serilog;
@@ -20,6 +21,7 @@ public static class RepositoryConfiguration
         services.AddScoped<IVehiculosRepository, VehiculoRepository>();
         services.AddScoped<ITrabajadorRepository, TrabajadorRepository>();
         services.AddScoped<IClienteRepository, ClienteRepository>();
+        services.AddScoped<IParteRepository, ParteRepository>();
         services.AddScoped<IPagoRepository, PagoRepository>();
         return services;
     }

@@ -1,0 +1,23 @@
+﻿info:
+  name: AbrirParte201Created
+  type: http
+  seq: 1
+
+http:
+  method: POST
+  url: "{{baseUrl}}/api/Taller"
+  body:
+    type: json
+    data: |-
+      {
+        "vehiculoId": "veh00000001",
+        "descripcion": "Revisión periódica de frenos y cambio de aceite"
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false

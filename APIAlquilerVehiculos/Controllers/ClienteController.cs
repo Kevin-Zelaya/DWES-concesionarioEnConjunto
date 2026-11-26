@@ -37,10 +37,12 @@ public class ClienteController(IClienteService service) : ControllerBase
     [SwaggerResponse(401, "No autenticado")]
     [SwaggerResponse(403, "Permisos insuficientes")]
     [SwaggerResponse(500, "Error interno del servidor")]
-    public async Task<ActionResult<List<ClienteDto>>> GetAllAsync([FromQuery, SwaggerParameter("Filtros opcionales", Required = false)] ClienteFilterDto filter,
-        CancellationToken cancellationToken)
+    public async Task<ActionResult<List<ClienteDto>>> GetAllAsync(CancellationToken cancellationToken, 
+        [FromQuery, SwaggerParameter("Número de pagina", Required = true)] int page = 1,
+        [FromQuery, SwaggerParameter("Número de elementos por pagina", Required = true)] int pageSize = 10,
+        [FromQuery, SwaggerParameter("Filtro de buscar por clientes inactivos", Required = false)] bool incluirInactivos = false)
     {
-        var resultado = await _service.FindAllPagedAsync(filter, cancellationToken);
+        var resultado = await _service.FindAllPagedAsync(cancellationToken, page, pageSize, incluirInactivos);
 
         // Si se produce un error, devolvemos su mensaje y código HTTP.
         if (resultado.IsFailure)
@@ -58,7 +60,7 @@ public class ClienteController(IClienteService service) : ControllerBase
         Summary = "Obtener todos los funkos",
         Description = "Devuelve una lista paginada de funkos con filtros opcionales",
         OperationId = "GetAllAsync",
-        Tags = new[] { "Funkos" }
+        Tags = new[] { "Clientes" }
     )]
     //[SwaggerRequestExample(typeof(FunkoFilterDto), typeof(FunkoFilterExample))] 
     [SwaggerResponse(200, "Lista de funkos obtenida", typeof(List<ClienteDto>))]
@@ -107,6 +109,35 @@ public class ClienteController(IClienteService service) : ControllerBase
             return StatusCode((int)resultado.Error.StatusCode, resultado.Error);
 
         return Ok(resultado.Value);
+    }
+    
+    /// <summary>
+    /// Actualiza los datos de un cliente existente.
+    /// </summary>
+    [HttpPatch("{id:long}/reactivar")]
+    [Authorize(Policy = "RequireAdminRole")]
+    [SwaggerOperation(
+        Summary = "Actualización del estado de un cliente",
+        Description = "Devuelve el cliente renovado junto a su usuario",
+        OperationId = "UpdateAsync",
+        Tags = new[] { "Clientes" }
+    )]
+    //[SwaggerRequestExample(typeof(UpdateClienteDto), typeof(UpdateClienteExample))] 
+    [SwaggerResponse(200, "Cliente reactivado correctamente", typeof(ClienteDto))]
+    [SwaggerResponse(400, "Identificador o datos de la operación no válidos")]
+    [SwaggerResponse(401, "No autenticado")]
+    [SwaggerResponse(403, "Permisos insuficientes")]
+    [SwaggerResponse(404, "Cliente no encontrado")]
+    [SwaggerResponse(409, "El cliente ya se encuentra activo")]
+    [SwaggerResponse(500, "Error interno del servidor")]
+    public async Task<ActionResult<ClienteDto>> UpdateStateAsync(
+        [FromRoute, SwaggerParameter("Identificador del cliente", Required = true)] long id, 
+        CancellationToken cancellationToken)
+    {
+        var resultado = await _service.UpdatePartialAsync(id, cancellationToken); 
+
+        return resultado.IsSuccess ?
+            Ok(resultado.Value) : StatusCode((int)resultado.Error.StatusCode, resultado.Error);
     }
 
     /// <summary>

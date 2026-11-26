@@ -519,4 +519,148 @@ public static class CatalogoSeeder
             "Se han creado {Cantidad} pólizas seed.",
             polizasNuevas.Count);
     }
+
+    /// <summary>
+    /// Inserta los extras por defecto si todavía no existen.
+    /// </summary>
+    public static async Task SeedExtrasAsync(IServiceProvider services, ILogger logger)
+    {
+        var db = services.GetRequiredService<AppDbContext>();
+
+        await EnsureExtrasExistAsync(db, logger);
+    }
+
+    /// <summary>
+    /// Comprueba qué extras existen e inserta los que faltan.
+    /// </summary>
+    private static async Task EnsureExtrasExistAsync(AppDbContext db, ILogger logger)
+    {
+        var extrasSeed = new List<Extra>
+        {
+            new()
+            {
+                Nombre = "GPS",
+                Descripcion = "Servicio de navegación GPS durante el alquiler.",
+                Precio = 5m,
+                TipoPrecio = TipoPrecio.Diario,
+                Activa = true
+            },
+            new()
+            {
+                Nombre = "Silla infantil",
+                Descripcion = "Silla de seguridad infantil para el vehículo.",
+                Precio = 7m,
+                TipoPrecio = TipoPrecio.Diario,
+                Activa = true
+            },
+            new()
+            {
+                Nombre = "Conductor adicional",
+                Descripcion = "Permite añadir un conductor adicional a la reserva.",
+                Precio = 8m,
+                TipoPrecio = TipoPrecio.Diario,
+                Activa = true
+            },
+            new()
+            {
+                Nombre = "WiFi portátil",
+                Descripcion = "Dispositivo WiFi portátil para disponer de conexión durante el viaje.",
+                Precio = 6m,
+                TipoPrecio = TipoPrecio.Diario,
+                Activa = true
+            }
+        };
+
+        // Obtenemos todos los nombres, incluidos los extras inactivos
+        var nombresExistentes = await db.Set<Extra>()
+            .IgnoreQueryFilters()
+            .Select(e => e.Nombre)
+            .ToListAsync();
+
+        var nombres = nombresExistentes
+            .ToHashSet(StringComparer.OrdinalIgnoreCase);
+
+        // Filtramos los extras que todavía no existen
+        var extrasNuevos = extrasSeed
+            .Where(e => !nombres.Contains(e.Nombre))
+            .ToList();
+
+        if (extrasNuevos.Count == 0)
+        {
+            logger.LogInformation("Todos los extras seed ya existen.");
+            return;
+        }
+
+        // Insertamos los nuevos extras
+        await db.Set<Extra>().AddRangeAsync(extrasNuevos);
+        await db.SaveChangesAsync();
+
+        logger.LogInformation(
+            "Se han creado {Cantidad} extras seed.",
+            extrasNuevos.Count);
+    }
+
+    /// <summary>
+    /// Inserta los recargos por defecto si todavía no existen.
+    /// </summary>
+    public static async Task SeedRecargosAsync(IServiceProvider services, ILogger logger)
+    {
+        var db = services.GetRequiredService<AppDbContext>();
+
+        await EnsureRecargosExistAsync(db, logger);
+    }
+
+    /// <summary>
+    /// Comprueba qué recargos existen e inserta los que faltan.
+    /// </summary>
+    private static async Task EnsureRecargosExistAsync(AppDbContext db, ILogger logger)
+    {
+        var recargosSeed = new List<Recargo>
+        {
+            new()
+            {
+                Nombre = "Conductor joven",
+                Descripcion = "Recargo diario aplicado a conductores menores de 25 años.",
+                Importe = 12m,
+                TipoPrecio = TipoPrecio.Diario,
+                Activa = true
+            },
+            new()
+            {
+                Nombre = "Conductor novel",
+                Descripcion = "Recargo aplicado a conductores con poca antigüedad en el permiso de conducir.",
+                Importe = 10m,
+                TipoPrecio = TipoPrecio.Diario,
+                Activa = true
+            }
+        };
+
+        // Obtenemos todos los nombres, incluidos los recargos inactivos
+        var nombresExistentes = await db.Set<Recargo>()
+            .IgnoreQueryFilters()
+            .Select(r => r.Nombre)
+            .ToListAsync();
+
+        var nombres = nombresExistentes
+            .ToHashSet(StringComparer.OrdinalIgnoreCase);
+
+        // Filtramos los recargos que todavía no existen
+        var recargosNuevos = recargosSeed
+            .Where(r => !nombres.Contains(r.Nombre))
+            .ToList();
+
+        if (recargosNuevos.Count == 0)
+        {
+            logger.LogInformation("Todos los recargos seed ya existen.");
+            return;
+        }
+
+        // Insertamos los nuevos recargos
+        await db.Set<Recargo>().AddRangeAsync(recargosNuevos);
+        await db.SaveChangesAsync();
+
+        logger.LogInformation(
+            "Se han creado {Cantidad} recargos seed.",
+            recargosNuevos.Count);
+    }
 }

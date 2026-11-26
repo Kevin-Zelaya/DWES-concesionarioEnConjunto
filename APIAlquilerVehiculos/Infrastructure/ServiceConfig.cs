@@ -1,10 +1,16 @@
 using APIAlquilerVehiculos.Services;
 using APIAlquilerVehiculos.Services.Auth;
 using APIAlquilerVehiculos.Services.Clientes;
+using APIAlquilerVehiculos.Services.Pagos;
+using APIAlquilerVehiculos.Services.Taller;
 using APIAlquilerVehiculos.Services.Trabajadores;
 using Serilog;
 using APIAlquilerVehiculos.Services.Pagos;
+<<<<<<< HEAD
 using APIAlquilerVehiculos.Services.Cassandra;
+=======
+using APIAlquilerVehiculos.Services.Usuarios;
+>>>>>>> 509138f4455c2e28df819a9cef45ca66a52e156d
 
 public static class ServiceConfig
 {
@@ -22,10 +28,19 @@ public static class ServiceConfig
         services.AddScoped<IClienteService, ClienteService>();
         services.AddScoped<ITrabajadorService, TrabajadorService>();
         services.AddScoped<IDisponibilidadService, DisponibilidadService>();
+        services.AddScoped<IParteService, ParteService>();
         services.AddScoped<IPasarelaPago, PasarelaPagoSimulada>();
         services.AddScoped<IPagoService, PagoService>();
         services.AddScoped<ICifradorTarjeta, CifradorTarjeta>();
+<<<<<<< HEAD
         services.AddSingleton<ReservaEventoService>();
+=======
+        services.AddSingleton<IncidenciaService>();
+        services.AddScoped<IExtraService, ExtraService>();
+        services.AddScoped<IPolizaService, PolizaService>();
+        services.AddScoped<INotificationService, NotificationService>();
+        services.AddScoped<INotificationService, NotificationService>();
+>>>>>>> 509138f4455c2e28df819a9cef45ca66a52e156d
         return services;
     }
 }

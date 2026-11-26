@@ -108,7 +108,7 @@ public abstract class ParteRepositoryTests
         var vehiculo = new Vehiculo
         {
             Matricula = "1234BCD",
-            Marca = "prueba",
+            MarcaId = 1,
             Modelo = "Corolla",
             Acriss = "CDMR",
             categoria = CategoriaEnum.Hatchback,

@@ -1,0 +1,49 @@
+2026-11-25 23:19:17.298 [INF] Iniciando aplicación...
+2026-11-25 23:19:18.060 [INF] Configurando servicios...
+2026-11-25 23:19:18.062 [INF] Configurando servicios...
+2026-11-25 23:19:18.147 [INF] Configurando servicios en segundo plano...
+2026-11-25 23:19:18.276 [INF] Configurando la conexión a Redis...
+2026-11-25 23:19:18.389 [INF] Conexión a Redis configurada correctamente.
+2026-11-25 23:19:19.484 [WRN] Entity 'Trabajador' has a global query filter defined and is the required end of a relationship with the entity 'Oficina'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-25 23:19:19.487 [WRN] Entity 'Trabajador' has a global query filter defined and is the required end of a relationship with the entity 'Parte'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-25 23:19:19.488 [WRN] Entity 'Marca' has a global query filter defined and is the required end of a relationship with the entity 'Vehiculo'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-25 23:19:20.779 [INF] Todas las marcas seed ya existen.
+2026-11-25 23:19:20.784 [INF] Todas las pólizas seed ya existen.
+2026-11-25 23:19:20.812 [INF] Todos los vehículos seed ya existen.
+2026-11-25 23:19:20.818 [INF] Todos los extras seed ya existen.
+2026-11-25 23:19:20.826 [INF] Todos los recargos seed ya existen.
+2026-11-25 23:19:20.985 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-25 23:19:21.008 [WRN] The WebRootPath was not found: F:\DWES-ConcesionarioConjunto\APIAlquilerVehiculos\wwwroot. Static files may be unavailable.
+2026-11-25 23:19:21.028 [WRN] The query uses the 'First'/'FirstOrDefault' operator without 'OrderBy' and filter operators. This may lead to unpredictable results.
+2026-11-25 23:19:21.105 [WRN] Compiling a query which loads related collections for more than one collection navigation, either via 'Include' or through projection, but no 'QuerySplittingBehavior' has been configured. By default, Entity Framework will use 'QuerySplittingBehavior.SingleQuery', which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))'.
+2026-11-25 23:19:21.299 [INF] [BACKGROUND-RESERVAS] Reserva null marcada como NoPresentado.
+2026-11-25 23:20:21.337 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-25 23:21:21.372 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-25 23:22:21.386 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-25 23:22:40.693 [INF] Iniciando aplicación...
+2026-11-25 23:22:40.759 [INF] Configurando servicios...
+2026-11-25 23:22:40.764 [INF] Configurando servicios...
+2026-11-25 23:22:40.786 [INF] Configurando servicios en segundo plano...
+2026-11-25 23:22:40.790 [INF] Configurando la conexión a Redis...
+2026-11-25 23:22:40.896 [INF] Conexión a Redis configurada correctamente.
+2026-11-25 23:22:41.515 [WRN] Entity 'Trabajador' has a global query filter defined and is the required end of a relationship with the entity 'Oficina'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-25 23:22:41.518 [WRN] Entity 'Trabajador' has a global query filter defined and is the required end of a relationship with the entity 'Parte'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-25 23:22:41.519 [WRN] Entity 'Marca' has a global query filter defined and is the required end of a relationship with the entity 'Vehiculo'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-25 23:22:42.519 [INF] Todas las marcas seed ya existen.
+2026-11-25 23:22:42.525 [INF] Todas las pólizas seed ya existen.
+2026-11-25 23:22:42.553 [INF] Todos los vehículos seed ya existen.
+2026-11-25 23:22:42.564 [INF] Todos los extras seed ya existen.
+2026-11-25 23:22:42.572 [INF] Todos los recargos seed ya existen.
+2026-11-25 23:22:42.701 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-25 23:22:42.717 [WRN] The WebRootPath was not found: F:\DWES-ConcesionarioConjunto\APIAlquilerVehiculos\wwwroot. Static files may be unavailable.
+2026-11-25 23:23:42.793 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-25 23:24:15.931 [INF] Usuario 3 ha iniciado sesion
+2026-11-25 23:24:37.063 [WRN] The query uses the 'First'/'FirstOrDefault' operator without 'OrderBy' and filter operators. This may lead to unpredictable results.
+2026-11-25 23:24:37.382 [INF] [SERVICE-CREATE] Se han creado 2 líneas correctamente para la reserva 5.
+2026-11-25 23:24:37.420 [INF] [SERVICE-CREATE] Reserva creada correctamente con ID 5 y código RZ0XPQ.
+2026-11-25 23:24:37.424 [INF] Notificación Reserva - Creada enviada al grupo user-5
+2026-11-25 23:24:42.813 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-25 23:25:42.822 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-25 23:26:42.834 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-25 23:27:42.845 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-25 23:28:42.916 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.

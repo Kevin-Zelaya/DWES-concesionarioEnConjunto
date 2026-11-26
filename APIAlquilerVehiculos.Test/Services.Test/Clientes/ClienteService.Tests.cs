@@ -150,45 +150,55 @@ public class ClienteServiceTests
     #region FindAllPagedAsync
 
     [Test]
-    public async Task FindAllPagedAsync_Devuelve_Lista_Paginada_Correctamente()
+    public async Task FindAllPagedAsync_Devuelve_Lista_Dtos_Correctamente()
     {
         // Arrange
-        var filter = new ClienteFilterDto { Page = 0, Size = 10 };
         var clientes = new List<Cliente> { CrearClienteEntidad(1, 10), CrearClienteEntidad(2, 20) };
         _repositoryMock
-            .Setup(r => r.FindAllPagedAsync(filter, It.IsAny<CancellationToken>()))
+            .Setup(r => r.FindAllPagedAsync(1, 10, false, It.IsAny<CancellationToken>()))
             .ReturnsAsync((clientes, 2));
 
         // Act
-        var result = await _service.FindAllPagedAsync(filter, CancellationToken.None);
+        var result = await _service.FindAllPagedAsync(CancellationToken.None, page: 1, pageSize: 10, incluirInactivos: false);
 
         // Assert
         result.IsSuccess.Should().BeTrue();
-        result.Value.Items.Should().HaveCount(2);
-        result.Value.TotalCount.Should().Be(2);
-        result.Value.Page.Should().Be(1);
-        result.Value.PageSize.Should().Be(10);
+        result.Value.Should().HaveCount(2);
     }
 
     [Test]
     public async Task FindAllPagedAsync_Devuelve_Lista_Vacia_Cuando_No_Hay_Resultados()
     {
         // Arrange
-        var filter = new ClienteFilterDto { Page = 1, Size = 5 };
         _repositoryMock
-            .Setup(r => r.FindAllPagedAsync(filter, It.IsAny<CancellationToken>()))
+            .Setup(r => r.FindAllPagedAsync(2, 5, true, It.IsAny<CancellationToken>()))
             .ReturnsAsync((new List<Cliente>(), 0));
 
         // Act
-        var result = await _service.FindAllPagedAsync(filter, CancellationToken.None);
+        var result = await _service.FindAllPagedAsync(CancellationToken.None, page: 2, pageSize: 5, incluirInactivos: true);
 
         // Assert
         result.IsSuccess.Should().BeTrue();
-        result.Value.Items.Should().BeEmpty();
-        result.Value.TotalCount.Should().Be(0);
-        result.Value.Page.Should().Be(2);
+        result.Value.Should().BeEmpty();
     }
 
+    [Test]
+    public async Task FindAllPagedAsync_Devuelve_Lista_Ajustando_Page_Y_PageSize_Fuera_De_Rango()
+    {
+        // Arrange (page <= 0 -> 1; pageSize > 100 -> 100; pageSize < 1 -> 1)
+        var clientes = new List<Cliente> { CrearClienteEntidad(1, 10) };
+        _repositoryMock
+            .Setup(r => r.FindAllPagedAsync(1, 100, false, It.IsAny<CancellationToken>()))
+            .ReturnsAsync((clientes, 1));
+
+        // Act
+        var result = await _service.FindAllPagedAsync(CancellationToken.None, page: -3, pageSize: 500, incluirInactivos: false);
+
+        // Assert
+        result.IsSuccess.Should().BeTrue();
+        result.Value.Should().HaveCount(1);
+        _repositoryMock.Verify(r => r.FindAllPagedAsync(1, 100, false, It.IsAny<CancellationToken>()), Times.Once);
+    }
     #endregion
 
     #region GetByIdAsync
@@ -562,6 +572,100 @@ public class ClienteServiceTests
 
     #endregion
 
+    #region UpdatePartialAsync
+
+    [Test]
+public async Task UpdatePartialAsync_Devuelve_NotFound_Cuando_Id_Es_Menor_O_Igual_A_Cero()
+{
+    // Act
+    var result = await _service.UpdatePartialAsync(0, CancellationToken.None);
+
+    // Assert
+    result.IsFailure.Should().BeTrue();
+    result.Error.Should().BeOfType<NotFoundError>();
+    _repositoryMock.Verify(r => r.FindByIdAsync(It.IsAny<long>(), It.IsAny<CancellationToken>()), Times.Never);
+    _repositoryMock.Verify(r => r.UpdatePartialAsync(It.IsAny<long>(), It.IsAny<CancellationToken>()), Times.Never);
+}
+
+[Test]
+public async Task UpdatePartialAsync_Devuelve_NotFound_Cuando_Cliente_No_Existe()
+{
+    // Arrange
+    _repositoryMock.Setup(r => r.FindByIdAsync(99, It.IsAny<CancellationToken>()))
+        .ReturnsAsync((Cliente?)null);
+
+    // Act
+    var result = await _service.UpdatePartialAsync(99, CancellationToken.None);
+
+    // Assert
+    result.IsFailure.Should().BeTrue();
+    result.Error.Should().BeOfType<NotFoundError>();
+    _repositoryMock.Verify(r => r.UpdatePartialAsync(It.IsAny<long>(), It.IsAny<CancellationToken>()), Times.Never);
+}
+
+[Test]
+public async Task UpdatePartialAsync_Devuelve_ConflictError_Cuando_Cliente_Ya_Esta_Activo()
+{
+    // Arrange
+    var clienteActivo = CrearClienteEntidad(id: 1, idUsuario: 10, isActivo: true);
+    _repositoryMock.Setup(r => r.FindByIdAsync(1, It.IsAny<CancellationToken>()))
+        .ReturnsAsync(clienteActivo);
+
+    // Act
+    var result = await _service.UpdatePartialAsync(1, CancellationToken.None);
+
+    // Assert
+    result.IsFailure.Should().BeTrue();
+    result.Error.Should().BeOfType<ConflictError>();
+    _repositoryMock.Verify(r => r.UpdatePartialAsync(It.IsAny<long>(), It.IsAny<CancellationToken>()), Times.Never);
+}
+
+[Test]
+public async Task UpdatePartialAsync_Devuelve_NotFound_Cuando_Repositorio_Devuelve_Null()
+{
+    // Arrange
+    var clienteInactivo = CrearClienteEntidad(id: 3, idUsuario: 30, isActivo: false);
+    _repositoryMock.Setup(r => r.FindByIdAsync(3, It.IsAny<CancellationToken>()))
+        .ReturnsAsync(clienteInactivo);
+    _repositoryMock.Setup(r => r.UpdatePartialAsync(3, It.IsAny<CancellationToken>()))
+        .ReturnsAsync((Cliente?)null);
+
+    // Act
+    var result = await _service.UpdatePartialAsync(3, CancellationToken.None);
+
+    // Assert
+    result.IsFailure.Should().BeTrue();
+    result.Error.Should().BeOfType<NotFoundError>();
+    _cacheMock.Verify(c => c.RemoveAsync(It.IsAny<string>()), Times.Never);
+}
+
+[Test]
+public async Task UpdatePartialAsync_Devuelve_Cliente_Reactivado_Y_Limpia_Cache_Cuando_Todo_Es_Correcto()
+{
+    // Arrange
+    var clienteInactivo = CrearClienteEntidad(id: 3, idUsuario: 30, isActivo: false);
+    var clienteReactivado = CrearClienteEntidad(id: 3, idUsuario: 30, isActivo: true);
+    clienteReactivado.DeletedAt = null;
+
+    _repositoryMock.Setup(r => r.FindByIdAsync(3, It.IsAny<CancellationToken>()))
+        .ReturnsAsync(clienteInactivo);
+    _repositoryMock.Setup(r => r.UpdatePartialAsync(3, It.IsAny<CancellationToken>()))
+        .ReturnsAsync(clienteReactivado);
+
+    // Act
+    var result = await _service.UpdatePartialAsync(3, CancellationToken.None);
+
+    // Assert
+    result.IsSuccess.Should().BeTrue();
+    result.Value.Id.Should().Be(3);
+    result.Value.IsActivo.Should().BeTrue();
+    result.Value.DeletedAt.Should().BeNull();
+    _repositoryMock.Verify(r => r.UpdatePartialAsync(3, It.IsAny<CancellationToken>()), Times.Once);
+    _cacheMock.Verify(c => c.RemoveAsync("cliente:3"), Times.Once);
+}
+
+    #endregion
+    
     #region DeleteAsync
 
     [Test]
