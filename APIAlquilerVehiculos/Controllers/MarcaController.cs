@@ -1,4 +1,3 @@
-
 using APIAlquilerVehiculos.DTOs.Marcas;
 using APIAlquilerVehiculos.Services.Marcas;
 using Microsoft.AspNetCore.Mvc;
@@ -8,7 +7,7 @@ namespace APIAlquilerVehiculos.Controllers;
 /// <summary>
 /// Controlador encargado de gestionar las operaciones relacionadas con las marcas.
 /// </summary>
-[Route("api/marcas")]
+[Route("api/marcassss")]
 [ApiController]
 public class MarcaController(IMarcaService service) : ControllerBase
 {
@@ -25,7 +24,6 @@ public class MarcaController(IMarcaService service) : ControllerBase
     {
         var resultado = await _service.GetAllAsync();
 
-        // Si se produce un error, devolvemos su mensaje y código HTTP.
         if (resultado.IsFailure)
             return StatusCode((int)resultado.Error.StatusCode, resultado.Error.Message);
 
@@ -38,11 +36,9 @@ public class MarcaController(IMarcaService service) : ControllerBase
     [HttpGet("paginated")]
     public async Task<IActionResult> GetPaginated(
         [FromQuery] int pageNumber = 1,
-        [FromQuery] int pageSize = 10,
-        CancellationToken ct = default)
+        [FromQuery] int pageSize = 10)
     {
-        var resultado = await _service.GetPaginatedMarcasAsync(
-            pageNumber, pageSize, ct);
+        var resultado = await _service.GetPaginatedMarcasAsync(pageNumber, pageSize);
 
         if (resultado.IsFailure)
             return StatusCode((int)resultado.Error.StatusCode, resultado.Error.Message);
@@ -99,9 +95,7 @@ public class MarcaController(IMarcaService service) : ControllerBase
     /// Actualiza los datos de una marca existente.
     /// </summary>
     [HttpPut("{id:long}")]
-    public async Task<IActionResult> Update(
-        long id,
-        [FromBody] UpdateMarcaDto dto)
+    public async Task<IActionResult> Update(long id, [FromBody] UpdateMarcaDto dto)
     {
         var resultado = await _service.UpdateAsync(id, dto);
 

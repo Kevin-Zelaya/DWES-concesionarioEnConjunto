@@ -1,4 +1,3 @@
-
 using APIAlquilerVehiculos.Entities;
 using APIAlquilerVehiculos.Models;
 using Microsoft.EntityFrameworkCore;
@@ -12,7 +11,7 @@ namespace APIAlquilerVehiculos.Repositories.Marcas;
 public class MarcaRepository : IMarcaRepository
 {
     /// <summary>
-    /// Conexion entre la base de datos y el programa.
+    /// Conexión entre la base de datos y el programa.
     /// </summary>
     public AppDbContext _context;
 
@@ -25,16 +24,15 @@ public class MarcaRepository : IMarcaRepository
     public async Task<List<Marca>> GetAllAsync()
     {
         return await _context.Marcas
-            .Where(m => m.Activo == true)
+            .Where(m => m.Activo)
+            .OrderBy(m => m.Id)
             .ToListAsync();
     }
 
     /// <inheritdoc cref="GetPaginatedMarcasAsync"/>
-    public async Task<(List<Marca> items, int count, int totalPages,bool HasPreviousPage, bool HasNextPage)>
-        GetPaginatedMarcasAsync(
-            int pageNumber,
-            int pageSize,
-            CancellationToken ct = default)
+    public async Task<(List<Marca> items, int count, int totalPages,
+        bool HasPreviousPage, bool HasNextPage)>
+        GetPaginatedMarcasAsync(int pageNumber, int pageSize)
     {
         // Comprobar que los parámetros de paginación sean válidos
         if (pageNumber < 1 || pageSize < 1)
@@ -47,7 +45,7 @@ public class MarcaRepository : IMarcaRepository
             .Where(m => m.Activo);
 
         // Calcular el total de registros
-        int count = await query.CountAsync(ct);
+        int count = await query.CountAsync();
 
         // Calcular el número total de páginas
         int totalPages = (int)Math.Ceiling(
@@ -58,7 +56,7 @@ public class MarcaRepository : IMarcaRepository
             .OrderBy(m => m.Id)
             .Skip((pageNumber - 1) * pageSize)
             .Take(pageSize)
-            .ToListAsync(ct);
+            .ToListAsync();
 
         bool hasPreviousPage = pageNumber > 1;
         bool hasNextPage = pageNumber < totalPages;
@@ -70,17 +68,21 @@ public class MarcaRepository : IMarcaRepository
     /// <inheritdoc cref="GetByIdAsync"/>
     public async Task<Marca?> GetByIdAsync(long id)
     {
-        return await _context.Marcas .AsNoTracking() .FirstOrDefaultAsync(m => m.Id == id && m.Activo == true);
+        return await _context.Marcas
+            .AsNoTracking()
+            .FirstOrDefaultAsync(
+                m => m.Id == id && m.Activo);
     }
-   
+
     /// <inheritdoc cref="GetByNombreAsync"/>
     public async Task<Marca?> GetByNombreAsync(string nombre)
     {
         return await _context.Marcas
             .AsNoTracking()
-            .FirstOrDefaultAsync(m => m.Nombre == nombre && m.Activo == true);
+            .FirstOrDefaultAsync(
+                m => m.Nombre == nombre && m.Activo);
     }
-    
+
     /// <inheritdoc cref="CreateAsync"/>
     public async Task<Marca> CreateAsync(Marca obj)
     {
@@ -98,13 +100,17 @@ public class MarcaRepository : IMarcaRepository
     /// <inheritdoc cref="UpdateAsync"/>
     public async Task<Marca?> UpdateAsync(Marca obj)
     {
-        var response = await _context.Marcas.FirstOrDefaultAsync(m => m.Id == obj.Id && m.Activo == true);
-        if (response == null) return null;
+        var response = await _context.Marcas
+            .FirstOrDefaultAsync(
+                m => m.Id == obj.Id && m.Activo);
 
-        var createdAt = response.CreatedAt;
-         _context.Entry(response).CurrentValues.SetValues(obj);
+        if (response == null)
+            return null;
 
-        response.CreatedAt = createdAt;
+        response.Nombre = obj.Nombre;
+        response.Pais = obj.Pais;
+        response.Wb = obj.Wb;
+
         response.UpdatedAt = DateTime.UtcNow;
 
         await _context.SaveChangesAsync();
@@ -116,10 +122,11 @@ public class MarcaRepository : IMarcaRepository
     public async Task<bool> DeleteAsync(long id)
     {
         var obj = await _context.Marcas
-            .FirstOrDefaultAsync(m =>
-                m.Id == id && m.Activo == true);
+            .FirstOrDefaultAsync(
+                m => m.Id == id && m.Activo);
 
-        if (obj == null) return false;
+        if (obj == null)
+            return false;
 
         obj.UpdatedAt = DateTime.UtcNow;
         obj.DeletedAt = DateTime.UtcNow;

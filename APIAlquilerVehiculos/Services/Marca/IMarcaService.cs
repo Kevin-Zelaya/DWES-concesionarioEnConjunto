@@ -1,6 +1,6 @@
-
 using APIAlquilerVehiculos.DTOs.Marcas;
 using APIAlquilerVehiculos.Errors.Common;
+using APIAlquilerVehiculos.Extensions;
 using CSharpFunctionalExtensions;
 
 namespace APIAlquilerVehiculos.Services.Marcas;
@@ -9,12 +9,10 @@ public interface IMarcaService
 {
     Task<Result<List<MarcaDto>, DomainError>> GetAllAsync();
 
-    Task<Result<(List<MarcaDto> items, int count, int totalPages,
-        bool HasPreviousPage, bool HasNextPage), DomainError>>
+    Task<Result<PaginatedResouce<MarcaDto>, DomainError>>
         GetPaginatedMarcasAsync(
             int pageNumber,
-            int pageSize,
-            CancellationToken ct = default);
+            int pageSize);
 
     Task<Result<MarcaDto, DomainError>> GetByIdAsync(long id);
 

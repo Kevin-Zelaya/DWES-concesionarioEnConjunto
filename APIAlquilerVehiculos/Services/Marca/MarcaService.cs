@@ -1,10 +1,10 @@
-
 using System.Net;
 using APIAlquilerVehiculos.DTOs.Marcas;
 using APIAlquilerVehiculos.Errors.Common;
 using APIAlquilerVehiculos.Models;
 using APIAlquilerVehiculos.Repositories.Marcas;
 using CSharpFunctionalExtensions;
+using APIAlquilerVehiculos.Extensions;
 
 namespace APIAlquilerVehiculos.Services.Marcas;
 
@@ -26,7 +26,6 @@ public class MarcaService(IMarcaRepository repository) : IMarcaService
         var marcas = await _repository.GetAllAsync();
 
         // Convertimos las entidades Marca en objetos MarcaDto.
-        // Así evitamos devolver directamente los modelos de la base de datos.
         var marcasDto = marcas.Select(m => new MarcaDto
         {
             Id = m.Id,
@@ -40,29 +39,23 @@ public class MarcaService(IMarcaRepository repository) : IMarcaService
     }
 
     /// <inheritdoc cref="GetPaginatedMarcasAsync"/>
-    public async Task<Result<(List<MarcaDto> items, int count, int totalPages,
-        bool HasPreviousPage, bool HasNextPage), DomainError>>
-        GetPaginatedMarcasAsync(
-            int pageNumber,
-            int pageSize,
-            CancellationToken ct = default)
+    public async Task<Result<PaginatedResouce<MarcaDto>, DomainError>>
+        GetPaginatedMarcasAsync(int pageNumber, int pageSize)
     {
-        // Comprobamos que los parámetros de paginación sean válidos.
-        // Tanto el número de página como el tamaño deben ser mayores que 0.
+        // Comprobamos que los parámetros sean válidos.
         if (pageNumber < 1 || pageSize < 1)
             return Result.Failure<
-                (List<MarcaDto> items, int count, int totalPages,
-                bool HasPreviousPage, bool HasNextPage), DomainError>(
+                PaginatedResouce<MarcaDto>, DomainError>(
                 new DomainError(
                     "Los parámetros de paginación no son válidos.",
                     HttpStatusCode.BadRequest));
 
-        // Solicitamos al repositorio las marcas correspondientes a esa página.
-        var resultado = await _repository.GetPaginatedMarcasAsync(
-            pageNumber, pageSize, ct);
+        // Obtenemos las marcas paginadas del repositorio.
+        var response = await _repository.GetPaginatedMarcasAsync(
+            pageNumber, pageSize);
 
-        // Convertimos las marcas obtenidas a DTOs.
-        var marcasDto = resultado.items.Select(m => new MarcaDto
+        // Convertimos las entidades a DTOs.
+        var marcasDto = response.items.Select(m => new MarcaDto
         {
             Id = m.Id,
             Nombre = m.Nombre,
@@ -70,12 +63,16 @@ public class MarcaService(IMarcaRepository repository) : IMarcaService
             Wb = m.Wb
         }).ToList();
 
-        // Devolvemos las marcas junto con la información de paginación.
-        return Result.Success<
-            (List<MarcaDto> items, int count, int totalPages,
-            bool HasPreviousPage, bool HasNextPage), DomainError>(
-            (marcasDto, resultado.count, resultado.totalPages,
-            resultado.HasPreviousPage, resultado.HasNextPage));
+        // Construimos el objeto de paginación.
+        var toResponse = new PaginatedResouce<MarcaDto>(
+            marcasDto,
+            response.count,
+            response.totalPages,
+            response.HasPreviousPage,
+            response.HasNextPage);
+
+        return Result.Success<PaginatedResouce<MarcaDto>, DomainError>(
+            toResponse);
     }
 
     /// <inheritdoc cref="GetByIdAsync"/>
@@ -102,8 +99,7 @@ public class MarcaService(IMarcaRepository repository) : IMarcaService
     }
 
     /// <inheritdoc cref="GetByNombreAsync"/>
-    public async Task<Result<MarcaDto, DomainError>> GetByNombreAsync(
-        string nombre)
+    public async Task<Result<MarcaDto, DomainError>> GetByNombreAsync(string nombre)
     {
         // Buscamos una marca por su nombre.
         var marca = await _repository.GetByNombreAsync(nombre);
@@ -126,8 +122,7 @@ public class MarcaService(IMarcaRepository repository) : IMarcaService
     }
 
     /// <inheritdoc cref="CreateAsync"/>
-    public async Task<Result<MarcaDto, DomainError>> CreateAsync(
-        CreateMarcaDto dto)
+    public async Task<Result<MarcaDto, DomainError>> CreateAsync(CreateMarcaDto dto)
     {
         // Creamos una nueva entidad Marca a partir de los datos recibidos.
         var marca = new Marca

@@ -11,6 +11,9 @@ using APIAlquilerVehiculos.Repositories.Clientes;
 using APIAlquilerVehiculos.Repositories.Vehiculos;
 using CSharpFunctionalExtensions;
 using Microsoft.EntityFrameworkCore;
+using APIAlquilerVehiculos.Entities.Cassandra;
+using APIAlquilerVehiculos.Services.Cassandra;
+using System.Linq;
 
 /// <summary>
 /// Implementación de <see cref="IReservaService"/> para gestionar las reservas.
@@ -26,7 +29,8 @@ public class ReservaService(
     IClienteRepository _clienteRepository,
     IncidenciaService _incidenciaService,
     IRecargoRepository _recargoRepository,
-    INotificationService _notificationService
+    INotificationService _notificationService,
+    IReservaEventoService _reservaEventoService
 
 ) : IReservaService
 {
@@ -124,10 +128,30 @@ public class ReservaService(
 
             // Actualizamos el estado del vehículo
             vehiculo.Estado = EstadoEnum.Reservado;
+           
 
             // Guardamos los cambios y confirmamos la transacción
             await _unitOfWork.SaveChangesAsync();
             await _unitOfWork.CommitTransactionAsync();
+             
+             // Registrar evento de reserva creada en Cassandra.
+            await _reservaEventoService.RegistrarEventoAsync(new ReservaEvento
+            {
+                EventoId = Guid.NewGuid(),
+                ReservaId = reservaTS.Id,
+                CodigoReferencia = reservaTS.CodigoRefencia ?? string.Empty,
+                TipoEvento = "ReservaCreada",
+                FechaEvento = DateTime.UtcNow,
+                VehiculoId = vehiculo.Id,
+                Modelo = vehiculo.Modelo,
+                Categoria = vehiculo.categoria.ToString(),
+                Polizas = lineasCreadas.Value
+                    .Where(l => l.Tipo == TipoLinea.Poliza)
+                    .Select(l => l.Concepto)
+                    .ToList(),
+                FechaRecogida = reservaTS.FechaRecogida,
+                FechaDevolucion = reservaTS.FechaDevolucion
+            });
 
             // Asociamos las líneas y devolvemos el resultado
             reservaTS.Lineas = lineasCreadas.Value;

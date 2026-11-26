@@ -4,6 +4,7 @@ using APIAlquilerVehiculos.Repositories.Taller;
 using APIAlquilerVehiculos.Repositories.Trabajadores;
 using APIAlquilerVehiculos.Repositories.Vehiculos;
 using Serilog;
+using APIAlquilerVehiculos.Repositories.Marcas;
 
 public static class RepositoryConfiguration
 {
@@ -23,6 +24,7 @@ public static class RepositoryConfiguration
         services.AddScoped<IClienteRepository, ClienteRepository>();
         services.AddScoped<IParteRepository, ParteRepository>();
         services.AddScoped<IPagoRepository, PagoRepository>();
+        services.AddScoped<IMarcaRepository, MarcaRepository>();
         return services;
     }
 }

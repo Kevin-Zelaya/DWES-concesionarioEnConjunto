@@ -5,6 +5,8 @@ using APIAlquilerVehiculos.Services.Pagos;
 using APIAlquilerVehiculos.Services.Taller;
 using APIAlquilerVehiculos.Services.Trabajadores;
 using Serilog;
+using APIAlquilerVehiculos.Services.Cassandra;
+using APIAlquilerVehiculos.Services.Marcas;
 using APIAlquilerVehiculos.Services.Pagos;
 using APIAlquilerVehiculos.Services.Usuarios;
 
@@ -34,6 +36,8 @@ public static class ServiceConfig
         services.AddScoped<IUsuarioService, UsuarioService>();
         services.AddScoped<INotificationService, NotificationService>();
         services.AddScoped<INotificationService, NotificationService>();
+        services.AddSingleton<IReservaEventoService, ReservaEventoService>();
+        services.AddScoped<IMarcaService, MarcaService>();
         return services;
     }
 }
