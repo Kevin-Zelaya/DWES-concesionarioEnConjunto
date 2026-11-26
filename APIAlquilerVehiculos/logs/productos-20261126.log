@@ -1,0 +1,276 @@
+2026-11-26 10:23:52.804 [INF] Iniciando aplicación...
+2026-11-26 10:23:53.456 [INF] Configurando servicios...
+2026-11-26 10:23:53.459 [INF] Configurando servicios...
+2026-11-26 10:23:53.521 [INF] Configurando servicios en segundo plano...
+2026-11-26 10:23:53.898 [INF] Configurando la conexión a Redis...
+2026-11-26 10:23:54.111 [INF] Conexión a Redis configurada correctamente.
+2026-11-26 10:23:55.779 [WRN] Entity 'Trabajador' has a global query filter defined and is the required end of a relationship with the entity 'Oficina'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-26 10:23:55.791 [WRN] Entity 'Trabajador' has a global query filter defined and is the required end of a relationship with the entity 'Parte'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-26 10:23:55.811 [WRN] Entity 'Marca' has a global query filter defined and is the required end of a relationship with the entity 'Vehiculo'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-26 10:23:57.435 [INF] Todas las marcas seed ya existen.
+2026-11-26 10:23:57.458 [INF] Todas las pólizas seed ya existen.
+2026-11-26 10:23:57.491 [INF] Todos los vehículos seed ya existen.
+2026-11-26 10:23:57.499 [INF] Todos los extras seed ya existen.
+2026-11-26 10:23:57.517 [INF] Todos los recargos seed ya existen.
+2026-11-26 10:23:57.672 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 10:23:57.698 [WRN] The WebRootPath was not found: C:\Users\Marcos\Documents\Proyectos\Back-end\C#\PracticaAlquler_de_choches\APIAlquilerVehiculos\wwwroot. Static files may be unavailable.
+2026-11-26 10:24:40.832 [INF] Usuario 6 ha iniciado sesion
+2026-11-26 10:24:57.838 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 10:25:06.416 [INF] Usuario 1 ha iniciado sesion
+2026-11-26 10:25:22.138 [INF] Obteniendo clientes paginados - Página: 1, Tamaño: 2
+2026-11-26 10:25:39.927 [INF] Obteniendo clientes paginados - Página: 1, Tamaño: 1
+2026-11-26 10:25:57.857 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 10:26:23.538 [ERR] Excepción no manejada. ErrorId: 6dcc5d81
+System.InvalidOperationException: Unable to resolve service for type 'APIAlquilerVehiculos.Services.Usuarios.IUsuarioService' while attempting to activate 'APIAlquilerVehiculos.Controllers.UsuarioController'.
+   at Microsoft.Extensions.DependencyInjection.ActivatorUtilities.ThrowHelperUnableToResolveService(Type type, Type requiredBy)
+   at lambda_method587(Closure, IServiceProvider, Object[])
+   at Microsoft.AspNetCore.Mvc.Controllers.ControllerFactoryProvider.<>c__DisplayClass6_0.<CreateControllerFactory>g__CreateController|0(ControllerContext controllerContext)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.InvokeInnerFilterAsync()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at GlobalExceptionHandler.InvokeAsync(HttpContext context) in C:\Users\Marcos\Documents\Proyectos\Back-end\C#\PracticaAlquler_de_choches\APIAlquilerVehiculos\MiddleWares\GlobalExceptionHandler.cs:line 13
+2026-11-26 10:26:57.868 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 11:28:19.306 [INF] Iniciando aplicación...
+2026-11-26 11:28:19.852 [INF] Configurando servicios...
+2026-11-26 11:28:19.910 [INF] Configurando servicios...
+2026-11-26 11:28:20.080 [INF] Configurando servicios en segundo plano...
+2026-11-26 11:28:20.123 [INF] Configurando la conexión a Redis...
+2026-11-26 11:28:21.300 [INF] Conexión a Redis configurada correctamente.
+2026-11-26 11:28:25.474 [WRN] Entity 'Trabajador' has a global query filter defined and is the required end of a relationship with the entity 'Oficina'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-26 11:28:25.490 [WRN] Entity 'Trabajador' has a global query filter defined and is the required end of a relationship with the entity 'Parte'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-26 11:28:25.497 [WRN] Entity 'Marca' has a global query filter defined and is the required end of a relationship with the entity 'Vehiculo'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-26 11:28:32.129 [INF] Todas las marcas seed ya existen.
+2026-11-26 11:28:32.167 [INF] Todas las pólizas seed ya existen.
+2026-11-26 11:28:32.346 [INF] Todos los vehículos seed ya existen.
+2026-11-26 11:28:32.385 [INF] Todos los extras seed ya existen.
+2026-11-26 11:28:32.421 [INF] Todos los recargos seed ya existen.
+2026-11-26 11:28:33.141 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 11:28:33.239 [WRN] The WebRootPath was not found: C:\Users\Marcos\Documents\Proyectos\Back-end\C#\PracticaAlquler_de_choches\APIAlquilerVehiculos\wwwroot. Static files may be unavailable.
+2026-11-26 11:28:39.912 [INF] Usuario 1 ha iniciado sesion
+2026-11-26 11:29:33.913 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 11:29:35.599 [INF] Obteniendo clientes paginados - Página: 1, Tamaño: 1
+2026-11-26 11:29:44.141 [INF] Obteniendo clientes paginados - Página: 1, Tamaño: 10
+2026-11-26 11:29:50.154 [INF] Obteniendo clientes paginados - Página: 1, Tamaño: 10
+2026-11-26 11:30:33.978 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 11:31:34.013 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 11:32:08.981 [INF] Obteniendo clientes paginados - Página: 1, Tamaño: 1
+2026-11-26 11:32:34.053 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 11:33:34.094 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 11:34:25.125 [INF] Usuario 6 ha iniciado sesion
+2026-11-26 11:34:34.292 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 11:35:34.332 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 11:36:34.369 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 11:37:34.407 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 11:38:34.433 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 11:39:34.549 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 11:40:34.568 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 11:40:37.520 [INF] Buscando cliente 2
+2026-11-26 11:41:34.593 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 11:41:58.940 [INF] Buscando cliente 6
+2026-11-26 11:42:05.875 [INF] Buscando cliente 6
+2026-11-26 11:42:09.493 [INF] Buscando cliente 2
+2026-11-26 11:42:34.611 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 11:43:34.625 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 11:43:48.206 [INF] Buscando cliente 3
+2026-11-26 11:44:34.742 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 11:44:52.576 [INF] Usuario 4 ha iniciado sesion
+2026-11-26 11:45:34.756 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 11:46:34.767 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 11:47:34.780 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 11:48:34.796 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 11:49:12.379 [INF] Usuario 1 ha iniciado sesion
+2026-11-26 11:49:34.907 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 11:49:37.327 [INF] Usuario 1 ha iniciado sesion
+2026-11-26 11:50:34.922 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 11:50:42.550 [INF] Buscando cliente 2
+2026-11-26 11:51:34.937 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 11:52:34.950 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 11:53:34.965 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 11:54:35.015 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 11:55:27.494 [INF] Cliente 2 actualizdo correctamente
+2026-11-26 11:55:35.034 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 11:55:44.163 [INF] Cliente 2 actualizdo correctamente
+2026-11-26 11:56:35.055 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 11:57:35.071 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 11:58:35.090 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 11:58:45.670 [INF] Usuario 6 ha iniciado sesion
+2026-11-26 11:59:35.212 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 11:59:47.429 [WRN] No se encontro el Cliente 3
+2026-11-26 11:59:53.032 [WRN] No se encontro el Cliente 6
+2026-11-26 12:00:35.228 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 12:01:14.942 [WRN] No se encontro el Cliente 6
+2026-11-26 12:01:35.245 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 12:02:35.265 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 12:03:02.996 [INF] Buscando cliente 6
+2026-11-26 12:03:03.010 [WRN] Cliente 6 NO encontrado 
+2026-11-26 12:03:35.277 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 12:04:35.360 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 12:05:35.370 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 12:05:57.296 [INF] Obteniendo clientes paginados - Página: 1, Tamaño: 1
+2026-11-26 12:06:03.423 [INF] Obteniendo clientes paginados - Página: 1, Tamaño: 5
+2026-11-26 12:06:35.380 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 12:06:38.054 [INF] Ya existe un usuario con el email añadido: cliente@alquiler.com
+2026-11-26 12:07:35.396 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 12:08:35.402 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 12:09:35.520 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 12:10:35.532 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 12:10:54.955 [INF] Usuario 6 ha iniciado sesion
+2026-11-26 12:11:35.546 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 12:11:40.801 [INF] Usuario 1 ha iniciado sesion
+2026-11-26 12:11:56.035 [WRN] Cliente 2 dado de baja correctamente
+2026-11-26 12:12:35.558 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 12:13:24.964 [WRN] No se encontro el Cliente 9
+2026-11-26 12:13:35.566 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 12:14:35.659 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 12:15:35.676 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 12:16:35.698 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 12:16:45.515 [WRN] Intento de login de cuenta desactivada 6
+2026-11-26 12:16:56.934 [INF] Usuario 2 ha iniciado sesion
+2026-11-26 12:17:23.583 [INF] Usuario 1 ha iniciado sesion
+2026-11-26 12:17:35.707 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 12:17:36.974 [INF] Cliente 2 con estado renovado correctamente
+2026-11-26 12:18:35.715 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 12:19:35.815 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 12:20:35.837 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 12:21:35.848 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 12:22:35.870 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 12:23:35.893 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 12:24:36.006 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 12:25:36.022 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 12:26:36.049 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 12:27:36.075 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 12:28:36.096 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 12:29:36.207 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 12:30:36.216 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 12:31:36.237 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 12:32:36.266 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 12:33:36.285 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 12:34:36.404 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 12:35:36.411 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 12:36:36.422 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 12:37:36.432 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 12:38:36.441 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 12:39:36.463 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 12:40:36.553 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 12:41:36.563 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 12:42:36.585 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 12:43:36.907 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 12:44:36.928 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 12:45:37.169 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 12:46:37.226 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 12:47:37.253 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 12:48:37.260 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 12:49:37.267 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 12:50:37.418 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 12:51:37.439 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 12:52:37.474 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 12:53:37.483 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 12:54:37.494 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 12:55:37.609 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 12:56:37.623 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 12:57:37.636 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 12:58:37.645 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 12:59:37.698 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 13:00:37.717 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 13:01:37.876 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 13:02:38.374 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 13:03:38.397 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 13:04:38.687 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 13:05:38.838 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 13:06:39.098 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 13:07:39.109 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 13:08:39.496 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 13:09:39.523 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 13:10:39.560 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 13:11:39.918 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 13:12:39.955 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 13:13:39.961 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 13:14:39.981 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 13:15:39.994 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 13:16:40.130 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 13:17:40.285 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 13:18:40.781 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 13:19:40.815 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 13:20:40.827 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 13:21:41.005 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 13:22:41.017 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 13:23:41.058 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 13:24:41.356 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 13:25:41.363 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 13:26:41.460 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 13:27:41.962 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 13:28:42.434 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 13:29:42.717 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 13:30:42.758 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 13:31:42.826 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 13:32:43.352 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 13:33:44.249 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 13:34:44.298 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 13:35:44.306 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 13:36:44.323 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 13:37:44.332 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 13:38:44.630 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 13:39:44.640 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 13:40:44.716 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 13:41:44.856 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 13:42:44.867 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 13:43:44.890 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 13:44:45.035 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 13:45:45.043 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 13:46:45.050 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 13:47:45.066 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 13:48:45.082 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 13:49:45.090 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 13:50:45.193 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 13:51:45.199 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 13:52:45.206 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 13:53:45.213 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 13:54:45.236 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 13:55:45.241 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 13:56:45.345 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 13:57:45.355 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 13:58:45.360 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 13:59:45.365 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 14:00:45.384 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 14:01:45.518 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 14:02:45.526 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 14:03:45.550 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 14:04:45.556 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 14:05:45.572 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 14:06:45.586 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 14:07:45.703 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 14:08:45.722 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 14:09:45.734 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 14:10:45.748 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 14:11:45.758 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 14:12:45.882 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 14:13:45.899 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 14:14:45.926 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 14:15:45.941 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 14:16:45.953 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 14:17:45.960 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 14:18:46.065 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 14:19:46.084 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 14:20:46.090 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 14:21:47.764 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 14:22:47.835 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 14:23:47.947 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 14:24:47.968 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 14:25:47.985 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 14:26:47.991 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 14:27:48.006 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 14:28:48.137 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 14:29:48.148 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 14:30:48.169 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 14:31:48.180 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 14:32:48.214 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 14:33:48.368 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 14:34:48.380 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-26 14:35:48.407 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.

@@ -1,0 +1,62 @@
+2026-11-25 18:06:16.032 [INF] Iniciando aplicación...
+2026-11-25 18:06:16.565 [INF] Configurando servicios...
+2026-11-25 18:06:16.568 [INF] Configurando servicios...
+2026-11-25 18:06:16.606 [INF] Configurando servicios en segundo plano...
+2026-11-25 18:06:16.835 [INF] Configurando la conexión a Redis...
+2026-11-25 18:06:17.016 [INF] Conexión a Redis configurada correctamente.
+2026-11-25 18:06:18.390 [WRN] Entity 'Trabajador' has a global query filter defined and is the required end of a relationship with the entity 'Oficina'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-25 18:06:18.396 [WRN] Entity 'Trabajador' has a global query filter defined and is the required end of a relationship with the entity 'Parte'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-25 18:06:18.400 [WRN] Entity 'Marca' has a global query filter defined and is the required end of a relationship with the entity 'Vehiculo'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-25 18:06:20.414 [INF] Todas las marcas seed ya existen.
+2026-11-25 18:06:20.426 [INF] Todas las pólizas seed ya existen.
+2026-11-25 18:06:20.462 [INF] Todos los vehículos seed ya existen.
+2026-11-25 18:06:20.603 [INF] Se han creado 4 extras seed.
+2026-11-25 18:06:20.636 [INF] Se han creado 2 recargos seed.
+2026-11-25 18:06:20.763 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-25 18:06:20.783 [WRN] The WebRootPath was not found: C:\Users\Marcos\Documents\Proyectos\Back-end\C#\PracticaAlquler_de_choches\APIAlquilerVehiculos\wwwroot. Static files may be unavailable.
+2026-11-25 18:07:20.895 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-25 18:08:20.924 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-25 18:09:20.935 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-25 18:10:20.940 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-25 18:11:20.954 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-25 18:12:21.084 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-25 18:13:21.097 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-25 18:14:21.105 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-25 18:15:22.335 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-25 18:16:22.377 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-25 18:17:22.573 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-25 18:18:22.590 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-25 18:19:22.605 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-25 18:20:22.625 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-25 18:21:22.666 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-25 18:22:22.884 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-25 18:23:23.112 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-25 18:24:23.126 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-25 18:25:23.141 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-25 18:26:23.155 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-25 18:27:23.699 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-25 18:28:23.713 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-25 18:29:23.723 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-25 18:30:23.734 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-25 18:31:23.744 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-25 18:32:23.890 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-25 18:33:23.980 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-25 18:34:24.021 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-25 18:35:24.045 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-25 18:36:24.066 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-25 18:37:24.147 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-25 18:38:24.164 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-25 18:39:24.173 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-25 18:40:24.183 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-25 18:41:24.194 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-25 18:42:24.304 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-25 18:43:24.312 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-25 18:44:24.333 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-25 18:45:27.567 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-25 18:46:28.666 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-25 19:04:46.547 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-25 19:05:46.560 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-25 19:06:46.567 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-25 19:07:46.582 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-25 19:08:46.609 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-25 19:09:46.792 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.

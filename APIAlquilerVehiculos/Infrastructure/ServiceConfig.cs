@@ -31,6 +31,7 @@ public static class ServiceConfig
         services.AddSingleton<IncidenciaService>();
         services.AddScoped<IExtraService, ExtraService>();
         services.AddScoped<IPolizaService, PolizaService>();
+        services.AddScoped<IUsuarioService, UsuarioService>();
         return services;
     }
 }

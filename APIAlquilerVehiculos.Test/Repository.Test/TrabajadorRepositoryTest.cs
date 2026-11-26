@@ -401,11 +401,18 @@ public class TrabajadorRepositoryTest
     [TestCase(Estado.Cancelada, false)]
     public async Task TieneReservasVivasAsync_EvaluaCorrectamenteSegunEstado(Estado estado, bool esperado)
     {
+        var marca = new Marca
+        {
+            Nombre = "Marca Test" // ajusta las propiedades requeridas de Marca
+        };
+        _db.Marcas.Add(marca);
+        await _db.SaveChangesAsync();
+        
         var vehiculo = new Vehiculo
         {
             Id = "VEH-01",
             Matricula = "9999XYZ",
-            MarcaId = 1,
+            MarcaId = marca.Id,
             Modelo = "Focus",
             Acriss = "CCMR",
             categoria = CategoriaEnum.Familiar,
@@ -432,8 +439,8 @@ public class TrabajadorRepositoryTest
             Estado = estado,
             Categoria = CategoriaEnum.Familiar,
             FechaCreacion = DateTime.UtcNow,
-            FechaRecogida = DateTime.SpecifyKind(DateTime.Now.AddDays(1), DateTimeKind.Unspecified),
-            FechaDevolucion = DateTime.SpecifyKind(DateTime.Now.AddDays(3), DateTimeKind.Unspecified),
+            FechaRecogida = DateTime.UtcNow.AddDays(1),
+            FechaDevolucion = DateTime.UtcNow.AddDays(3),
             PrecioTotal = 100m
         };
         await _db.Reservas.AddAsync(reserva);

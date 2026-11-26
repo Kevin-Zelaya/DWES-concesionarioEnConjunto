@@ -500,8 +500,8 @@ public class ClientesRepositoryTest
             Categoria = CategoriaEnum.Familiar,
             Estado = estado,
             FechaCreacion = DateTime.UtcNow,
-            FechaRecogida = DateTime.SpecifyKind(DateTime.Now.AddDays(1), DateTimeKind.Unspecified),
-            FechaDevolucion = DateTime.SpecifyKind(DateTime.Now.AddDays(3), DateTimeKind.Unspecified),
+            FechaRecogida = DateTime.UtcNow.AddDays(1),
+            FechaDevolucion = DateTime.UtcNow.AddDays(3),
             PrecioTotal = 150m
         };
 

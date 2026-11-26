@@ -1,0 +1,18 @@
+info:
+  name: GetByIdAdmin200OK
+  type: http
+  seq: 1
+
+http:
+  method: GET
+  url: "{{baseUrl}}/api/cliente/2"
+  auth:
+    type: bearer
+    token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwiZW1haWwiOiJhZG1pbkBhbHF1aWxlci5jb20iLCJqdGkiOiIxYzhhNTRhYS0yMzQ2LTQ1M2QtODI3Zi01MDkwYzEwYTNkMTkiLCJpYXQiOjE3OTU2ODg5MTksInJvbGUiOiJBZG1pbmlzdHJhZG9yIiwibmJmIjoxNzk1Njg4OTE5LCJleHAiOjE3OTU2OTYxMTksImlzcyI6IkFscXVpbGVyVmVoaWN1bG9zQXBpIiwiYXVkIjoiQWxxdWlsZXJWZWhpY3Vsb3NDbGllbnQifQ.IAayZKY_EL8Eunx_CO5TS-YWYvjddvTJ5aNccsc4Bzg
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false
