@@ -15,6 +15,8 @@ public static class TestServices
 
         services.AddLogging();
 
+        services.AddMemoryCache();
+        
         services.AddDbContext<AppDbContext>(options =>
             options.UseNpgsql(connectionString));
 

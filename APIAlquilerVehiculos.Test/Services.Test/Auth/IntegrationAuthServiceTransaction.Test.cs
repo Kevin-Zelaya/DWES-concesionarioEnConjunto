@@ -4,6 +4,7 @@ using APIAlquilerVehiculos.Entities;
 using APIAlquilerVehiculos.Errors.Common;
 using APIAlquilerVehiculos.Models.Usuarios;
 using APIAlquilerVehiculos.Services.Auth;
+using APIAlquilerVehiculos.Tests.Infrastructure;
 using FluentValidation;
 using FluentValidation.Results;
 using Microsoft.AspNetCore.Http;
@@ -51,8 +52,10 @@ private PostgreSqlContainer _postgresContainer = null!;
             .Options;
 
         await using var initContext = new AppDbContext(options);
-        await initContext.Database.MigrateAsync();
 
+        await using var migrationContext = new AppDbContext(options);
+        await TestMigrationHelper.InitializeTestDatabaseAsync(migrationContext);
+        
         var roleStore = new RoleStore<IdentityRole<long>, AppDbContext, long>(initContext);
         using var roleManager = new RoleManager<IdentityRole<long>>(
             roleStore,
@@ -73,9 +76,8 @@ private PostgreSqlContainer _postgresContainer = null!;
         var options = new DbContextOptionsBuilder<AppDbContext>()
             .UseNpgsql(_connectionString)
             .Options;
-
+        
         _dbContext = new AppDbContext(options);
-        await _dbContext.Database.MigrateAsync();
 
         // UserManager REAL usando el mismo _dbContext (misma conexión y misma transacción)
         var userStore = new UserStore<Usuario, IdentityRole<long>, AppDbContext, long>(_dbContext);
@@ -133,15 +135,22 @@ private PostgreSqlContainer _postgresContainer = null!;
     [TearDown]
     public async Task TearDown()
     {
-        if (_dbContext.Database.GetDbConnection().State == ConnectionState.Open)
+        try
         {
-            await _dbContext.Clientes.ExecuteDeleteAsync();
-            await _dbContext.UserRoles.ExecuteDeleteAsync();
-            await _dbContext.Users.ExecuteDeleteAsync();
-        }
+            if (_dbContext.Database.GetDbConnection().State != ConnectionState.Open)
+            {
+                await _dbContext.Database.OpenConnectionAsync();
+            }
 
-        _userManager.Dispose();
-        await _dbContext.DisposeAsync();
+            await _dbContext.Clientes.IgnoreQueryFilters().ExecuteDeleteAsync();
+            await _dbContext.UserRoles.ExecuteDeleteAsync();
+            await _dbContext.Users.IgnoreQueryFilters().ExecuteDeleteAsync();
+        }
+        finally
+        {
+            _userManager.Dispose();
+            await _dbContext.DisposeAsync();
+        }
     }
 
     [OneTimeTearDown]
@@ -180,16 +189,18 @@ private PostgreSqlContainer _postgresContainer = null!;
     [Test]
     public async Task Signup_FallaSaveChangesAsync_DevuelveInternalError()
     {
-        // Arrange: forzamos fallo al guardar el Cliente cerrando la conexión justo antes de SaveChangesAsync
+        // Arrange
         var email = $"savechanges-{Guid.NewGuid()}@correo.com";
         var request = CrearDtoValido(email: email);
+        var llamadasSaveChanges = 0;
 
-        _dbContext.SavingChanges += async (_, _) =>
+        _dbContext.SavingChanges += (_, _) =>
         {
-            // Solo cerramos cuando ya se haya creado el usuario para simular fallo al guardar Cliente
-            if (await _dbContext.Users.AnyAsync(u => u.Email == email))
+            llamadasSaveChanges++;
+
+            if (llamadasSaveChanges >= 2 || _dbContext.ChangeTracker.Entries<Cliente>().Any())
             {
-                await _dbContext.Database.CloseConnectionAsync();
+                throw new InvalidOperationException("Fallo simulado en SaveChangesAsync al persistir Cliente");
             }
         };
 

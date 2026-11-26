@@ -354,6 +354,7 @@ public class VehiculosRepository_Test
     {
         await _context.Vehiculos.AddRangeAsync(vehiculos);
         await _context.SaveChangesAsync();
+        _context.ChangeTracker.Clear();
     }
 
     private Vehiculo CrearVehiculo(
@@ -365,7 +366,7 @@ public class VehiculosRepository_Test
         {
             Id = id,
             Matricula = matricula,
-            MarcaId = 1,
+            MarcaId = _marcaId,
             Modelo = "GOLF",
             Acriss = "ECMR",
             categoria = CategoriaEnum.Sedan,

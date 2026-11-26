@@ -4,6 +4,7 @@ using APIAlquilerVehiculos.Errors.Common;
 using APIAlquilerVehiculos.Errors.Email;
 using APIAlquilerVehiculos.Models.Usuarios;
 using APIAlquilerVehiculos.Services.Auth;
+using APIAlquilerVehiculos.Tests.Infrastructure;
 using FluentValidation;
 using FluentValidation.Results;
 using Microsoft.AspNetCore.Authentication;
@@ -14,6 +15,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moq;
+using Npgsql;
 using Testcontainers.PostgreSql;
 
 namespace APIAlquilerVehiculos.Test.Services.Test;
@@ -57,6 +59,13 @@ public class AuthServiceTest
 
         await _postgresContainer.StartAsync(); // lo inicializamos
         _connectionString = _postgresContainer.GetConnectionString();
+        
+        var options = new DbContextOptionsBuilder<AppDbContext>()
+            .UseNpgsql(_connectionString)
+            .Options;
+        await using var migrationContext = new AppDbContext(options);
+
+        await TestMigrationHelper.InitializeTestDatabaseAsync(migrationContext);
     }
     
     [SetUp] // Antes de cada test individual
@@ -107,7 +116,6 @@ public class AuthServiceTest
             .ReturnsAsync(IdentityResult.Success);
         
         
-
         // SignInManager
         // Acceder al contexto HTTP actual.
         var contextAccessor = new Mock<IHttpContextAccessor>();
@@ -149,8 +157,6 @@ public class AuthServiceTest
             .Options;
 
         _dbContext = new AppDbContext(options); // conectamos el appdbcontext al postgre
-
-        await _dbContext.Database.MigrateAsync(); // y ejecutamos migraciones (ya que la tabla es nueva)
         
         // Mockeamos para que no queden logs reales
         _loggerMock = new Mock<ILogger<AuthService>>();
@@ -193,19 +199,25 @@ public class AuthServiceTest
     [TearDown] // Se ejecuta después de cada test
     public async Task TearDown()
     {
-        // Si la conexión fue cerrada por un test de fallo 500, la reabrimos para poder limpiar las tablas
-        if (_dbContext.Database.GetDbConnection().State != System.Data.ConnectionState.Open)
+        try
         {
-            await _dbContext.Database.OpenConnectionAsync();
+            if (_dbContext.Database.GetDbConnection().State != System.Data.ConnectionState.Open)
+            {
+                await _dbContext.Database.OpenConnectionAsync();
+            }
+
+            await _dbContext.Clientes.IgnoreQueryFilters().ExecuteDeleteAsync();
+            await _dbContext.Trabajadores.IgnoreQueryFilters().ExecuteDeleteAsync();
+            await _dbContext.Users.IgnoreQueryFilters().ExecuteDeleteAsync();
         }
-
-        // Primero limpiamos las tablas dependientes (incluyendo inactivos) antes de borrar usuarios
-        await _dbContext.Clientes.IgnoreQueryFilters().ExecuteDeleteAsync();
-        await _dbContext.Trabajadores.IgnoreQueryFilters().ExecuteDeleteAsync();
-        await _dbContext.Users.IgnoreQueryFilters().ExecuteDeleteAsync();
-
-        // Eliminamos el contexto para que no afecte al trabajo real
-        await _dbContext.DisposeAsync();
+        catch (PostgresException ex) when (ex.SqlState == "42P01")
+        {
+            // Si las tablas aún no se crearon por un fallo previo en setup, no enmascarar el error original
+        }
+        finally
+        {
+            await _dbContext.DisposeAsync();
+        }
     }
     
     [OneTimeTearDown] // se ejecuta una vez al terminar TODOS los test
@@ -216,7 +228,7 @@ public class AuthServiceTest
     }
 
     #region Helpers
-    // Helper para construir un SignupDto válido cambiando solo los documentos en cada test
+   // Helper para construir un SignupDto válido cambiando solo los documentos en cada test
     private static SignupDto CrearSignupDto(
         string? dni = null,
         string? nie = null,

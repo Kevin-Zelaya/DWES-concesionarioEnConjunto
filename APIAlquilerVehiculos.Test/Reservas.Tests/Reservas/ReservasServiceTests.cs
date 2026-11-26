@@ -30,7 +30,7 @@ public class ReservaServiceTests
         var context = scope.ServiceProvider
             .GetRequiredService<AppDbContext>();
 
-        await context.Database.MigrateAsync();
+        await TestMigrationHelper.InitializeTestDatabaseAsync(context);
     }
 
     [SetUp]
@@ -51,8 +51,15 @@ public class ReservaServiceTests
     [OneTimeTearDown]
     public async Task OneTimeTearDown()
     {
-        await _provider.DisposeAsync();
-        await _postgres.StopAsync();
+        if (_provider is not null)
+        {
+            await _provider.DisposeAsync();
+        }
+
+        if (_postgres is not null)
+        {
+            await _postgres.StopAsync();
+        }
     }
 
     [Test]
@@ -75,15 +82,68 @@ public class ReservaServiceTests
         // Arrange
         var context = _scope.ServiceProvider
             .GetRequiredService<AppDbContext>();
+        var usuario = new Usuario
+        {
+            UserName = $"cliente-{Guid.NewGuid()}@correo.com",
+            Email = $"cliente-{Guid.NewGuid()}@correo.com",
+            EmailConfirmed = true,
+            CreatedAt = DateTime.UtcNow
+        };
 
+        var cliente = new Cliente
+        {
+            Nombre = "Ana",
+            Apellidos = "López",
+            Dni = "12345678A",
+            FechaNacimiento = new DateTime(1995, 5, 10, 0, 0, 0, DateTimeKind.Utc),
+            NumeroPermisoConducir = "PERM12345",
+            Usuario = usuario,
+            CreatedAt = DateTime.UtcNow,
+            IsActivo = true
+        };
+
+        // 2. Crear Marca, Modelo y Vehiculo requeridos por FK_Reservas_Vehiculos_VehiculoId
+        var marca = new Marca
+        {
+            Nombre = "Toyota",
+            Wb = "https://toyota.example",
+            Activo = true,
+            CreatedAt = DateTime.UtcNow
+        };
+        
+        var vehiculo = new Vehiculo
+        {
+            Id = $"veh-{Guid.NewGuid().ToString("N")[..7]}",
+            Matricula = "1234BBB",
+            Marca = marca,
+            Modelo = "pito",
+            Acriss = "CDAR",
+            categoria = CategoriaEnum.Deportivo,
+            Concesionario_id = 1,
+            Color = "Blanco",
+            Combustible = CombustibleEnum.Diesel,
+            Maletero = 360,
+            NumeroPlazas = 5,
+            Autonomia = 700,
+            Imagenes = 1,
+            Estado = EstadoEnum.Disponible,
+            UltimaRevision = DateTime.UtcNow,
+            Activo = true,
+            CreatedAt = DateTime.UtcNow
+        };
+
+        context.AddRange(usuario, cliente, marca, vehiculo);
+        await context.SaveChangesAsync();
+
+        // 3. Crear la Reserva usando las entidades/IDs ya persistidos
         var reserva = new Reserva
         {
-            ClienteId = 1,
-            VehiculoId = "vehiculo001",
+            ClienteId = cliente.Id,
+            VehiculoId = vehiculo.Id,
             Categoria = CategoriaEnum.Sedan,
-            FechaCreacion = DateTime.Now,
-            FechaRecogida = DateTime.Now.AddDays(1),
-            FechaDevolucion = DateTime.Now.AddDays(5),
+            FechaCreacion = DateTime.UtcNow,
+            FechaRecogida = DateTime.UtcNow.AddDays(1),
+            FechaDevolucion = DateTime.UtcNow.AddDays(5),
             Estado = Estado.Pendiente,
             PrecioTotal = 200m
         };
@@ -271,12 +331,19 @@ public class ReservaServiceTests
 
         var context = _scope.ServiceProvider
             .GetRequiredService<AppDbContext>();
+        
+        var marca = new Marca
+        {
+            Nombre = "Marca Test" // ajusta las propiedades requeridas de Marca
+        };
+        context.Marcas.Add(marca);
+        await context.SaveChangesAsync();
 
         var vehiculo = new Vehiculo
         {
             Id = "vehiculo001",
             Modelo = "Seat Ibiza",
-            MarcaId = 1
+            MarcaId = marca.Id
         };
 
         // Crear usuario asociado al cliente

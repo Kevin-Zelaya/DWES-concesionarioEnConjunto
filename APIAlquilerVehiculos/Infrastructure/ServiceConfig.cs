@@ -33,6 +33,7 @@ public static class ServiceConfig
         services.AddSingleton<IncidenciaService>();
         services.AddScoped<IExtraService, ExtraService>();
         services.AddScoped<IPolizaService, PolizaService>();
+        services.AddScoped<IUsuarioService, UsuarioService>();
         services.AddScoped<INotificationService, NotificationService>();
         services.AddScoped<INotificationService, NotificationService>();
         services.AddSingleton<IReservaEventoService, ReservaEventoService>();

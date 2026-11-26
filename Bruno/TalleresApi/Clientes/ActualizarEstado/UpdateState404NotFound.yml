@@ -1,0 +1,18 @@
+info:
+  name: UpdateState404NotFound
+  type: http
+  seq: 2
+
+http:
+  method: PATCH
+  url: "{{baseUrl}}/api/cliente/9/reactivar"
+  auth:
+    type: bearer
+    token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwiZW1haWwiOiJhZG1pbkBhbHF1aWxlci5jb20iLCJqdGkiOiJhMDNlYWEzZi00MWI2LTQ4YjYtODk1Ny04ZTIyNWI1NTUxNzciLCJpYXQiOjE3OTU2OTE1MDAsInJvbGUiOiJBZG1pbmlzdHJhZG9yIiwibmJmIjoxNzk1NjkxNTAwLCJleHAiOjE3OTU2OTg3MDAsImlzcyI6IkFscXVpbGVyVmVoaWN1bG9zQXBpIiwiYXVkIjoiQWxxdWlsZXJWZWhpY3Vsb3NDbGllbnQifQ.5BQAZ8tY5-eEVrqQ3bzea7VjfsDp5HFHd7mkBynN6Kc
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false

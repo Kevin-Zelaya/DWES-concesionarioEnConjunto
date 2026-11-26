@@ -1,0 +1,18 @@
+info:
+  name: GetByIdCliente403Forbidden
+  type: http
+  seq: 3
+
+http:
+  method: GET
+  url: "{{baseUrl}}/api/cliente/3"
+  auth:
+    type: bearer
+    token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2IiwiZW1haWwiOiJjbGllbnRlUHJ1ZWJhQGV4YW1wbGUuY29tIiwianRpIjoiMGNlNjlmZTEtZTlmOC00NmVjLWI1MWMtMzYyOTkyNjUyODhhIiwiaWF0IjoxNzk1Njg5MjY1LCJyb2xlIjoiQ2xpZW50ZSIsIm5iZiI6MTc5NTY4OTI2NSwiZXhwIjoxNzk1Njk2NDY1LCJpc3MiOiJBbHF1aWxlclZlaGljdWxvc0FwaSIsImF1ZCI6IkFscXVpbGVyVmVoaWN1bG9zQ2xpZW50In0.DHFYghSDK9Lc9G8qISHJ8o_FfJXo5P8jximXi7zFCqg
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false
