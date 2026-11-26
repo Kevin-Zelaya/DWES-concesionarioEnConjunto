@@ -12,11 +12,7 @@ http:
       {
         "clienteId": 5,
         "categoria": "Descapotable",
-<<<<<<< HEAD
-        "vehiculoId": "5t7UWNxRaBB",
-=======
         "vehiculoId": "gZqh22G_CBh",
->>>>>>> 509138f4455c2e28df819a9cef45ca66a52e156d
         "fechaRecogida": "2026-12-25T10:00:00",
         "fechaDevolucion": "2026-12-28T10:00:00",
         "lineas": [

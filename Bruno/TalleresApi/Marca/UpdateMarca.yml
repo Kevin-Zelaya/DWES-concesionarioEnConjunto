@@ -1,0 +1,24 @@
+info:
+  name: UpdateMarca
+  type: http
+  seq: 6
+
+http:
+  method: PUT
+  url: http://{{host}}:{{port}}/api/marcas/3
+  body:
+    type: json
+    data: |-
+      {
+        "nombre": "Mercedes-Benzz",
+        "pais": "Alemania",
+        "wb": "https://www.mercedes-benz.es"
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false

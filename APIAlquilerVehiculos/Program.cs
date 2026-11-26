@@ -12,6 +12,7 @@ using APIAlquilerVehiculos.Configuration;
 using APIAlquilerVehiculos.Repositories.Marcas;
 using APIAlquilerVehiculos.Services.Marcas;
 using APIAlquilerVehiculos.Configuration.Initializers;
+using APIAlquilerVehiculos.Validators.Auth.Documentos;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -57,17 +58,16 @@ builder.Services
     .AddRepositories()
     .AddAuthenticationConfing(builder.Configuration)
     .AddBackground()
+    .AddStorage()
     .AddRedisConnection(builder.Configuration)
+    .AddCassandraConnection(builder.Configuration)
     .AddMemoryCache()
     .AddSignalR();
 
 // Registrar el inicializador de Cassandra
 builder.Services.AddSingleton<CassandraInitializer>();
-builder.Services.AddValidatorsFromAssemblyContaining<Program>();
-builder.Services.AddFluentValidationAutoValidation();
-
 // ======= FluentValidation =======
-builder.Services.AddValidatorsFromAssemblyContaining<SignupDtoValidator>();
+builder.Services.AddFluentAuto();
 
 // ======= MIDDLEWARES ==========
 

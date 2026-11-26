@@ -29,7 +29,8 @@ public class ReservaService(
     IClienteRepository _clienteRepository,
     IncidenciaService _incidenciaService,
     IRecargoRepository _recargoRepository,
-    INotificationService _notificationService
+    INotificationService _notificationService,
+    IReservaEventoService _reservaEventoService
 
 ) : IReservaService
 {

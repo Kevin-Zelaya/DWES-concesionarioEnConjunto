@@ -8,7 +8,7 @@ namespace APIAlquilerVehiculos.Services.Cassandra;
 /// Servicio encargado de almacenar en Cassandra
 /// los eventos relacionados con las reservas.
 /// </summary>
-public class ReservaEventoService
+public class ReservaEventoService : IReservaEventoService
 {
     private readonly global::Cassandra.ISession _session;
     private readonly PreparedStatement _insertStatement;
