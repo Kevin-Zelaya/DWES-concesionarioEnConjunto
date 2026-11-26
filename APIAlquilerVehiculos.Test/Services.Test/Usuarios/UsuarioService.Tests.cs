@@ -24,7 +24,6 @@ public class UsuarioServiceTests
     private Mock<ILogger<UsuarioService>> _loggerMock = null!;
     private UsuarioService _service = null!;
     
-
     [OneTimeSetUp]
     public async Task OneTimeSetUp()
     {
