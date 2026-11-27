@@ -13,7 +13,7 @@ websocket:
         data: "{\"protocol\":\"json\",\"version\":1}\x1e"
   auth:
     type: bearer
-    token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1IiwiZW1haWwiOiJjbGllbnRlQGFscXVpbGVyLmNvbSIsImp0aSI6ImE0YzU5NjBjLTdjODAtNDk1NS04ZGM5LTY1ZDFiOWU1YmZmZiIsImlhdCI6MTc5NTUyNjgxNywicm9sZSI6IkNsaWVudGUiLCJuYmYiOjE3OTU1MjY4MTcsImV4cCI6MTc5NTUzNDAxNywiaXNzIjoiQWxxdWlsZXJWZWhpY3Vsb3NBcGkiLCJhdWQiOiJBbHF1aWxlclZlaGljdWxvc0NsaWVudCJ9.GPDcXhNInyTpqrBsr6dqpPLRpmVkZEh8mfzv1L-hl9g
+    token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1IiwiZW1haWwiOiJjbGllbnRlQGFscXVpbGVyLmNvbSIsImp0aSI6IjFmNjczZGFjLTU5NzQtNDk0ZC05MDlhLTlkZGZjNGE1YWIwZiIsImlhdCI6MTc5NTY0NjMyOCwicm9sZSI6IkNsaWVudGUiLCJuYmYiOjE3OTU2NDYzMjgsImV4cCI6MTc5NTY1MzUyOCwiaXNzIjoiQWxxdWlsZXJWZWhpY3Vsb3NBcGkiLCJhdWQiOiJBbHF1aWxlclZlaGljdWxvc0NsaWVudCJ9.eoc1T6SN125B6f4_s8cIl7Ogtc6_62F0O5J59-nEdEU
 
 settings:
   timeout: 0

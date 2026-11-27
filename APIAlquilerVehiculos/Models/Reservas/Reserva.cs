@@ -24,6 +24,7 @@ public class Reserva
     public Estado Estado {get; set;}
     public List<LineaReserva> Lineas {get; set;} = [];
     public decimal PrecioTotal { get; set; }
+    public DateTime? FechaExpiracionPago { get; set; }
     public List<Pago> Pagos { get; set; } = [];
     public string? Notas {get; set;}
     // control de concurrencia

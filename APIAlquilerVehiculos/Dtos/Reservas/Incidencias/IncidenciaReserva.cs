@@ -7,8 +7,10 @@ public enum TipoIncidencia
 public record IncidenciaReserva(
     long ReservaId,
     string CodigoReferencia,
+    long ClienteId,
     string VehiculoId,
     TipoIncidencia Tipo,
     string Descripcion,
-    DateTime FechaDeteccion
+    DateTime FechaDeteccion = default,
+    DateTime? FechaUltimaNotificacion = null
 );

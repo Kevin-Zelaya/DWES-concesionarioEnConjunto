@@ -132,4 +132,11 @@ public interface IReservaService
     /// </summary>
     /// <param name="ct">Token para cancelar la operación.</param>
     Task ProcesarVehiculosNoDisponiblesAsync(CancellationToken ct = default);
+
+    /// <summary>
+    /// Procesa las reservas pendientes de pago cuyo plazo de expiración ha finalizado,
+    /// actualiza su estado y notifica a los clientes correspondientes.
+    /// </summary>
+    /// <param name="ct">Token para cancelar la operación.</param>
+    Task ProcesarReservasPendientesDePagoAsync(CancellationToken ct = default);
 }

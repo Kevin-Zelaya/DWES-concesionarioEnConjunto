@@ -104,7 +104,8 @@ public class ReservaService(
                 await _unitOfWork.RollbackTransactionAsync(ct);
                 return Result.Failure<ReservaDto, DomainError>(lineasFactorizadas.Error);
             }
-
+            // fecha en la que caduca el pago: dentro de 30 minutos
+            reservaTS.FechaExpiracionPago = DateTime.UtcNow.AddMinutes(30);
             // Creamos la reserva 
             reservaTS = await _repository.CreateAsync(reservaTS, ct);
 
@@ -214,7 +215,7 @@ public class ReservaService(
         };
         if (cliente.CalcularEdad() < 25)
         {
-            var lj = await CrearLineaJoven(ct);
+            var lj = await CrearLineaJoven(vehiculo.precioPorDia, ct);
             lineasFd.Add(lj);
         }
 
@@ -260,7 +261,9 @@ public class ReservaService(
             TipoPrecio = TipoPrecio.Diario
         };
     }
-    private async Task<LineaReserva> CrearLineaJoven(CancellationToken ct)
+    private async Task<LineaReserva> CrearLineaJoven(
+        decimal precioVehículo,
+        CancellationToken ct)
     {
         var recargo = await _recargoRepository.GetByIdAsync(1, ct);
 
@@ -269,8 +272,11 @@ public class ReservaService(
             Tipo = TipoLinea.Recargo,
             Concepto = recargo?.Nombre ?? "Recargo conductor joven",
             Cantidad = 1,
-            PrecioUnitario = recargo?.Importe ?? 100,
-            TipoPrecio = recargo?.TipoPrecio ?? TipoPrecio.Unico
+            PrecioUnitario = recargo is not null 
+                ?precioVehículo*(recargo!.Importe/100) // El importe es realmente el porcentaje que se le aplica al precio
+                :precioVehículo*0.25m, // por ejemplo si el precio es 80 sería. 80*0.25 = 20 €
+            TipoPrecio = recargo?.TipoPrecio ?? TipoPrecio.Diario // el precio se define como diario, ya que es un importe que aumente un 25% (por ejemplo) al precio del vehículo
+            // y el precio del vehículo se calcula por el número de días
         };
     }
 
@@ -746,9 +752,7 @@ public class ReservaService(
         long id,
         CancellationToken ct = default)
     {
-        _logger.LogDebug(
-            "[SERVICE-EXISTS] Comprobando existencia de la reserva {Id}.",
-            id);
+        _logger.LogDebug("[SERVICE-EXISTS] Comprobando existencia de la reserva {Id}.", id);
 
         var response = await _repository.ExistsAsync(id, ct);
 
@@ -767,8 +771,7 @@ public class ReservaService(
     public async Task ProcesarReservasPendientesAsync(
         CancellationToken ct = default)
     {
-        _logger.LogInformation(
-            "[BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.");
+        _logger.LogInformation("[BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.");
 
         // Obtener el comienzo del día actual en Madrid.
         var zonaHoraria = TimeZoneInfo.FindSystemTimeZoneById(
@@ -858,15 +861,12 @@ public class ReservaService(
                 await _unitOfWork.SaveChangesAsync();
                 await _unitOfWork.CommitTransactionAsync();
 
-                _logger.LogInformation(
-                    "[BACKGROUND-RESERVAS] Reserva {Codigo} marcada como NoPresentado.",
+                _logger.LogInformation("[BACKGROUND-RESERVAS] Reserva {Codigo} marcada como NoPresentado.",
                     reservaActual.CodigoRefencia);
             }
             catch (Exception ex)
             {
-                _logger.LogError(
-                    ex,
-                    "[BACKGROUND-RESERVAS] Error al procesar la reserva {Id}.",
+                _logger.LogError(ex, "[BACKGROUND-RESERVAS] Error al procesar la reserva {Id}.",
                     reserva.Id);
 
                 await _unitOfWork.RollbackTransactionAsync(ct);
@@ -887,13 +887,14 @@ public class ReservaService(
             var incidencia = new IncidenciaReserva(
                 reserva.Id,
                 reserva.CodigoRefencia ?? string.Empty,
+                reserva.ClienteId,
                 reserva.VehiculoId,
                 TipoIncidencia.DevolucionTardia,
                 "El vehículo no ha sido devuelto en la fecha prevista.",
                 ahoraUtc
             );
 
-            _incidenciaService.Registrar(incidencia);
+            _incidenciaService.Add(incidencia);
         }
     }
     /// <inheritdoc cref="IReservaService.ProcesarVehiculosNoDisponiblesAsync(CancellationToken)"/>
@@ -913,13 +914,60 @@ public class ReservaService(
             var incidencia = new IncidenciaReserva(
                 reserva.Id,
                 reserva.CodigoRefencia ?? string.Empty,
+                reserva.ClienteId,
                 reserva.VehiculoId,
                 TipoIncidencia.VehiculoNoDisponible,
-                "El vehículo reservado todavía se encuentra en alquiler.",
-                DateTime.UtcNow
+                "El vehículo reservado todavía se encuentra en alquiler."
             );
 
-            _incidenciaService.Registrar(incidencia);
+            _incidenciaService.Add(incidencia);
+        }
+    }
+
+    /// <inheritdoc cref="IReservaService.ProcesarReservasPendientesAsync(CancellationToken)"/>
+    public async Task ProcesarReservasPendientesDePagoAsync(
+        CancellationToken ct = default)
+    {
+        var reservas = await _repository.GetReservasPendientesDePagoAsync(ct);
+
+        var ahora = DateTime.UtcNow;
+
+        // Primero se obtienen todas las wque esten caducadas
+        var reservasCaducadas = reservas
+            .Where(r => r.FechaExpiracionPago <= ahora)
+            .ToList();
+
+        if (reservasCaducadas.Count == 0)
+            return;
+
+        // actualizamos el estado de las reservas.
+        foreach (var reserva in reservasCaducadas)
+        {
+            reserva.Estado = Estado.Caducada;
+        }
+        // Con todas se guarda
+        await _unitOfWork.SaveChangesAsync(ct);
+        // notificamos a los clientes de las reservas caducadas.
+        foreach (var reserva in reservasCaducadas)
+        {
+            await _notificationService.NotifyUserAsync(
+                reserva.ClienteId.ToString(),
+                new ResourceNotification<string>
+                {
+                    Resource = "Reserva",
+                    Action = "Caducada",
+                    ResourceId = reserva.CodigoRefencia!,
+                    Message = "Tu reserva ha caducado porque ha expirado el tiempo de pago.",
+                    Data = new
+                    {
+                        reserva.CodigoRefencia,
+                        reserva.FechaRecogida,
+                        reserva.Vehiculo!.Matricula,
+                        reserva.Estado
+                    },
+                    CreatedAt = ahora
+                });
+
         }
     }
 }

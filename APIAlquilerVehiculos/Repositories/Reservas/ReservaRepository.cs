@@ -301,4 +301,12 @@ public class ReservaRepository(AppDbContext _context) : IReservaRepository
                     r.FechaRecogida <= fechaFin)
         .ToListAsync(ct);
     }
+    public async Task<List<Reserva>> GetReservasPendientesDePagoAsync(
+        CancellationToken ct = default
+    )
+    {
+        return await _context.Reservas
+            .Where(r => r.Estado == Estado.Pendiente)
+            .ToListAsync(ct);
+    }
 }
