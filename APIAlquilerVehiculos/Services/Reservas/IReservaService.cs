@@ -96,6 +96,31 @@ public interface IReservaService
     Task<Result<Reserva, DomainError>> UpdateStatusAsync(string codigoReferencia, ReservaUpdateStatusRequestDto request, CancellationToken ct = default);
 
     /// <summary>
+    /// Confirma la recogida del vehículo asociado a una reserva.
+    /// Actualiza el estado de la reserva a EnCurso y el estado del vehículo a EnAlquiler.
+    /// </summary>
+    /// <param name="codigoReferencia">Código de referencia de la reserva.</param>
+    /// <param name="ct">Token para cancelar la operación.</param>
+    /// <returns>
+    /// Un resultado con la reserva actualizada si la operación se realiza correctamente,
+    /// o un error de dominio si la reserva no existe o no se puede confirmar la recogida.
+    /// </returns>
+    Task<Result<Reserva, DomainError>> ConfirmarRecogidaAsync(string codigoReferencia, CancellationToken ct = default);
+
+    /// <summary>
+    /// Confirma la devolución del vehículo asociado a una reserva.
+    /// Actualiza el estado de la reserva a Finalizada y establece el estado del vehículo
+    /// según las reservas activas existentes.
+    /// </summary>
+    /// <param name="codigoReferencia">Código de referencia de la reserva.</param>
+    /// <param name="ct">Token para cancelar la operación.</param>
+    /// <returns>
+    /// Un resultado con la reserva actualizada si la operación se realiza correctamente,
+    /// o un error de dominio si la reserva no existe o no se puede confirmar la devolución.
+    /// </returns>
+    Task<Result<Reserva, DomainError>> ConfirmarDevolucionAsync(string codigoReferencia, CancellationToken ct = default);
+
+    /// <summary>
     /// Actualiza el vehículo asignado a una reserva.
     /// </summary>
     /// <param name="codigoReferencia">Código de referencia de la reserva que se desea actualizar.</param>

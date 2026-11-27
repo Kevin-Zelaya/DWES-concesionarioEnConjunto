@@ -567,8 +567,7 @@ public class ReservaService(
         ReservaUpdateStatusRequestDto request,
         CancellationToken ct = default)
     {
-        _logger.LogDebug(
-            "[SERVICE-UPDATE] Actualizando estado de la reserva {Codigo}.",
+        _logger.LogDebug("[SERVICE-UPDATE] Actualizando estado de la reserva {Codigo}.",
             codigoReferencia);
 
         var reserva = await _repository.GetReservaByCodigoReferenciaAsync(
@@ -661,7 +660,163 @@ public class ReservaService(
         }
     }
 
+    
+    /// <inheritdoc cref="IReservaService.ConfirmarRecogidaAsync(string, CancellationToken)"/>
+    public async Task<Result<Reserva, DomainError>> ConfirmarRecogidaAsync(string codigoReferencia, CancellationToken ct = default)
+    {
+        _logger.LogDebug(
+            "[SERVICE-CONFIRMAR-RECOGIDA] Confirmando recogida de la reserva {Codigo}.",
+            codigoReferencia);
 
+        var reserva = await _repository.GetReservaByCodigoReferenciaAsync(
+            codigoReferencia,
+            ct);
+
+        if (reserva is null)
+            return Result.Failure<Reserva, DomainError>(
+                ReservaErrors.NotFound(codigoReferencia));
+
+        // Comprobar si se puede realizar la transición a EnCurso.
+        if (!reserva.Estado.PuedeTransicionarA(Estado.EnCurso))
+            return Result.Failure<Reserva, DomainError>(
+                ReservaErrors.TransicionEstadoNoValida(
+                    reserva.Estado,
+                    Estado.EnCurso));
+
+        await _unitOfWork.BeginTransactionAsync(ct);
+
+        try
+        {
+            // Bloquear el vehículo mientras se actualiza la reserva.
+            await _vehiculoRepository.BloquearVehiculoAsync(
+                reserva.VehiculoId,
+                ct);
+
+            var response = await _repository.UpdateStatusAsync(
+                codigoReferencia,
+                new ReservaUpdateStatusRequestDto(
+                    Estado.EnCurso,
+                    reserva.RowVersion),
+                ct);
+
+            if (response is null)
+            {
+                await _unitOfWork.RollbackTransactionAsync(ct);
+
+                return Result.Failure<Reserva, DomainError>(
+                    ReservaErrors.NotFound(codigoReferencia));
+            }
+
+            // Actualizar el estado del vehículo a EnAlquiler.
+            await _vehiculoRepository.UpdateEstadoAsync(
+                reserva.VehiculoId,
+                EstadoEnum.EnAlquiler,
+                ct);
+
+            await _unitOfWork.SaveChangesAsync();
+            await _unitOfWork.CommitTransactionAsync();
+
+            return Result.Success<Reserva, DomainError>(response)
+                .Tap(r => _logger.LogInformation(
+                    "[SERVICE-CONFIRMAR-RECOGIDA] Recogida confirmada correctamente para la reserva {Codigo}.",
+                    r.CodigoRefencia));
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(
+                ex,
+                "[SERVICE-CONFIRMAR-RECOGIDA] Error al confirmar la recogida de la reserva {Codigo}.",
+                codigoReferencia);
+
+            await _unitOfWork.RollbackTransactionAsync(ct);
+            throw;
+        }
+    }   
+
+    
+    /// <inheritdoc cref="IReservaService.ConfirmarDevolucionAsync(string, CancellationToken)"/>
+    public async Task<Result<Reserva, DomainError>> ConfirmarDevolucionAsync(string codigoReferencia, CancellationToken ct = default)
+    {
+        _logger.LogDebug(
+            "[SERVICE-CONFIRMAR-DEVOLUCION] Confirmando devolución de la reserva {Codigo}.",
+            codigoReferencia);
+
+        var reserva = await _repository.GetReservaByCodigoReferenciaAsync(
+            codigoReferencia,
+            ct);
+
+        if (reserva is null)
+            return Result.Failure<Reserva, DomainError>(
+                ReservaErrors.NotFound(codigoReferencia));
+
+        // Comprobar si se puede realizar la transición a Finalizada.
+        if (!reserva.Estado.PuedeTransicionarA(Estado.Finalizada))
+            return Result.Failure<Reserva, DomainError>(
+                ReservaErrors.TransicionEstadoNoValida(
+                    reserva.Estado,
+                    Estado.Finalizada));
+
+        await _unitOfWork.BeginTransactionAsync(ct);
+
+        try
+        {
+            // Bloquear el vehículo mientras se actualiza la reserva.
+            await _vehiculoRepository.BloquearVehiculoAsync(
+                reserva.VehiculoId,
+                ct);
+
+            var response = await _repository.UpdateStatusAsync(
+                codigoReferencia,
+                new ReservaUpdateStatusRequestDto(
+                    Estado.Finalizada,
+                    reserva.RowVersion),
+                ct);
+
+            if (response is null)
+            {
+                await _unitOfWork.RollbackTransactionAsync(ct);
+
+                return Result.Failure<Reserva, DomainError>(
+                    ReservaErrors.NotFound(codigoReferencia));
+            }
+
+            // Comprobar si existen otras reservas activas para el vehículo.
+            var existenReservasActivas = await _repository.ExistsReservasActivasAsync(
+                reserva.VehiculoId,
+                reserva.Id,
+                ct);
+
+            // Actualizar el estado del vehículo según las reservas existentes.
+            var nuevoEstadoVehiculo = existenReservasActivas
+                ? EstadoEnum.Reservado
+                : EstadoEnum.Disponible;
+
+            await _vehiculoRepository.UpdateEstadoAsync(
+                reserva.VehiculoId,
+                nuevoEstadoVehiculo,
+                ct);
+
+            await _unitOfWork.SaveChangesAsync();
+            await _unitOfWork.CommitTransactionAsync();
+
+            return Result.Success<Reserva, DomainError>(response)
+                .Tap(r => _logger.LogInformation(
+                    "[SERVICE-CONFIRMAR-DEVOLUCION] Devolución confirmada correctamente para la reserva {Codigo}.",
+                    r.CodigoRefencia));
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(
+                ex,
+                "[SERVICE-CONFIRMAR-DEVOLUCION] Error al confirmar la devolución de la reserva {Codigo}.",
+                codigoReferencia);
+
+            await _unitOfWork.RollbackTransactionAsync(ct);
+            throw;
+        }
+    }
+
+   
     /// <inheritdoc cref="IReservaService.UpdateVehicleAsync(string, ReservaUpdateVehicleRequestDto, CancellationToken)"/>
     public async Task<Result<Reserva, DomainError>> UpdateVehicleAsync(
         string codigoReferencia,
