@@ -44,7 +44,7 @@ public class EmailService : IEmailService
             using var client = new SmtpClient();
 
             var secureSocketOptions = _emailSettings.EnableSsl
-                ? SecureSocketOptions.Auto
+                ? (_emailSettings.Port == 465 ? SecureSocketOptions.SslOnConnect : SecureSocketOptions.StartTls)
                 : SecureSocketOptions.None;
 
             _logger.LogDebug("Conectando a SMTP {Server}:{Port}", _emailSettings.Server, _emailSettings.Port);
@@ -53,7 +53,7 @@ public class EmailService : IEmailService
             if (!string.IsNullOrEmpty(_emailSettings.UserName))
             {
                 _logger.LogDebug("Autenticando usuario SMTP {UserName}", _emailSettings.UserName);
-                await client.AuthenticateAsync(_emailSettings.UserName, _emailSettings.Password);
+                await client.AuthenticateAsync(_emailSettings.UserName, _emailSettings.Password.Replace(" ", ""));
             }
 
             var response = await client.SendAsync(message);

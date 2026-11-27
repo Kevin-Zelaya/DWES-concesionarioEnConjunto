@@ -1,10 +1,12 @@
 ﻿using System.Net;
+using APIAlquilerVehiculos.Dtos.Email;
 using APIAlquilerVehiculos.Dtos.Taller;
 using APIAlquilerVehiculos.Models;
 using APIAlquilerVehiculos.Models.Enums;
 using APIAlquilerVehiculos.Models.Reservas;
 using APIAlquilerVehiculos.Models.Usuarios;
 using APIAlquilerVehiculos.Repositories.Taller;
+using APIAlquilerVehiculos.Services.Email;
 using APIAlquilerVehiculos.Services.Taller;
 using FluentAssertions;
 using Microsoft.Extensions.Logging;
@@ -16,6 +18,7 @@ namespace APIAlquilerVehiculos.Test.Services.Test.Taller;
 public class ParteServiceTests
 {
     protected Mock<IParteRepository> _repositoryMock = null!;
+    protected Mock<INotificationEmailService> _notificationEmailMock = null!;
     protected Mock<ILogger<ParteService>> _loggerMock = null!;
     protected ParteService _service = null!;
 
@@ -27,8 +30,13 @@ public class ParteServiceTests
     public void SetUp()
     {
         _repositoryMock = new Mock<IParteRepository>();
+        _notificationEmailMock = new Mock<INotificationEmailService>();
         _loggerMock = new Mock<ILogger<ParteService>>();
-        _service = new ParteService(_repositoryMock.Object, _loggerMock.Object);
+
+        _service = new ParteService(
+            _repositoryMock.Object,
+            _notificationEmailMock.Object,
+            _loggerMock.Object);
 
         _mecanicoActivo = new Trabajador
         {
@@ -44,6 +52,7 @@ public class ParteServiceTests
         {
             Id = "veh00000001",
             Matricula = "1234BCD",
+            Modelo = "León",
             Estado = EstadoEnum.Disponible,
             Activo = true
         };
@@ -91,7 +100,7 @@ public class ParteServiceTests
                 QuienLoTramitaId = 1,
                 Descripcion = "Cambio aceite",
                 VehiculoId = "veh00000002",
-                Vehiculo = null, // Cubre la rama p.Vehiculo?.Matricula ?? string.Empty
+                Vehiculo = null,
                 Estado = EstadoParte.Cerrado
             };
             _repositoryMock.Setup(r => r.GetAllAsync())
@@ -127,7 +136,6 @@ public class ParteServiceTests
         public async Task AbrirParteAsync_CuandoDatosSonValidos_CreaParteYDejaVehiculoEnMantenimiento()
         {
             // Arrange
-            // Incluye una reserva Finalizada para cubrir el filtro Where(r => EstadosReservaViva.Contains(r.Estado))
             _repositoryMock.Setup(r => r.GetReservasVivasByVehiculoIdAsync(_vehiculoDisponible.Id))
                 .ReturnsAsync([new Reserva { CodigoRefencia = "RES-OLD", Estado = Estado.Finalizada }]);
 
@@ -162,11 +170,56 @@ public class ParteServiceTests
             _repositoryMock.Verify(r => r.UpdateAsync(_parteAbierto), Times.Once);
             _repositoryMock.Verify(r => r.UpdateVehiculoAsync(_vehiculoDisponible), Times.Once);
         }
+
+        [Test]
+        public async Task NotificarReservaAfectadaTallerAsync_CuandoEmailEsValido_EncolaNotificacion()
+        {
+            // Arrange
+            _vehiculoDisponible.Marca = new Marca { Id = 1, Nombre = "Seat" };
+
+            // Act
+            await _service.NotificarReservaAfectadaTallerAsync(
+                "cliente@test.com",
+                "Laura",
+                "RES-2026-01",
+                _vehiculoDisponible,
+                "Fallo embrague",
+                "Cambio de vehículo",
+                "Asignado vehículo equivalente");
+
+            // Assert
+            _notificationEmailMock.Verify(n => n.EnviarAsync(
+                It.Is<ParteTallerEmailDto>(dto =>
+                    dto.EmailDestino == "cliente@test.com" &&
+                    dto.CodigoReferencia == "RES-2026-01" &&
+                    dto.VehiculoOriginal == "Seat León (1234BCD)"),
+                It.IsAny<CancellationToken>()),
+                Times.Once);
+        }
     }
 
     [TestFixture]
     public class CasosInvalidos : ParteServiceTests
     {
+        [Test]
+        public async Task NotificarReservaAfectadaTallerAsync_CuandoEmailEstaVacio_NoEncolaNotificacion()
+        {
+            // Act
+            await _service.NotificarReservaAfectadaTallerAsync(
+                "",
+                "Laura",
+                "RES-2026-01",
+                _vehiculoDisponible,
+                "Fallo embrague",
+                "Cancelación",
+                "Reembolso completo");
+
+            // Assert
+            _notificationEmailMock.Verify(
+                n => n.EnviarAsync(It.IsAny<IEmailNotificacionDto>(), It.IsAny<CancellationToken>()),
+                Times.Never);
+        }
+
         [Test]
         public async Task GetByIdAsync_CuandoParteNoExiste_DevuelveNotFound()
         {

@@ -1,0 +1,167 @@
+2026-11-27 20:07:24.660 [INF] Iniciando aplicación...
+2026-11-27 20:07:27.746 [INF] Configurando servicios...
+2026-11-27 20:07:27.796 [INF] Configurando servicios...
+2026-11-27 20:07:28.685 [INF] Configurando servicios en segundo plano...
+2026-11-27 20:07:30.276 [INF] Configurando la conexión a Redis...
+2026-11-27 20:07:39.291 [INF] Conexión a Redis configurada correctamente.
+2026-11-27 20:07:45.131 [WRN] Entity 'Trabajador' has a global query filter defined and is the required end of a relationship with the entity 'Oficina'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-27 20:07:45.147 [WRN] Entity 'Trabajador' has a global query filter defined and is the required end of a relationship with the entity 'Parte'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-27 20:07:45.154 [WRN] Entity 'Marca' has a global query filter defined and is the required end of a relationship with the entity 'Vehiculo'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-27 20:07:47.983 [INF] Todas las marcas seed ya existen.
+2026-11-27 20:07:47.999 [INF] Todas las pólizas seed ya existen.
+2026-11-27 20:07:48.072 [INF] Todos los vehículos seed ya existen.
+2026-11-27 20:07:48.099 [INF] Todos los extras seed ya existen.
+2026-11-27 20:07:48.120 [INF] Todos los recargos seed ya existen.
+2026-11-27 20:07:48.355 [INF] Worker de envío de correos iniciado.
+2026-11-27 20:07:48.426 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-27 20:07:48.491 [WRN] The WebRootPath was not found: C:\Users\aitor\Desktop\Proyectos2DAW-DWES\DWES-concesionarioEnConjunto\APIAlquilerVehiculos\wwwroot. Static files may be unavailable.
+2026-11-27 20:08:48.751 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-27 20:09:48.779 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-27 20:09:52.655 [ERR] Error al enviar correo a funkoapi52@gmail.com | Asunto: 'Aviso sobre tu reserva RES-2026-001 - Revisión en taller'
+MailKit.Net.Smtp.SmtpProtocolException: The SMTP server has unexpectedly disconnected.
+   at MailKit.Net.Smtp.SmtpStream.ReadAheadAsync(CancellationToken cancellationToken)
+   at MailKit.Net.Smtp.SmtpStream.ReadResponseAsync(SmtpCommand command, CancellationToken cancellationToken)
+   at MailKit.Net.Smtp.SmtpStream.SendCommandAsync(SmtpCommand command, String commandText, CancellationToken cancellationToken)
+   at MailKit.Net.Smtp.SmtpClient.SendCommandInternalAsync(SmtpCommand command, String commandText, CancellationToken cancellationToken)
+   at MailKit.Net.Smtp.SmtpClient.AuthenticateAsync(Encoding encoding, ICredentials credentials, CancellationToken cancellationToken)
+   at APIAlquilerVehiculos.Services.Email.EmailService.SendEmailAsync(String toEmail, String subject, String bodyHtml)
+2026-11-27 20:09:52.705 [WRN] Fallo enviando correo a funkoapi52@gmail.com (intento 1/3). Motivo: Error al enviar el correo electrónico: The SMTP server has unexpectedly disconnected.. Reencolando...
+2026-11-27 20:09:57.996 [ERR] Error al enviar correo a funkoapi52@gmail.com | Asunto: 'Aviso sobre tu reserva RES-2026-001 - Revisión en taller'
+MailKit.Net.Smtp.SmtpProtocolException: The SMTP server has unexpectedly disconnected.
+   at MailKit.Net.Smtp.SmtpStream.ReadAheadAsync(CancellationToken cancellationToken)
+   at MailKit.Net.Smtp.SmtpStream.ReadResponseAsync(SmtpCommand command, CancellationToken cancellationToken)
+   at MailKit.Net.Smtp.SmtpStream.SendCommandAsync(SmtpCommand command, String commandText, CancellationToken cancellationToken)
+   at MailKit.Net.Smtp.SmtpClient.SendCommandInternalAsync(SmtpCommand command, String commandText, CancellationToken cancellationToken)
+   at MailKit.Net.Smtp.SmtpClient.AuthenticateAsync(Encoding encoding, ICredentials credentials, CancellationToken cancellationToken)
+   at APIAlquilerVehiculos.Services.Email.EmailService.SendEmailAsync(String toEmail, String subject, String bodyHtml)
+2026-11-27 20:09:58.030 [WRN] Fallo enviando correo a funkoapi52@gmail.com (intento 1/3). Motivo: Error al enviar el correo electrónico: The SMTP server has unexpectedly disconnected.. Reencolando...
+2026-11-27 20:10:03.303 [ERR] Error al enviar correo a funkoapi52@gmail.com | Asunto: 'Aviso sobre tu reserva RES-2026-001 - Revisión en taller'
+MailKit.Net.Smtp.SmtpProtocolException: The SMTP server has unexpectedly disconnected.
+   at MailKit.Net.Smtp.SmtpStream.ReadAheadAsync(CancellationToken cancellationToken)
+   at MailKit.Net.Smtp.SmtpStream.ReadResponseAsync(SmtpCommand command, CancellationToken cancellationToken)
+   at MailKit.Net.Smtp.SmtpStream.SendCommandAsync(SmtpCommand command, String commandText, CancellationToken cancellationToken)
+   at MailKit.Net.Smtp.SmtpClient.SendCommandInternalAsync(SmtpCommand command, String commandText, CancellationToken cancellationToken)
+   at MailKit.Net.Smtp.SmtpClient.AuthenticateAsync(Encoding encoding, ICredentials credentials, CancellationToken cancellationToken)
+   at APIAlquilerVehiculos.Services.Email.EmailService.SendEmailAsync(String toEmail, String subject, String bodyHtml)
+2026-11-27 20:10:03.330 [WRN] Fallo enviando correo a funkoapi52@gmail.com (intento 2/3). Motivo: Error al enviar el correo electrónico: The SMTP server has unexpectedly disconnected.. Reencolando...
+2026-11-27 20:10:13.600 [ERR] Error al enviar correo a funkoapi52@gmail.com | Asunto: 'Aviso sobre tu reserva RES-2026-001 - Revisión en taller'
+MailKit.Net.Smtp.SmtpProtocolException: The SMTP server has unexpectedly disconnected.
+   at MailKit.Net.Smtp.SmtpStream.ReadAheadAsync(CancellationToken cancellationToken)
+   at MailKit.Net.Smtp.SmtpStream.ReadResponseAsync(SmtpCommand command, CancellationToken cancellationToken)
+   at MailKit.Net.Smtp.SmtpStream.SendCommandAsync(SmtpCommand command, String commandText, CancellationToken cancellationToken)
+   at MailKit.Net.Smtp.SmtpClient.SendCommandInternalAsync(SmtpCommand command, String commandText, CancellationToken cancellationToken)
+   at MailKit.Net.Smtp.SmtpClient.AuthenticateAsync(Encoding encoding, ICredentials credentials, CancellationToken cancellationToken)
+   at APIAlquilerVehiculos.Services.Email.EmailService.SendEmailAsync(String toEmail, String subject, String bodyHtml)
+2026-11-27 20:10:13.610 [WRN] Fallo enviando correo a funkoapi52@gmail.com (intento 2/3). Motivo: Error al enviar el correo electrónico: The SMTP server has unexpectedly disconnected.. Reencolando...
+2026-11-27 20:10:23.881 [ERR] Error al enviar correo a funkoapi52@gmail.com | Asunto: 'Aviso sobre tu reserva RES-2026-001 - Revisión en taller'
+MailKit.Net.Smtp.SmtpProtocolException: The SMTP server has unexpectedly disconnected.
+   at MailKit.Net.Smtp.SmtpStream.ReadAheadAsync(CancellationToken cancellationToken)
+   at MailKit.Net.Smtp.SmtpStream.ReadResponseAsync(SmtpCommand command, CancellationToken cancellationToken)
+   at MailKit.Net.Smtp.SmtpStream.SendCommandAsync(SmtpCommand command, String commandText, CancellationToken cancellationToken)
+   at MailKit.Net.Smtp.SmtpClient.SendCommandInternalAsync(SmtpCommand command, String commandText, CancellationToken cancellationToken)
+   at MailKit.Net.Smtp.SmtpClient.AuthenticateAsync(Encoding encoding, ICredentials credentials, CancellationToken cancellationToken)
+   at APIAlquilerVehiculos.Services.Email.EmailService.SendEmailAsync(String toEmail, String subject, String bodyHtml)
+2026-11-27 20:10:23.891 [WRN] Fallo enviando correo a funkoapi52@gmail.com (intento 3/3). Motivo: Error al enviar el correo electrónico: The SMTP server has unexpectedly disconnected.. Reencolando...
+2026-11-27 20:10:39.192 [ERR] Error al enviar correo a funkoapi52@gmail.com | Asunto: 'Aviso sobre tu reserva RES-2026-001 - Revisión en taller'
+MailKit.Net.Smtp.SmtpProtocolException: The SMTP server has unexpectedly disconnected.
+   at MailKit.Net.Smtp.SmtpStream.ReadAheadAsync(CancellationToken cancellationToken)
+   at MailKit.Net.Smtp.SmtpStream.ReadResponseAsync(SmtpCommand command, CancellationToken cancellationToken)
+   at MailKit.Net.Smtp.SmtpStream.SendCommandAsync(SmtpCommand command, String commandText, CancellationToken cancellationToken)
+   at MailKit.Net.Smtp.SmtpClient.SendCommandInternalAsync(SmtpCommand command, String commandText, CancellationToken cancellationToken)
+   at MailKit.Net.Smtp.SmtpClient.AuthenticateAsync(Encoding encoding, ICredentials credentials, CancellationToken cancellationToken)
+   at APIAlquilerVehiculos.Services.Email.EmailService.SendEmailAsync(String toEmail, String subject, String bodyHtml)
+2026-11-27 20:10:39.253 [WRN] Fallo enviando correo a funkoapi52@gmail.com (intento 3/3). Motivo: Error al enviar el correo electrónico: The SMTP server has unexpectedly disconnected.. Reencolando...
+2026-11-27 20:10:48.807 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-27 20:10:54.539 [ERR] Error al enviar correo a funkoapi52@gmail.com | Asunto: 'Aviso sobre tu reserva RES-2026-001 - Revisión en taller'
+MailKit.Net.Smtp.SmtpProtocolException: The SMTP server has unexpectedly disconnected.
+   at MailKit.Net.Smtp.SmtpStream.ReadAheadAsync(CancellationToken cancellationToken)
+   at MailKit.Net.Smtp.SmtpStream.ReadResponseAsync(SmtpCommand command, CancellationToken cancellationToken)
+   at MailKit.Net.Smtp.SmtpStream.SendCommandAsync(SmtpCommand command, String commandText, CancellationToken cancellationToken)
+   at MailKit.Net.Smtp.SmtpClient.SendCommandInternalAsync(SmtpCommand command, String commandText, CancellationToken cancellationToken)
+   at MailKit.Net.Smtp.SmtpClient.AuthenticateAsync(Encoding encoding, ICredentials credentials, CancellationToken cancellationToken)
+   at APIAlquilerVehiculos.Services.Email.EmailService.SendEmailAsync(String toEmail, String subject, String bodyHtml)
+2026-11-27 20:10:54.550 [ERR] Correo descartado definitivamente tras 3 intentos para funkoapi52@gmail.com | Asunto: 'Aviso sobre tu reserva RES-2026-001 - Revisión en taller' | Último error: Error al enviar el correo electrónico: The SMTP server has unexpectedly disconnected.
+2026-11-27 20:10:54.796 [ERR] Error al enviar correo a funkoapi52@gmail.com | Asunto: 'Aviso sobre tu reserva RES-2026-001 - Revisión en taller'
+MailKit.Net.Smtp.SmtpProtocolException: The SMTP server has unexpectedly disconnected.
+   at MailKit.Net.Smtp.SmtpStream.ReadAheadAsync(CancellationToken cancellationToken)
+   at MailKit.Net.Smtp.SmtpStream.ReadResponseAsync(SmtpCommand command, CancellationToken cancellationToken)
+   at MailKit.Net.Smtp.SmtpStream.SendCommandAsync(SmtpCommand command, String commandText, CancellationToken cancellationToken)
+   at MailKit.Net.Smtp.SmtpClient.SendCommandInternalAsync(SmtpCommand command, String commandText, CancellationToken cancellationToken)
+   at MailKit.Net.Smtp.SmtpClient.AuthenticateAsync(Encoding encoding, ICredentials credentials, CancellationToken cancellationToken)
+   at APIAlquilerVehiculos.Services.Email.EmailService.SendEmailAsync(String toEmail, String subject, String bodyHtml)
+2026-11-27 20:10:54.826 [ERR] Correo descartado definitivamente tras 3 intentos para funkoapi52@gmail.com | Asunto: 'Aviso sobre tu reserva RES-2026-001 - Revisión en taller' | Último error: Error al enviar el correo electrónico: The SMTP server has unexpectedly disconnected.
+2026-11-27 20:13:27.498 [INF] Iniciando aplicación...
+2026-11-27 20:13:27.748 [INF] Configurando servicios...
+2026-11-27 20:13:27.755 [INF] Configurando servicios...
+2026-11-27 20:13:27.809 [INF] Configurando servicios en segundo plano...
+2026-11-27 20:13:27.822 [INF] Configurando la conexión a Redis...
+2026-11-27 20:13:36.187 [INF] Conexión a Redis configurada correctamente.
+2026-11-27 20:13:37.452 [WRN] Entity 'Trabajador' has a global query filter defined and is the required end of a relationship with the entity 'Oficina'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-27 20:13:37.460 [WRN] Entity 'Trabajador' has a global query filter defined and is the required end of a relationship with the entity 'Parte'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-27 20:13:37.465 [WRN] Entity 'Marca' has a global query filter defined and is the required end of a relationship with the entity 'Vehiculo'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-27 20:13:39.624 [INF] Todas las marcas seed ya existen.
+2026-11-27 20:13:39.637 [INF] Todas las pólizas seed ya existen.
+2026-11-27 20:13:39.697 [INF] Todos los vehículos seed ya existen.
+2026-11-27 20:13:39.708 [INF] Todos los extras seed ya existen.
+2026-11-27 20:13:39.721 [INF] Todos los recargos seed ya existen.
+2026-11-27 20:13:39.861 [INF] Worker de envío de correos iniciado.
+2026-11-27 20:13:39.908 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-27 20:13:39.948 [WRN] The WebRootPath was not found: C:\Users\aitor\Desktop\Proyectos2DAW-DWES\DWES-concesionarioEnConjunto\APIAlquilerVehiculos\wwwroot. Static files may be unavailable.
+2026-11-27 20:14:40.155 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-27 20:14:44.129 [ERR] Error al enviar correo a funkoapi52@gmail.com | Asunto: 'Aviso sobre tu reserva RES-2026-001 - Revisión en taller'
+MailKit.Net.Smtp.SmtpProtocolException: The SMTP server has unexpectedly disconnected.
+   at MailKit.Net.Smtp.SmtpStream.ReadAheadAsync(CancellationToken cancellationToken)
+   at MailKit.Net.Smtp.SmtpStream.ReadResponseAsync(SmtpCommand command, CancellationToken cancellationToken)
+   at MailKit.Net.Smtp.SmtpStream.SendCommandAsync(SmtpCommand command, String commandText, CancellationToken cancellationToken)
+   at MailKit.Net.Smtp.SmtpClient.SendCommandInternalAsync(SmtpCommand command, String commandText, CancellationToken cancellationToken)
+   at MailKit.Net.Smtp.SmtpClient.AuthenticateAsync(Encoding encoding, ICredentials credentials, CancellationToken cancellationToken)
+   at APIAlquilerVehiculos.Services.Email.EmailService.SendEmailAsync(String toEmail, String subject, String bodyHtml) in C:\Users\aitor\Desktop\Proyectos2DAW-DWES\DWES-concesionarioEnConjunto\APIAlquilerVehiculos\Services\Email\EmailService.cs:line 56
+2026-11-27 20:14:44.233 [WRN] Fallo enviando correo a funkoapi52@gmail.com (intento 1/3). Motivo: Error al enviar el correo electrónico: The SMTP server has unexpectedly disconnected.. Reencolando...
+2026-11-27 20:14:49.510 [ERR] Error al enviar correo a funkoapi52@gmail.com | Asunto: 'Aviso sobre tu reserva RES-2026-001 - Revisión en taller'
+MailKit.Net.Smtp.SmtpProtocolException: The SMTP server has unexpectedly disconnected.
+   at MailKit.Net.Smtp.SmtpStream.ReadAheadAsync(CancellationToken cancellationToken)
+   at MailKit.Net.Smtp.SmtpStream.ReadResponseAsync(SmtpCommand command, CancellationToken cancellationToken)
+   at MailKit.Net.Smtp.SmtpStream.SendCommandAsync(SmtpCommand command, String commandText, CancellationToken cancellationToken)
+   at MailKit.Net.Smtp.SmtpClient.SendCommandInternalAsync(SmtpCommand command, String commandText, CancellationToken cancellationToken)
+   at MailKit.Net.Smtp.SmtpClient.AuthenticateAsync(Encoding encoding, ICredentials credentials, CancellationToken cancellationToken)
+   at APIAlquilerVehiculos.Services.Email.EmailService.SendEmailAsync(String toEmail, String subject, String bodyHtml) in C:\Users\aitor\Desktop\Proyectos2DAW-DWES\DWES-concesionarioEnConjunto\APIAlquilerVehiculos\Services\Email\EmailService.cs:line 56
+2026-11-27 20:14:49.528 [WRN] Fallo enviando correo a funkoapi52@gmail.com (intento 2/3). Motivo: Error al enviar el correo electrónico: The SMTP server has unexpectedly disconnected.. Reencolando...
+2026-11-27 20:14:59.850 [ERR] Error al enviar correo a funkoapi52@gmail.com | Asunto: 'Aviso sobre tu reserva RES-2026-001 - Revisión en taller'
+MailKit.Net.Smtp.SmtpProtocolException: The SMTP server has unexpectedly disconnected.
+   at MailKit.Net.Smtp.SmtpStream.ReadAheadAsync(CancellationToken cancellationToken)
+   at MailKit.Net.Smtp.SmtpStream.ReadResponseAsync(SmtpCommand command, CancellationToken cancellationToken)
+   at MailKit.Net.Smtp.SmtpStream.SendCommandAsync(SmtpCommand command, String commandText, CancellationToken cancellationToken)
+   at MailKit.Net.Smtp.SmtpClient.SendCommandInternalAsync(SmtpCommand command, String commandText, CancellationToken cancellationToken)
+   at MailKit.Net.Smtp.SmtpClient.AuthenticateAsync(Encoding encoding, ICredentials credentials, CancellationToken cancellationToken)
+   at APIAlquilerVehiculos.Services.Email.EmailService.SendEmailAsync(String toEmail, String subject, String bodyHtml) in C:\Users\aitor\Desktop\Proyectos2DAW-DWES\DWES-concesionarioEnConjunto\APIAlquilerVehiculos\Services\Email\EmailService.cs:line 56
+2026-11-27 20:14:59.860 [WRN] Fallo enviando correo a funkoapi52@gmail.com (intento 3/3). Motivo: Error al enviar el correo electrónico: The SMTP server has unexpectedly disconnected.. Reencolando...
+2026-11-27 20:15:15.125 [ERR] Error al enviar correo a funkoapi52@gmail.com | Asunto: 'Aviso sobre tu reserva RES-2026-001 - Revisión en taller'
+MailKit.Net.Smtp.SmtpProtocolException: The SMTP server has unexpectedly disconnected.
+   at MailKit.Net.Smtp.SmtpStream.ReadAheadAsync(CancellationToken cancellationToken)
+   at MailKit.Net.Smtp.SmtpStream.ReadResponseAsync(SmtpCommand command, CancellationToken cancellationToken)
+   at MailKit.Net.Smtp.SmtpStream.SendCommandAsync(SmtpCommand command, String commandText, CancellationToken cancellationToken)
+   at MailKit.Net.Smtp.SmtpClient.SendCommandInternalAsync(SmtpCommand command, String commandText, CancellationToken cancellationToken)
+   at MailKit.Net.Smtp.SmtpClient.AuthenticateAsync(Encoding encoding, ICredentials credentials, CancellationToken cancellationToken)
+   at APIAlquilerVehiculos.Services.Email.EmailService.SendEmailAsync(String toEmail, String subject, String bodyHtml) in C:\Users\aitor\Desktop\Proyectos2DAW-DWES\DWES-concesionarioEnConjunto\APIAlquilerVehiculos\Services\Email\EmailService.cs:line 56
+2026-11-27 20:15:15.135 [ERR] Correo descartado definitivamente tras 3 intentos para funkoapi52@gmail.com | Asunto: 'Aviso sobre tu reserva RES-2026-001 - Revisión en taller' | Último error: Error al enviar el correo electrónico: The SMTP server has unexpectedly disconnected.
+2026-11-27 20:15:40.200 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-27 20:16:40.222 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-27 20:18:45.730 [INF] Iniciando aplicación...
+2026-11-27 20:18:45.842 [INF] Configurando servicios...
+2026-11-27 20:18:45.846 [INF] Configurando servicios...
+2026-11-27 20:18:45.897 [INF] Configurando servicios en segundo plano...
+2026-11-27 20:18:45.916 [INF] Configurando la conexión a Redis...
+2026-11-27 20:18:54.205 [INF] Conexión a Redis configurada correctamente.
+2026-11-27 20:18:56.109 [WRN] Entity 'Trabajador' has a global query filter defined and is the required end of a relationship with the entity 'Oficina'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-27 20:18:56.121 [WRN] Entity 'Trabajador' has a global query filter defined and is the required end of a relationship with the entity 'Parte'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-27 20:18:56.126 [WRN] Entity 'Marca' has a global query filter defined and is the required end of a relationship with the entity 'Vehiculo'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-11-27 20:18:58.837 [INF] Todas las marcas seed ya existen.
+2026-11-27 20:18:58.854 [INF] Todas las pólizas seed ya existen.
+2026-11-27 20:18:58.902 [INF] Todos los vehículos seed ya existen.
+2026-11-27 20:18:58.912 [INF] Todos los extras seed ya existen.
+2026-11-27 20:18:58.922 [INF] Todos los recargos seed ya existen.
+2026-11-27 20:18:59.110 [INF] Worker de envío de correos iniciado.
+2026-11-27 20:18:59.155 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.
+2026-11-27 20:18:59.195 [WRN] The WebRootPath was not found: C:\Users\aitor\Desktop\Proyectos2DAW-DWES\DWES-concesionarioEnConjunto\APIAlquilerVehiculos\wwwroot. Static files may be unavailable.
+2026-11-27 20:19:11.783 [INF] Correo enviado correctamente a funkoapi52@gmail.com | Asunto: 'Aviso sobre tu reserva RES-2026-001 - Revisión en taller' | Respuesta: MailKit.Net.Smtp.SmtpSendResult
+2026-11-27 20:19:59.444 [INF] [BACKGROUND-RESERVAS] Iniciando comprobación de reservas pendientes.

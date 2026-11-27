@@ -4,10 +4,12 @@ using APIAlquilerVehiculos.Services.Auth;
 using APIAlquilerVehiculos.Services.Clientes;
 using APIAlquilerVehiculos.Services.Email;
 using APIAlquilerVehiculos.Services.Pagos;
-using APIAlquilerVehiculos.Services.Trabajadores;
-using Serilog;
-using APIAlquilerVehiculos.Services.Pagos;
 using APIAlquilerVehiculos.Services.Taller;
+using APIAlquilerVehiculos.Services.Trabajadores;
+using APIAlquilerVehiculos.Services.Usuarios;
+using Serilog;
+
+namespace APIAlquilerVehiculos.Infrastructure;
 
 public static class ServiceConfig
 {
@@ -32,6 +34,9 @@ public static class ServiceConfig
         services.AddSingleton<IncidenciaService>();
         services.AddScoped<IExtraService, ExtraService>();
         services.AddScoped<IPolizaService, PolizaService>();
+        services.AddScoped<IUsuarioService, UsuarioService>();
+        services.AddScoped<INotificationService, NotificationService>();    
+        
         // Email
         services.AddOptions<EmailSettings>()
             .Bind(configuration.GetSection(EmailSettings.SectionName))
@@ -40,7 +45,7 @@ public static class ServiceConfig
         services.AddSingleton<IEmailQueue, EmailQueue>();
         services.AddHostedService<EmailBackgroundWorker>();
         services.AddScoped<IEmailService, EmailService>();
-        //services.AddScoped<INotificationEmailService, NotificationEmailService>();
+        services.AddScoped<INotificationEmailService, NotificationEmailService>();
         return services;
     }
 }

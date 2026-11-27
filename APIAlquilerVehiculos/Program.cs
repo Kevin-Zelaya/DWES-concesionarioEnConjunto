@@ -1,4 +1,5 @@
 using System.Text.Json.Serialization;
+using APIAlquilerVehiculos.Infrastructure;
 using APIAlquilerVehiculos.Infrastructure.AutenticationJWTAutorization;
 using APIAlquilerVehiculos.Seed;
 using APIAlquilerVehiculos.Services;
@@ -57,6 +58,8 @@ builder.Services
     .AddBackground()
     .AddRedisConnection(builder.Configuration)
     .AddMemoryCache();
+
+builder.Services.AddSignalR();
 
 builder.Services.AddValidatorsFromAssemblyContaining<Program>();
 builder.Services.AddFluentValidationAutoValidation();

@@ -1,7 +1,9 @@
 ﻿using System.Security.Claims;
+using APIAlquilerVehiculos.Dtos.Email;
 using APIAlquilerVehiculos.Dtos.Taller;
 using APIAlquilerVehiculos.Entities;
 using APIAlquilerVehiculos.Models.Usuarios;
+using APIAlquilerVehiculos.Services.Email;
 using APIAlquilerVehiculos.Services.Taller;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -86,6 +88,27 @@ public class TallerController(IParteService service, AppDbContext context) : Con
             return StatusCode((int)resultado.Error.StatusCode, resultado.Error);
 
         return Ok(resultado.Value);
+    }
+
+    // TEMPORAL: Endpoint de prueba de envío de correo (borrar antes del commit final)
+    [HttpPost("test-email")]
+    [AllowAnonymous]
+    public async Task<IActionResult> ProbarEmail(
+        [FromServices] INotificationEmailService notificationEmail)
+    {
+        var destino = "funkoapi52@gmail.com";
+
+        await notificationEmail.EnviarAsync(new ParteTallerEmailDto(
+            EmailDestino: destino,
+            NombreCliente: "Aitor",
+            CodigoReferencia: "RES-2026-001",
+            VehiculoOriginal: "Seat León (1234BCD)",
+            DescripcionAveria: "Revisión de frenos en taller",
+            ResolucionAplicada: "Cambio de vehículo equivalente",
+            DetalleResolucion: "Te hemos asignado un Volkswagen Golf (5678FGH) sin coste adicional."
+        ));
+
+        return Ok(new { mensaje = $"Correo encolado hacia {destino}" });
     }
 
     /// <summary>

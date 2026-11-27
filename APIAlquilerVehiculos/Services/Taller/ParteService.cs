@@ -1,4 +1,5 @@
-﻿using APIAlquilerVehiculos.Dtos.Taller;
+﻿using APIAlquilerVehiculos.Dtos.Email;
+using APIAlquilerVehiculos.Dtos.Taller;
 using APIAlquilerVehiculos.Errors.Common;
 using APIAlquilerVehiculos.Errors.Taller;
 using APIAlquilerVehiculos.Models;
@@ -6,6 +7,7 @@ using APIAlquilerVehiculos.Models.Enums;
 using APIAlquilerVehiculos.Models.Reservas;
 using APIAlquilerVehiculos.Models.Usuarios;
 using APIAlquilerVehiculos.Repositories.Taller;
+using APIAlquilerVehiculos.Services.Email;
 using CSharpFunctionalExtensions;
 
 namespace APIAlquilerVehiculos.Services.Taller;
@@ -13,6 +15,7 @@ namespace APIAlquilerVehiculos.Services.Taller;
 public class ParteService : IParteService
 {
     private readonly IParteRepository _repository;
+    private readonly INotificationEmailService _notificationEmail;
     private readonly ILogger<ParteService> _logger;
 
     private static readonly HashSet<Estado> EstadosReservaViva =
@@ -22,9 +25,13 @@ public class ParteService : IParteService
         Estado.EnCurso
     ];
 
-    public ParteService(IParteRepository repository, ILogger<ParteService> logger)
+    public ParteService(
+        IParteRepository repository,
+        INotificationEmailService notificationEmail,
+        ILogger<ParteService> logger)
     {
         _repository = repository;
+        _notificationEmail = notificationEmail;
         _logger = logger;
     }
 
@@ -163,6 +170,42 @@ public class ParteService : IParteService
             parte.Id, vehiculo.Matricula);
 
         return Result.Success<ParteResponseDto, DomainError>(MapToDto(parte, vehiculo.Matricula));
+    }
+
+    /// <summary>
+    /// RF-07 / RF-34: Llamar justo después de guardar en BD la resolución de una reserva viva
+    /// (cambio de vehículo equivalente, cancelación o aplazamiento) para meter el coche en taller.
+    /// </summary>
+    public async Task NotificarReservaAfectadaTallerAsync(
+        string emailCliente,
+        string nombreCliente,
+        string codigoReferencia,
+        Models.Vehiculo vehiculoOriginal,
+        string descripcionAveria,
+        string resolucionAplicada,
+        string detalleResolucion)
+    {
+        if (string.IsNullOrWhiteSpace(emailCliente))
+        {
+            _logger.LogWarning(
+                "No se pudo enviar correo de taller para reserva {Codigo}: cliente sin email.",
+                codigoReferencia);
+            return;
+        }
+
+        var nombreVehiculo = vehiculoOriginal.Marca is not null
+            ? $"{vehiculoOriginal.Marca.Nombre} {vehiculoOriginal.Modelo} ({vehiculoOriginal.Matricula})"
+            : $"{vehiculoOriginal.Modelo} ({vehiculoOriginal.Matricula})";
+
+        await _notificationEmail.EnviarAsync(new ParteTallerEmailDto(
+            EmailDestino: emailCliente,
+            NombreCliente: nombreCliente,
+            CodigoReferencia: codigoReferencia,
+            VehiculoOriginal: nombreVehiculo,
+            DescripcionAveria: descripcionAveria,
+            ResolucionAplicada: resolucionAplicada,
+            DetalleResolucion: detalleResolucion
+        ));
     }
 
     private static bool EsMecanico(Trabajador trabajador) =>
