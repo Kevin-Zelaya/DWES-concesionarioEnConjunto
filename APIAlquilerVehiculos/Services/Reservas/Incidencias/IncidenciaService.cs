@@ -1,23 +1,42 @@
-using Microsoft.Extensions.Caching.Memory;
 
 /// <summary>
-/// Gestiona las incidencias de las reservas mediante la caché en memoria.
+/// Gestiona las incidencias de las reservas mediante un diccionario en memoria.
+/// Garantiza el acceso concurrente mediante un semáforo.
 /// </summary>
-/// <param name="cache">Servicio de caché en memoria.</param>
-public class IncidenciaService(IMemoryCache cache)
+public class IncidenciaService()
 {
     /// <summary>
-    /// Registra una incidencia en caché durante 7 días, evitando duplicados.
+    /// Controla el acceso concurrente al diccionario de incidencias.
+    /// </summary>
+    private readonly SemaphoreSlim _semaforo = new(1, 1);
+
+    /// <summary>
+    /// Almacena las incidencias registradas, utilizando como clave
+    /// el identificador de reserva y el tipo de incidencia.
+    /// </summary>
+    private readonly Dictionary<string, IncidenciaReserva> incidencias = new();
+
+    /// <summary>
+    /// Registra una incidencia, evitando duplicados.
     /// </summary>
     /// <param name="incidencia">Incidencia que se desea registrar.</param>
-    public void Registrar(IncidenciaReserva incidencia)
+    public void Add(IncidenciaReserva incidencia)
     {
         string clave = $"{incidencia.ReservaId}_{incidencia.Tipo}";
 
-        if (cache.TryGetValue(clave, out _))
-            return;
+        _semaforo.Wait();
 
-        cache.Set(clave, incidencia, TimeSpan.FromDays(7));
+        try
+        {
+            if (incidencias.ContainsKey(clave))
+                return;
+
+            incidencias.Add(clave, incidencia);
+        }
+        finally
+        {
+            _semaforo.Release();
+        }
 
         Console.WriteLine("=== INCIDENCIA REGISTRADA ===");
         Console.WriteLine($"Reserva: {incidencia.CodigoReferencia}");
@@ -25,6 +44,7 @@ public class IncidenciaService(IMemoryCache cache)
         Console.WriteLine($"Tipo: {incidencia.Tipo}");
         Console.WriteLine($"Descripción: {incidencia.Descripcion}");
         Console.WriteLine($"Fecha: {incidencia.FechaDeteccion}");
+        Console.WriteLine($"Notificado: {incidencia.FechaUltimaNotificacion}");
         Console.WriteLine("=============================");
     }
 
@@ -34,22 +54,105 @@ public class IncidenciaService(IMemoryCache cache)
     /// <param name="reservaId">Identificador de la reserva.</param>
     /// <param name="tipo">Tipo de incidencia.</param>
     /// <returns>La incidencia encontrada o null si no existe.</returns>
-    public IncidenciaReserva? Obtener(long reservaId, TipoIncidencia tipo)
+    public IncidenciaReserva? Get(long reservaId, TipoIncidencia tipo)
     {
         string clave = $"{reservaId}_{tipo}";
 
-        return cache.Get<IncidenciaReserva>(clave);
+        _semaforo.Wait();
+
+        try
+        {
+            return incidencias.TryGetValue(clave, out IncidenciaReserva? incidencia)
+                ? incidencia
+                : null;
+        }
+        finally
+        {
+            _semaforo.Release();
+        }
     }
 
     /// <summary>
-    /// Elimina una incidencia de la caché.
+    /// Elimina una incidencia del diccionario.
     /// </summary>
     /// <param name="reservaId">Identificador de la reserva.</param>
     /// <param name="tipo">Tipo de incidencia.</param>
-    public void Eliminar(long reservaId, TipoIncidencia tipo)
+    public void Delete(long reservaId, TipoIncidencia tipo)
     {
         string clave = $"{reservaId}_{tipo}";
 
-        cache.Remove(clave);
+        _semaforo.Wait();
+
+        try
+        {
+            incidencias.Remove(clave);
+        }
+        finally
+        {
+            _semaforo.Release();
+        }
+    }
+
+    /// <summary>
+    /// Obtiene todas las incidencias registradas.
+    /// </summary>
+    /// <returns>Copia del diccionario con las incidencias almacenadas.</returns>
+    public Dictionary<string, IncidenciaReserva> GetAll()
+    {
+        _semaforo.Wait();
+
+        try
+        {
+            return new Dictionary<string, IncidenciaReserva>(incidencias);
+        }
+        finally
+        {
+            _semaforo.Release();
+        }
+    }
+
+    /// <summary>
+    /// Actualiza una incidencia existente en el diccionario.
+    /// </summary>
+    /// <param name="clave">Clave identificadora de la incidencia.</param>
+    /// <param name="incidencia">Incidencia con los datos actualizados.</param>
+    public void Update(string clave, IncidenciaReserva incidencia)
+    {
+        _semaforo.Wait();
+
+        try
+        {
+            if (!incidencias.ContainsKey(clave))
+                return;
+
+            incidencias[clave] = incidencia;
+        }
+        finally
+        {
+            _semaforo.Release();
+        }
+    }
+    /// <summary>
+    /// Elimina todas las incidencias asociadas a una reserva.
+    /// </summary>
+    /// <param name="reservaId">Identificador de la reserva.</param>
+    public void DeleteAll(long reservaId)
+    {
+        _semaforo.Wait();
+
+        try
+        {
+            var claves = incidencias
+                .Where(i => i.Value.ReservaId == reservaId)
+                .Select(i => i.Key)
+                .ToList();
+
+            foreach (var clave in claves)
+                incidencias.Remove(clave);
+        }
+        finally
+        {
+            _semaforo.Release();
+        }
     }
 }

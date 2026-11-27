@@ -26,6 +26,11 @@ public class CreateReservaRequestDtoValidator : AbstractValidator<ReservaCreateR
             .Must((reserva, fechaDevolucion) =>
                 fechaDevolucion >= reserva.FechaRecogida.AddHours(24))
             .WithMessage("La fecha de devolución debe ser al menos 24 horas posterior a la fecha de recogida.");
+        RuleFor(x => x.FechaDevolucion)
+            .NotEmpty()
+            .Must((reserva, fechaDevolucion) =>
+                fechaDevolucion <= reserva.FechaRecogida.AddDays(30))
+            .WithMessage("La fecha de devolución deber ser como máximo de 30 días.");
 
         RuleFor(x => x.Lineas)
             .NotNull()

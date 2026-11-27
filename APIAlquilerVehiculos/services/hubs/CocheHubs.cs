@@ -1,3 +1,4 @@
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
@@ -8,8 +9,8 @@ public class CocheHubs : Hub
 {
     public override async Task OnConnectedAsync()
     {
-        var userId = Context.User?.FindFirstValue(ClaimTypes.NameIdentifier);
-        var email = Context.User?.FindFirstValue(ClaimTypes.Email);
+        var userId = Context.User?.FindFirstValue(JwtRegisteredClaimNames.Sub);
+        var email = Context.User?.FindFirstValue(JwtRegisteredClaimNames.Email);
         var isAdmin = Context.User?.IsInRole("ADMIN") ?? false;
 
         // Añadimos al usuario a su grupo personal

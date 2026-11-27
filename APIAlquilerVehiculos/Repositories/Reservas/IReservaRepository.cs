@@ -171,4 +171,11 @@ public interface IReservaRepository
     /// <param name="ct">Token para cancelar la operación.</param>
     /// <returns>Lista de reservas cuyo vehículo todavía no está disponible.</returns>
     Task<List<Reserva>> GetReservasConVehiculoNoDisponibleAsync(DateTime fechaInicio, DateTime fechaFin, CancellationToken ct = default);
+    
+    /// <summary>
+    /// Obtiene todas las reservas que se encuentran pendientes de pago.
+    /// </summary>
+    /// <param name="ct">Token para cancelar la operación.</param>
+    /// <returns>Lista de reservas pendientes de pago.</returns>
+    Task<List<Reserva>> GetReservasPendientesDePagoAsync(CancellationToken ct = default);
 }

@@ -19,8 +19,12 @@ public class ReservaBackgroundService(
                     .GetRequiredService<IReservaService>();
                 // Procesa reservas pendientes
                 await reservaService.ProcesarReservasPendientesAsync(ct);
+                // Procesar devoluciones tardias
                 await reservaService.ProcesarDevolucionesTardiasAsync(ct);
+                // Procesar vehiculos no disponibles
                 await reservaService.ProcesarVehiculosNoDisponiblesAsync(ct);
+                // Procesar reservas no pagadas
+                await reservaService.ProcesarReservasPendientesAsync(ct);
             }
             catch (OperationCanceledException)
                 when (ct.IsCancellationRequested)

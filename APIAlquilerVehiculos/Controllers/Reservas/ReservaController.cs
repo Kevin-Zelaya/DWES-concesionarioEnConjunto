@@ -316,6 +316,47 @@ public class ReservaController(
             : response.Error.ToHttpResult<Reserva>();
     }
 
+    [HttpPatch("{codigo}/recogida")]
+    [Authorize(Roles = $"{Roles.Operario},{Roles.Responsable}")]
+    [SwaggerOperation(
+        Summary = "Confirmar la recogida de una reserva",
+        Description = "Confirma la recogida del vehículo y actualiza el estado de la reserva a EnCurso y el del vehículo a EnAlquiler."
+    )]
+    [SwaggerResponse(200, "Recogida confirmada correctamente.", typeof(Reserva))]
+    [SwaggerResponse(400, "La reserva no se encuentra en un estado válido para confirmar la recogida.")]
+    [SwaggerResponse(401, "No autenticado.")]
+    [SwaggerResponse(403, "No tienes permisos para confirmar la recogida.")]
+    [SwaggerResponse(404, "No se ha encontrado la reserva.")]
+    [SwaggerResponse(409, "Conflicto al confirmar la recogida.")]
+    public async Task<ActionResult<Reserva>> ConfirmarRecogida(string codigo, CancellationToken ct)
+    {
+        var response = await _service.ConfirmarRecogidaAsync(codigo, ct);
+
+        return response.IsSuccess
+            ? Ok(response.Value)
+            : response.Error.ToHttpResult<Reserva>();
+    }
+
+    [HttpPatch("{codigo}/devolucion")]
+    [Authorize(Roles = $"{Roles.Operario},{Roles.Responsable}")]
+    [SwaggerOperation(
+        Summary = "Confirmar la devolución de una reserva",
+        Description = "Confirma la devolución del vehículo, actualiza el estado de la reserva a Finalizada y establece el estado del vehículo según las reservas activas existentes."
+    )]
+    [SwaggerResponse(200, "Devolución confirmada correctamente.", typeof(Reserva))]
+    [SwaggerResponse(400, "La reserva no se encuentra en un estado válido para confirmar la devolución.")]
+    [SwaggerResponse(401, "No autenticado.")]
+    [SwaggerResponse(403, "No tienes permisos para confirmar la devolución.")]
+    [SwaggerResponse(404, "No se ha encontrado la reserva.")]
+    [SwaggerResponse(409, "Conflicto al confirmar la devolución.")]
+    public async Task<ActionResult<Reserva>> ConfirmarDevolucion(string codigo, CancellationToken ct)
+    {
+        var response = await _service.ConfirmarDevolucionAsync(codigo, ct);
+
+        return response.IsSuccess
+            ? Ok(response.Value)
+            : response.Error.ToHttpResult<Reserva>();
+    }
     // =========================================================
     // EXISTS
     // =========================================================
